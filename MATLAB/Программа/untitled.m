@@ -670,12 +670,6 @@ function legendOff()
     s = findobj('type','legend');
     delete(s);
 
-function informationAssigning()
-load 71118;
-assignin('base','Real',Real);
-assignin('base','VOI',VOI);
-assignin('base','POI',POI)
-
 function defaultSetting(handles)
 % Настраиваем график
 grid on;
@@ -723,3 +717,72 @@ VOI = evalin('base','VOI');
         newStr = char(oldStr, strPart);
         set(handles.listbox2,'String', newStr);
     end
+    
+function informationAssigning()
+    file = load ('SavedData.mat');
+    
+    if isfield(file,'Real')
+        assignin('base','Real',file.Real);
+    else
+        makeEmptyReal();
+    end
+    
+    if isfield(file,'VOI')
+        assignin('base','VOI',file.VOI);
+    else
+        makeEmptyVOI();
+    end
+    
+    if isfield(file,'POI')
+        assignin('base','POI',file.POI);
+    else
+        makeEmptyPOI();
+    end
+    
+    if isfield(file,'Noize')
+        assignin('base','Noize',file.Noize);
+    else
+        makeEmptyNoize();
+    end
+    
+function makeEmptyReal()
+    Real.x = [];
+    Real.y = [];
+    Real.z = [];
+    Real.Vx = [];
+    Real.Vy = [];
+    Real.Vz = [];
+    Real.ax = [];
+    Real.ay = [];
+    Real.az = [];
+    Real.t = [];
+    assignin('base','Real',Real);
+
+function makeEmptyVOI()
+    VOI.x = [];
+    VOI.y = [];
+    VOI.z = [];
+    VOI.Vx = [];
+    VOI.Vy = [];
+    VOI.Vz = [];
+    VOI.ax = [];
+    VOI.ay = [];
+    VOI.az = [];
+    VOI.t = [];
+    assignin('base','VOI',VOI);
+    
+function makeEmptyPOI()
+    POI.x = [];
+    POI.y = [];
+    POI.z = [];
+    POI.Vr = [];
+    POI.t = [];
+    assignin('base','POI',POI);
+    
+function makeEmptyNoize()
+    Noize.x = [];
+    Noize.y = [];
+    Noize.z = [];
+    Noize.Vr = [];
+    Noize.t = [];
+    assignin('base','Noize',Noize);
