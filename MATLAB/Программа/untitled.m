@@ -22,7 +22,7 @@ function varargout = untitled(varargin)
 
 % Edit the above text to modify the response to help untitled
 
-% Last Modified by GUIDE v2.5 04-Nov-2018 16:28:52
+% Last Modified by GUIDE v2.5 10-Nov-2018 17:15:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,9 +58,6 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-defaultSetting(handles);
-
-
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -74,6 +71,47 @@ function varargout = untitled_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+function edit1_Callback(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit1 as text
+%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+
+string = get(hObject,'String');
+
+informationAssigning(string);
+defaultSetting(handles);
+set(hObject,'Enable','off');
+set(handles.pushbutton1,'Enable','off');
+
+% --- Executes during object creation, after setting all properties.
+function edit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+string = get(handles.edit1,'String');
+
+informationAssigning(string);
+defaultSetting(handles);
+set(hObject,'Enable','off');
+set(handles.edit1,'Enable','off');
 
 % --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, eventdata, handles)
@@ -237,9 +275,9 @@ checkbox5 = get(handles.checkbox5,'Value');
 poiPlot = evalin('base','poiPlot');
 
 if checkbox5 == 1 
-    set(poiPlot.ch5.coordinate,'Visible','on');
+    set(poiPlot.ch5,'Visible','on');
 else
-    set(poiPlot.ch5.coordinate,'Visible','off');
+    set(poiPlot.ch5,'Visible','off');
 end
 
 
@@ -256,9 +294,9 @@ checkbox6 = get(handles.checkbox6,'Value');
 poiPlot = evalin('base','poiPlot');
 
 if checkbox6 == 1 
-    set(poiPlot.ch6.coordinate,'Visible','on');
+    set(poiPlot.ch6,'Visible','on');
 else
-    set(poiPlot.ch6.coordinate,'Visible','off');
+    set(poiPlot.ch6,'Visible','off');
 end
 
 
@@ -275,9 +313,9 @@ checkbox7 = get(handles.checkbox7,'Value');
 poiPlot = evalin('base','poiPlot');
 
 if checkbox7 == 1 
-    set(poiPlot.ch7.coordinate,'Visible','on');
+    set(poiPlot.ch7,'Visible','on');
 else
-    set(poiPlot.ch7.coordinate,'Visible','off');
+    set(poiPlot.ch7,'Visible','off');
 end
 
 % --- Executes on button press in checkbox8.
@@ -313,9 +351,9 @@ checkbox9 = get(handles.checkbox9,'Value');
 noizePlot = evalin('base','noizePlot');
 
         if checkbox9 == 1 
-            set(noizePlot.ch9.coordinate,'Visible','on');
+            set(noizePlot.ch9,'Visible','on');
         else
-            set(noizePlot.ch9.coordinate,'Visible','off');
+            set(noizePlot.ch9,'Visible','off');
         end
 
 % --- Executes on button press in checkbox10.
@@ -331,9 +369,9 @@ checkbox10 = get(handles.checkbox10,'Value');
 noizePlot = evalin('base','noizePlot');
 
         if checkbox10 == 1 
-            set(noizePlot.ch10.coordinate,'Visible','on');
+            set(noizePlot.ch10,'Visible','on');
         else
-            set(noizePlot.ch10.coordinate,'Visible','off');
+            set(noizePlot.ch10,'Visible','off');
         end
 
 % --- Executes on button press in checkbox11.
@@ -349,11 +387,87 @@ checkbox11 = get(handles.checkbox11,'Value');
 noizePlot = evalin('base','noizePlot');
 
         if checkbox11 == 1 
-            set(noizePlot.ch11.coordinate,'Visible','on');
+            set(noizePlot.ch11,'Visible','on');
         else
-            set(noizePlot.ch11.coordinate,'Visible','off');
+            set(noizePlot.ch11,'Visible','off');
         end
-            
+    
+
+
+% --- Executes on button press in checkbox12.
+function checkbox12_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox12
+
+content = get(hObject,'Value');
+Strob = evalin('base','Strob');
+if (content == 1)
+    strobCheckboxAssignin(Strob);
+    set(handles.uibuttongroup6,'Visible','on');
+else
+    deleteStrobPlot();
+    checkboxStrobOff(handles);
+    set(handles.uibuttongroup6,'Visible','off');
+end
+
+% --- Executes on button press in checkbox13.
+function checkbox13_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox13
+checkbox13 = get(handles.checkbox13,'Value');
+
+strobPlot = evalin('base','strobPlot');
+
+        if checkbox13 == 1 
+            set(strobPlot.ch13,'Visible','on');
+        else
+            set(strobPlot.ch13,'Visible','off');
+        end
+
+
+% --- Executes on button press in checkbox14.
+function checkbox14_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox14
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox13
+checkbox14 = get(handles.checkbox14,'Value');
+
+strobPlot = evalin('base','strobPlot');
+
+        if checkbox14 == 1 
+            set(strobPlot.ch14,'Visible','on');
+        else
+            set(strobPlot.ch14,'Visible','off');
+        end
+
+
+% --- Executes on button press in checkbox15.
+function checkbox15_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox15 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox15
+checkbox15 = get(handles.checkbox15,'Value');
+
+strobPlot = evalin('base','strobPlot');
+
+        if checkbox15 == 1 
+            set(strobPlot.ch15,'Visible','on');
+        else
+            set(strobPlot.ch15,'Visible','off');
+        end
+        
 % --- Executes on selection change in popupmenu1.
 function popupmenu1_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu1 (see GCBO)
@@ -370,53 +484,70 @@ realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
 switch contents 
     case 1
+        % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
         linesOff();
         legendOff();
-        checkboxCoordinateName(handles);
+        % Задаются имя отсчета координат и легенда
+        ylabel('Координаты, m');
         legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
              voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,],...
              'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z' );
+         % Чекбоксы помех и ПОИ становятся доступны
          set(handles.checkbox4,'Enable','on');
          set(handles.checkbox8,'Enable','on');
+         set(handles.checkbox12,'Enable','on');
     case 2
+        % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
         linesOff();
         legendOff();
-        checkboxSpeedName(handles);
+        % Задаются имя отсчета координат и легенда
+        ylabel('Скорость, m/s');
         legend([realPlot.ch1.speed,realPlot.ch2.speed,realPlot.ch3.speed,...
             voiPlot.ch1.speed,voiPlot.ch2.speed,voiPlot.ch3.speed,],...
             'Эталон Vx','Эталон Vy','Эталон Vz','ВОИ Vx','ВОИ Vy','ВОИ Vz' );
-        
+        % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
         deletePOIPlot();
         checkboxPOIOff(handles);
         set(handles.uibuttongroup4,'Visible','off');
-        
+        % Чекбокс помех становится недоступен, убирается вся информация о помехах
         set(handles.checkbox8,'Enable','off','Value',0);
         deleteNoizePlot();
         checkboxNoizeOff(handles);
         set(handles.uibuttongroup5,'Visible','off');
+        
+        set(handles.checkbox12,'Enable','off','Value',0);
+        deleteStrobPlot();
+        checkboxStrobOff(handles);
+        set(handles.uibuttongroup6,'Visible','off');
     case 3
+        % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
         linesOff();
         legendOff();
-        checkboxAccelerateName(handles);
+        % Задаются имя отсчета координат и легенда
+        ylabel('Ускорение, m/s^2');
         legend([realPlot.ch1.acceleration,realPlot.ch2.acceleration,realPlot.ch3.acceleration,...
             voiPlot.ch1.acceleration,voiPlot.ch2.acceleration,voiPlot.ch3.acceleration,],...
             'Эталон ax','Эталон ay','Эталон az','ВОИ ax','ВОИ ay','ВОИ az' );
+        % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
         deletePOIPlot();
         checkboxPOIOff(handles);
         set(handles.uibuttongroup4,'Visible','off');
-        
+        % Чекбокс помех становится недоступен, убирается вся информация о помехах
         set(handles.checkbox8,'Enable','off','Value',0);
         deleteNoizePlot();
         checkboxNoizeOff(handles);
         set(handles.uibuttongroup5,'Visible','off');
+        
+        set(handles.checkbox12,'Enable','off','Value',0);
+        deleteStrobPlot();
+        checkboxStrobOff(handles);
+        set(handles.uibuttongroup6,'Visible','off');
 end
-    
-
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu1_CreateFcn(hObject, eventdata, handles)
@@ -443,15 +574,16 @@ contents = get(hObject,'Value');
 
 Real = evalin('base', 'Real');
 realSize = size(Real);
-    linesOff();
-    checkboxOff(handles);
-    for i = 1:realSize(2)
-        if(i == contents)
-            realCheckboxAssignin(Real(i));
-            makeLegendAfterListbox(handles);
-            break;
-        end
+linesOff();
+checkboxOff(handles);
+% Привязывание к чекбоксам выбранной цели
+for i = 1:realSize(2)
+    if(i == contents)
+        realCheckboxAssignin(Real(i));
+        makeLegendAfterListbox(handles);
+        break;
     end
+end
 
 % --- Executes during object creation, after setting all properties.
 function listbox1_CreateFcn(hObject, eventdata, handles)
@@ -477,15 +609,16 @@ contents = get(hObject,'Value');
 
 VOI = evalin('base', 'VOI');
 voiSize = size(VOI);
-    linesOff();
-    checkboxOff(handles);
-    for i = 1 : voiSize(2)
-        if(i == contents)
-            voiCheckboxAssignin(VOI(i));
-            makeLegendAfterListbox(handles);
-            break;
-        end
+linesOff();
+checkboxOff(handles);
+% Привязывание к чекбоксам выбранной цели
+for i = 1 : voiSize(2)
+    if(i == contents)
+        voiCheckboxAssignin(VOI(i));
+        makeLegendAfterListbox(handles);
+        break;
     end
+end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -500,7 +633,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Создание графиков и привязка их к определенным чекбоксам
+% --- Создание графиков и привязка их к определенным чекбоксам для
+% эталонных данных
 function realCheckboxAssignin(Real)
 real.ch1.coordinate = plot(Real.t(:),Real.x(:),'--og','Visible','off','DisplayName', 'x');
 real.ch1.speed = plot(Real.t(:),Real.Vx(:),'--og','Visible','off','DisplayName', 'V(x)');
@@ -518,6 +652,8 @@ legendOff();
 
 assignin('base','realPlot',real);
 
+% --- Создание графиков и привязка их к определенным чекбоксам для
+% данных ВОИ
 function voiCheckboxAssignin(VOI)
 voi.ch1.coordinate = plot(VOI.t(:),VOI.x(:),'-*g','Visible','off','DisplayName', 'x');
 voi.ch1.speed = plot(VOI.t(:),VOI.Vx(:),'-*g','Visible','off','DisplayName', 'V(x)');
@@ -535,31 +671,57 @@ legendOff();
 
 assignin('base','voiPlot',voi);
 
+% --- Создание графиков и привязка их к определенным чекбоксам для
+% данных ПОИ
 function poiCheckboxAssignin(POI)
-poi.ch5.coordinate = plot(POI.t(:),POI.x(:),'-.g','Visible','off','DisplayName', 'ПОИ x');
-poi.ch6.coordinate = plot(POI.t(:),POI.y(:),'-.r','Visible','off','DisplayName', 'ПОИ y');
-poi.ch7.coordinate = plot(POI.t(:),POI.z(:),'-.b','Visible','off','DisplayName', 'ПОИ z');
+poi.ch5 = plot(POI.t(:),POI.x(:),'-.g','Visible','off','DisplayName', 'ПОИ x');
+poi.ch6 = plot(POI.t(:),POI.y(:),'-.r','Visible','off','DisplayName', 'ПОИ y');
+poi.ch7 = plot(POI.t(:),POI.z(:),'-.b','Visible','off','DisplayName', 'ПОИ z');
 
 assignin('base','poiPlot',poi);
 
-function deletePOIPlot()
-poi = evalin('base','poiPlot');
-delete (poi.ch5.coordinate);
-delete (poi.ch6.coordinate);
-delete (poi.ch7.coordinate);
-
+% --- Создание графиков и привязка их к определенным чекбоксам для
+% данных Шумов
 function noizeCheckboxAssignin(Noize)
-noize.ch9.coordinate = plot(Noize.t(:),Noize.x(:),':g','Visible','off','DisplayName', 'Шумы по x');
-noize.ch10.coordinate = plot(Noize.t(:),Noize.y(:),':r','Visible','off','DisplayName', 'Шумы по y');
-noize.ch11.coordinate = plot(Noize.t(:),Noize.z(:),':b','Visible','off','DisplayName', 'Шумы по z');
+noize.ch9 = plot(Noize.t(:),Noize.x(:),':g','Visible','off','DisplayName', 'Шумы по x');
+noize.ch10 = plot(Noize.t(:),Noize.y(:),':r','Visible','off','DisplayName', 'Шумы по y');
+noize.ch11 = plot(Noize.t(:),Noize.z(:),':b','Visible','off','DisplayName', 'Шумы по z');
 
 assignin('base','noizePlot',noize);
 
+% --- Создание графиков и привязка их к определенным чекбоксам для
+% данных строба
+function strobCheckboxAssignin(Strob)
+strob.ch13 = errorbar(Strob.t(:),Strob.x(:),Strob.Sx(:),...
+    'og','Visible','off','DisplayName', 'Стробы по x');
+strob.ch14 = errorbar(Strob.t(:),Strob.y(:),Strob.Sy(:),...
+    'or','Visible','off','DisplayName', 'Стробы по y');
+strob.ch15 = errorbar(Strob.t(:),Strob.z(:),Strob.Sz(:),...
+    'ob','Visible','off','DisplayName', 'Стробы по z');
+
+assignin('base','strobPlot',strob);
+
+
+% --- Удаление графиков ПОИ
+function deletePOIPlot()
+poi = evalin('base','poiPlot');
+delete (poi.ch5);
+delete (poi.ch6);
+delete (poi.ch7);
+
+% --- Удаление данных шумов
 function deleteNoizePlot()
 noize = evalin('base','noizePlot');
-delete (noize.ch9.coordinate);
-delete (noize.ch10.coordinate);
-delete (noize.ch11.coordinate);
+delete (noize.ch9);
+delete (noize.ch10);
+delete (noize.ch11);
+
+% --- Удаление данных стробов
+function deleteStrobPlot()
+strob = evalin('base','strobPlot');
+delete (strob.ch13);
+delete (strob.ch14);
+delete (strob.ch15);
 
 % --- Отключение чекбоксов
 function checkboxOff(handles)
@@ -567,37 +729,24 @@ function checkboxOff(handles)
     set(handles.checkbox2,'Value',0);
     set(handles.checkbox3,'Value',0);
     
+% --- Отключение чекбоксов ПОИ
 function checkboxPOIOff(handles)
     set(handles.checkbox5,'Value',0);
     set(handles.checkbox6,'Value',0);
     set(handles.checkbox7,'Value',0);
     
+% --- Отключение чекбоксов шумов
 function checkboxNoizeOff(handles)
     set(handles.checkbox9,'Value',0);
     set(handles.checkbox10,'Value',0);
     set(handles.checkbox11,'Value',0);
     
-% --- Именование чекбоксов по координатам
-function checkboxCoordinateName(handles)
-%     set(handles.checkbox1,'String','Координата X');
-%     set(handles.checkbox2,'String','Координата Y');
-%     set(handles.checkbox3,'String','Координата Z');
-    ylabel('Координаты, m')
+% --- Отключение чекбоксов стробов
+function checkboxStrobOff(handles)
+    set(handles.checkbox13,'Value',0);
+    set(handles.checkbox14,'Value',0);
+    set(handles.checkbox15,'Value',0);
     
-% --- Именование чекбоксов по скорости
-function checkboxSpeedName(handles)
-%     set(handles.checkbox1,'String','Скорость V(X)');
-%     set(handles.checkbox2,'String','Скорость V(Y)');
-%     set(handles.checkbox3,'String','Скорость V(Z)');
-    ylabel('Скорость, m/s')
-    
-% --- Именование чекбоксов по ускорению
-function checkboxAccelerateName(handles)
-%     set(handles.checkbox1,'String','Ускорение a(X)');
-%     set(handles.checkbox2,'String','Ускорение a(Y)');
-%     set(handles.checkbox3,'String','Ускорение a(Z)');
-    ylabel('Ускорение, m/s^2')
-     
 % --- Убираются все линии с графика
 function linesOff()
     realPlot = evalin('base','realPlot');
@@ -606,6 +755,7 @@ function linesOff()
     setLinesOff(realPlot);
     setLinesOff(voiPlot);
 
+% --- Скрытие линий графика
 function setLinesOff(inform)
     set(inform.ch1.coordinate,'Visible','off');
     set(inform.ch1.speed,'Visible','off');
@@ -619,42 +769,91 @@ function setLinesOff(inform)
     set(inform.ch3.speed,'Visible','off');
     set(inform.ch3.acceleration,'Visible','off');
 
+% --- Создается легенда после выбора цели, зависимо от работающих на экране
+% данных(ПОИ или Шумы)
 function makeLegendAfterListbox(handles)
     realPlot = evalin('base','realPlot');
     voiPlot = evalin('base','voiPlot');
+    
     contents = get(handles.popupmenu1, 'Value');
     switch contents
         case 1
             chPoi = get(handles.checkbox4,'Value');
             chNoize = get(handles.checkbox8,'Value');
-            if(chPoi == 0 && chNoize == 0)
-            legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
-                voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,],...
-                'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z');
+            chStrob = get(handles.checkbox12,'Value');
+            if(chPoi == 0 && chNoize == 0 && chStrob == 0)
+                legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z');
             end
-            if(chPoi == 1 && chNoize == 0)
+            
+            if(chPoi == 1 && chNoize == 0 && chStrob == 0)
                 poiPlot = evalin('base','poiPlot');
                 legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
-                voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
-                poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate],...
-                'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z' );
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z' );
             end
-            if(chPoi == 0 && chNoize == 1)
-                    noizePlot = evalin('base','noizePlot');
+            
+            if(chPoi == 0 && chNoize == 1 && chStrob == 0)
+                noizePlot = evalin('base','noizePlot');
                 legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
-                voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
-                noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate],...
-                'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','Шумы по x','Шумы по y','Шумы по x');
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','Шумы по x','Шумы по y','Шумы по x');
             end
-            if(chNoize == 1 && chPoi == 1)
-                    noizePlot = evalin('base','noizePlot');
+            if(chNoize == 1 && chPoi == 1 && chStrob == 0)
+                noizePlot = evalin('base','noizePlot');
                 poiPlot = evalin('base','poiPlot');
                 legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
-                voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
-                poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate,...
-                noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate],...
-                'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z',...
-                'Шумы по x','Шумы по y','Шумы по x' );
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate,...
+                    noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z',...
+                    'Шумы по x','Шумы по y','Шумы по x' );
+            end
+            
+            if(chPoi == 0 && chNoize == 0 && chStrob == 1)
+                strobPlot = evalin('base','strobPlot');
+                legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    strobPlot.ch13,strobPlot.ch14,strobPlot.ch15,],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z',...
+                    'Стробы по x','Стробы по y','Стробы по z');
+            end
+            
+            if(chPoi == 1 && chNoize == 0 && chStrob == 1)
+                poiPlot = evalin('base','poiPlot');
+                strobPlot = evalin('base','strobPlot');
+                legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate,...
+                    strobPlot.ch13,strobPlot.ch14,strobPlot.ch15,],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z',...
+                    'Стробы по x','Стробы по y','Стробы по z');
+            end
+            
+            if(chPoi == 0 && chNoize == 1 && chStrob == 1)
+                noizePlot = evalin('base','noizePlot');
+                strobPlot = evalin('base','strobPlot');
+                legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate,...
+                    strobPlot.ch13,strobPlot.ch14,strobPlot.ch15,],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z',...
+                    'Шумы по x','Шумы по y','Шумы по x','Стробы по x','Стробы по y','Стробы по z');
+            end
+            if(chNoize == 1 && chPoi == 1 && chStrob == 1)
+                noizePlot = evalin('base','noizePlot');
+                strobPlot = evalin('base','strobPlot');
+                poiPlot = evalin('base','poiPlot');
+                legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
+                    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,...
+                    poiPlot.ch5.coordinate,poiPlot.ch6.coordinate,poiPlot.ch7.coordinate,...
+                    noizePlot.ch9.coordinate,noizePlot.ch10.coordinate,noizePlot.ch11.coordinate,...
+                    strobPlot.ch13,strobPlot.ch14,strobPlot.ch15,],...
+                    'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z','ПОИ x','ПОИ y','ПОИ z',...
+                    'Шумы по x','Шумы по y','Шумы по x','Стробы по x','Стробы по y','Стробы по z');
             end
         case 2
             legend([realPlot.ch1.speed,realPlot.ch2.speed,realPlot.ch3.speed,...
@@ -666,18 +865,22 @@ function makeLegendAfterListbox(handles)
                 'Эталон ax','Эталон ay','Эталон az','ВОИ ax','ВОИ ay','ВОИ az' );     
     end
     
+% --- Удаляется легенда
 function legendOff()
     s = findobj('type','legend');
     delete(s);
 
+% --- Задаются первоначальные данные графика
 function defaultSetting(handles)
-% Настраиваем график
+set(handles.uibuttongroup1,'Visible','on');
+set(handles.uibuttongroup7,'Visible','on');
+set(handles.uipanel3,'Visible','on');
+
 grid on;
 hold on;
 xlabel('Время, s');
 ylabel('Координаты, m');
 
-informationAssigning();
 Real = evalin('base','Real');
 VOI = evalin('base','VOI');
 
@@ -693,7 +896,7 @@ legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,
     voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,],...
     'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z' );
 
-
+% --- Формируются списки целей, в зависимости от количества целей
 function setListboxes(handles)
 Real = evalin('base','Real');
 VOI = evalin('base','VOI');
@@ -718,33 +921,41 @@ VOI = evalin('base','VOI');
         set(handles.listbox2,'String', newStr);
     end
     
-function informationAssigning()
-    file = load ('SavedData.mat');
-    
+% --- К рабочей среде привязыаются данные из файла
+function informationAssigning(name)
+    file = load (name);
+    % --- Проверка на наличие эталоных данных в файле
     if isfield(file,'Real')
         assignin('base','Real',file.Real);
     else
         makeEmptyReal();
     end
-    
+    % --- Проверка на наличие данных ВОИ в файле
     if isfield(file,'VOI')
         assignin('base','VOI',file.VOI);
     else
         makeEmptyVOI();
     end
-    
+    % --- Проверка на наличие данных ПОИ в файле
     if isfield(file,'POI')
         assignin('base','POI',file.POI);
     else
         makeEmptyPOI();
     end
-    
+    % --- Проверка на наличие данных шума в файле
     if isfield(file,'Noize')
         assignin('base','Noize',file.Noize);
     else
         makeEmptyNoize();
     end
+    % --- Проверка на наличие данных строба в файле
+    if isfield(file,'Strob')
+        assignin('base','Strob',file.Strob);
+    else
+        makeEmptyStrob();
+    end
     
+% --- Создается пустая цель эталона
 function makeEmptyReal()
     Real.x = [];
     Real.y = [];
@@ -758,6 +969,7 @@ function makeEmptyReal()
     Real.t = [];
     assignin('base','Real',Real);
 
+% --- Создается пустая цель ВОИ
 function makeEmptyVOI()
     VOI.x = [];
     VOI.y = [];
@@ -771,6 +983,7 @@ function makeEmptyVOI()
     VOI.t = [];
     assignin('base','VOI',VOI);
     
+% --- Создается пустая цель ПОИ
 function makeEmptyPOI()
     POI.x = [];
     POI.y = [];
@@ -779,6 +992,7 @@ function makeEmptyPOI()
     POI.t = [];
     assignin('base','POI',POI);
     
+% --- Создается пустая цель шума
 function makeEmptyNoize()
     Noize.x = [];
     Noize.y = [];
@@ -786,3 +1000,14 @@ function makeEmptyNoize()
     Noize.Vr = [];
     Noize.t = [];
     assignin('base','Noize',Noize);
+    
+% --- Создается пустой строб
+function makeEmptyStrob()
+    Strob.x = [];
+    Strob.y = [];
+    Strob.z = [];
+    Strob.Sx = [];
+    Strob.Sy = [];
+    Strob.Sz = [];
+    Strob.t = [];
+    assignin('base','Strob',Strob);
