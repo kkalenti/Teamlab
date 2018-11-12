@@ -725,13 +725,13 @@ void saveData(CReferenceState* s) {
 	mx = matGetVariable(pmat, "Real");
 	int oldN;
 	if (mx == NULL) {
-		createStruct(s, s->NumberOfTarget);
+		createStruct(s, s->NumberOfTarget+1);
 	}
-	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget){ //новая цель
-		extendStruct(s, mx, oldN, s->NumberOfTarget);
+	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
+		extendStruct(s, mx, oldN, s->NumberOfTarget+1);
 	}
 	else { //новая дата
-		extendArray(s, mx, s->NumberOfTarget);
+		extendArray(s, mx, s->NumberOfTarget+1);
 	}
 
 	mxSetData(mx, NULL);
