@@ -99,7 +99,7 @@ void CAirObject::SendToVoi(const double curTime)
 	
 	CResultOfScan* package = new CResultOfScan(coordinates, 0, curTime); // формирование пакета данных для передачи на ВОИ
 	// здесь нужно отправить пакет на ВОИ
-	//saveData(package);
+	saveData(package);
 
 	delete package;
 }
@@ -109,7 +109,6 @@ void CAirObject::SendToDb(const int numTarget, const double curTime)
 	cout << "\NumberOfTarget number " << numTarget << " found!\nCoordinates without noise    X=" << Coordinate.x << " / Y=" << Coordinate.y << " / Z="
 		<< Coordinate.z << "      after " << curTime << "sec";
 	cout << "\nacceleration " << Acceleration.x << " / " << Acceleration.y << " / " << Acceleration.z << "  speed " << Speed.x << " / " << Speed.y << " / " << Speed.z;
-	
 	CReferenceState* RefPackage = new CReferenceState(Coordinate, Speed, Acceleration, curTime, numTarget); // формирование пакета данных для передачи в базу данных
 	saveData(RefPackage);
 	delete RefPackage;

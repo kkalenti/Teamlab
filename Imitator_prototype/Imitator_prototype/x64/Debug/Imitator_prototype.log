@@ -1,21 +1,28 @@
-﻿Сборка начата 08.11.2018 20:42:56.
-     1>Проект "C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" в узле 2 (целевые объекты Build).
+﻿Build started 12.11.2018 16:30:32.
+     1>Project "C:\Users\Никита\Documents\Teamlab\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt AirObject.cpp Imitator.cpp Saver.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 2013 ultimate\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 2013 ultimate\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt AirObject.cpp Imitator.cpp Imitator_prototype.cpp Noize.cpp ReferenceState.cpp ResultOfScan.cpp Saver.cpp VOI.cpp
+         VOI.cpp
          Saver.cpp
-     1>Saver.cpp(248): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-     1>Saver.cpp(355): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-     1>Saver.cpp(418): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-     1>Saver.cpp(481): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-     1>Saver.cpp(730): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-     1>Saver.cpp(776): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-         AirObject.cpp
-     1>AirObject.cpp(109): warning C4129: N: неизвестная escape-последовательность
-         Создание кода...
-         Пропуск... (изменения не обнаружены)
+     1>Saver.cpp(248): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+     1>Saver.cpp(355): warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+     1>Saver.cpp(418): warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+     1>Saver.cpp(481): warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+     1>Saver.cpp(730): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+     1>Saver.cpp(776): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+         ResultOfScan.cpp
+         ReferenceState.cpp
+         Noize.cpp
+         Imitator_prototype.cpp
+     1>Imitator_prototype.cpp(8): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
          Imitator.cpp
+         AirObject.cpp
+     1>AirObject.cpp(109): warning C4129: 'N' : unrecognized character escape sequence
+         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\x64\Debug\Imitator_prototype.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\MATLAB\R2018b\extern\lib\win64\microsoft" libeng.lib libmx.lib libmat.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\x64\Debug\Imitator_prototype.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\x64\Debug\Imitator_prototype.lib" /MACHINE:X64 x64\Debug\AirObject.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 2013 ultimate\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Никита\Documents\Teamlab\Imitator_prototype\x64\Debug\Imitator_prototype.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\MATLAB\R2018b\extern\lib\win64\microsoft" libeng.lib libmx.lib libmat.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Никита\Documents\Teamlab\Imitator_prototype\x64\Debug\Imitator_prototype.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Никита\Documents\Teamlab\Imitator_prototype\x64\Debug\Imitator_prototype.lib" /MACHINE:X64 x64\Debug\AirObject.obj
          x64\Debug\Imitator.obj
          x64\Debug\Imitator_prototype.obj
          x64\Debug\Noize.obj
@@ -24,9 +31,9 @@
          x64\Debug\Saver.obj
          x64\Debug\stdafx.obj
          x64\Debug\VOI.obj
-         Imitator_prototype.vcxproj -> C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\x64\Debug\Imitator_prototype.exe
-     1>Сборка проекта "C:\Users\Alexey\documents\visual studio 2013\Projects\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" завершена (целевые объекты Build).
+         Imitator_prototype.vcxproj -> C:\Users\Никита\Documents\Teamlab\Imitator_prototype\x64\Debug\Imitator_prototype.exe
+     1>Done Building Project "C:\Users\Никита\Documents\Teamlab\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" (Rebuild target(s)).
 
-Сборка успешно завершена.
+Build succeeded.
 
-Затраченное время: 00:00:00.43
+Time Elapsed 00:00:03.44
