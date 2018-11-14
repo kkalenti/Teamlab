@@ -22,7 +22,7 @@ function varargout = untitled(varargin)
 
 % Edit the above text to modify the response to help untitled
 
-% Last Modified by GUIDE v2.5 10-Nov-2018 17:15:45
+% Last Modified by GUIDE v2.5 13-Nov-2018 19:38:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,7 +59,7 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 % Добавление пути для вспомогательных функций
-  path(path,'C:\Users\kosti\Desktop\teamlab\Общий проект\MATLAB\Программа\Functions');
+path(path,'C:\Users\kosti\Desktop\teamlab\Общий проект\MATLAB\Программа\Functions');
 
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -75,46 +75,17 @@ function varargout = untitled_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
-string = get(hObject,'String');
-
-informationAssigning(string);
-defaultSetting(handles);
-set(hObject,'Enable','off');
-set(handles.pushbutton1,'Enable','off');
-
-% --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-string = get(handles.edit1,'String');
+file = uigetfile;
 
-informationAssigning(string);
+informationAssigning(file);
 defaultSetting(handles);
 set(hObject,'Enable','off');
-set(handles.edit1,'Enable','off');
 
 % --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, eventdata, handles)
