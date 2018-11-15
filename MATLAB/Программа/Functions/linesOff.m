@@ -1,9 +1,10 @@
 % --- Убираются все линии с графика
 function linesOff()
     realPlot = evalin('base','realPlot');
+    realIndex = evalin('base','realIndex');
     voiPlot = evalin('base','voiPlot');
     
-    setLinesOff(realPlot);
+    setLinesOff(realPlot(realIndex));
     setLinesOff(voiPlot);
 
 % --- Скрытие линий графика

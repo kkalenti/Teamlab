@@ -83,6 +83,8 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 file = uigetfile;
 
+
+
 set(handles.text6,'String',file);
 informationAssigning(file);
 defaultSetting(handles);
@@ -112,31 +114,30 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
-realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.coordinate,'Visible','on');
+            set(realPlot.ch1.coordinate,'Visible','on');
             set(voiPlot.ch1.coordinate,'Visible','on');
         else
-            set(realPlot(realIndex).ch1.coordinate,'Visible','off');
+            set(realPlot.ch1.coordinate,'Visible','off');
             set(voiPlot.ch1.coordinate,'Visible','off');
         end
     case 2
         if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.speed,'Visible','on');
+            set(realPlot.ch1.speed,'Visible','on');
             set(voiPlot.ch1.speed,'Visible','on');
         else
-            set(realPlot(realIndex).ch1.speed,'Visible','off');
+            set(realPlot.ch1.speed,'Visible','off');
             set(voiPlot.ch1.speed,'Visible','off');
         end
     case 3
         if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.acceleration,'Visible','on');
+            set(realPlot.ch1.acceleration,'Visible','on');
             set(voiPlot.ch1.acceleration,'Visible','on');
         else
-            set(realPlot(realIndex).ch1.acceleration,'Visible','off');
+            set(realPlot.ch1.acceleration,'Visible','off');
             set(voiPlot.ch1.acceleration,'Visible','off');
         end
 end
@@ -157,31 +158,30 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
-realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.coordinate,'Visible','on');
+            set(realPlot.ch2.coordinate,'Visible','on');
             set(voiPlot.ch2.coordinate,'Visible','on');
         else
-            set(realPlot(realIndex).ch2.coordinate,'Visible','off');
+            set(realPlot.ch2.coordinate,'Visible','off');
             set(voiPlot.ch2.coordinate,'Visible','off');
         end
     case 2
         if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.speed,'Visible','on');
+            set(realPlot.ch2.speed,'Visible','on');
             set(voiPlot.ch2.speed,'Visible','on');
         else
-            set(realPlot(realIndex).ch2.speed,'Visible','off');
+            set(realPlot.ch2.speed,'Visible','off');
             set(voiPlot.ch2.speed,'Visible','off');
         end
     case 3
         if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.acceleration,'Visible','on');
+            set(realPlot.ch2.acceleration,'Visible','on');
             set(voiPlot.ch2.acceleration,'Visible','on');
         else
-            set(realPlot(realIndex).ch2.acceleration,'Visible','off');
+            set(realPlot.ch2.acceleration,'Visible','off');
             set(voiPlot.ch2.acceleration,'Visible','off');
         end
 end
@@ -202,31 +202,30 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
-realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox3 == 1 
             set(realPlot(realIndex).ch3.coordinate,'Visible','on');
-            set(voiPlot.ch3.coordinate,'Visible','on');
+            set(voiPlotNow.ch3.coordinate,'Visible','on');
         else
-            set(realPlot(realIndex).ch3.coordinate,'Visible','off');
+            set(realPlot.ch3.coordinate,'Visible','off');
             set(voiPlot.ch3.coordinate,'Visible','off');
         end
     case 2
         if checkbox3 == 1 
-            set(realPlot(realIndex).ch3.speed,'Visible','on');
+            set(realPlot.ch3.speed,'Visible','on');
             set(voiPlot.ch3.speed,'Visible','on');
         else
-            set(realPlot(realIndex).ch3.speed,'Visible','off');
+            set(realPlot.ch3.speed,'Visible','off');
             set(voiPlot.ch3.speed,'Visible','off');
         end
     case 3
         if checkbox3 == 1 
-            set(realPlot(realIndex).ch3.acceleration,'Visible','on');
+            set(realPlot.ch3.acceleration,'Visible','on');
             set(voiPlot.ch3.acceleration,'Visible','on');
         else
-            set(realPlot(realIndex).ch3.acceleration,'Visible','off');
+            set(realPlot.ch3.acceleration,'Visible','off');
             set(voiPlot.ch3.acceleration,'Visible','off');
         end
 end
