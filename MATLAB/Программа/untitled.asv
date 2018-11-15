@@ -83,8 +83,6 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 file = uigetfile;
 
-
-
 set(handles.text6,'String',file);
 informationAssigning(file);
 defaultSetting(handles);
@@ -114,31 +112,32 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
+realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox1 == 1 
-            set(realPlot.ch1.coordinate,'Visible','on');
-            set(voiPlot.ch1.coordinate,'Visible','on');
+            set(realPlot(realIndex).ch1.coordinate,'Visible','on');
+            set(voiPlot(voiIndex).ch1.coordinate,'Visible','on');
         else
-            set(realPlot.ch1.coordinate,'Visible','off');
-            set(voiPlot.ch1.coordinate,'Visible','off');
+            set(realPlot(realIndex).ch1.coordinate,'Visible','off');
+            set(voiPlot(voiIndex).ch1.coordinate,'Visible','off');
         end
     case 2
         if checkbox1 == 1 
-            set(realPlot.ch1.speed,'Visible','on');
-            set(voiPlot.ch1.speed,'Visible','on');
+            set(realPlot(realIndex).ch1.speed,'Visible','on');
+            set(voiPlot(voiIndex).ch1.speed,'Visible','on');
         else
-            set(realPlot.ch1.speed,'Visible','off');
-            set(voiPlot.ch1.speed,'Visible','off');
+            set(realPlot(realIndex).ch1.speed,'Visible','off');
+            set(voiPlot(voiIndex).ch1.speed,'Visible','off');
         end
     case 3
         if checkbox1 == 1 
-            set(realPlot.ch1.acceleration,'Visible','on');
-            set(voiPlot.ch1.acceleration,'Visible','on');
+            set(realPlot(realIndex).ch1.acceleration,'Visible','on');
+            set(voiPlot(voiIndex).ch1.acceleration,'Visible','on');
         else
-            set(realPlot.ch1.acceleration,'Visible','off');
-            set(voiPlot.ch1.acceleration,'Visible','off');
+            set(realPlot(realIndex).ch1.acceleration,'Visible','off');
+            set(voiPlot(voiIndex).ch1.acceleration,'Visible','off');
         end
 end
 % Update handles structure
@@ -158,31 +157,32 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
+realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox2 == 1 
-            set(realPlot.ch2.coordinate,'Visible','on');
-            set(voiPlot.ch2.coordinate,'Visible','on');
+            set(realPlot(realIndex).ch2.coordinate,'Visible','on');
+            set(voiPlot(voiIndex).ch2.coordinate,'Visible','on');
         else
-            set(realPlot.ch2.coordinate,'Visible','off');
-            set(voiPlot.ch2.coordinate,'Visible','off');
+            set(realPlot(realIndex).ch2.coordinate,'Visible','off');
+            set(voiPlot(voiIndex).ch2.coordinate,'Visible','off');
         end
     case 2
         if checkbox2 == 1 
-            set(realPlot.ch2.speed,'Visible','on');
-            set(voiPlot.ch2.speed,'Visible','on');
+            set(realPlot(realIndex).ch2.speed,'Visible','on');
+            set(voiPlot(voiIndex).ch2.speed,'Visible','on');
         else
-            set(realPlot.ch2.speed,'Visible','off');
-            set(voiPlot.ch2.speed,'Visible','off');
+            set(realPlot(realIndex).ch2.speed,'Visible','off');
+            set(voiPlot(voiIndex).ch2.speed,'Visible','off');
         end
     case 3
         if checkbox2 == 1 
-            set(realPlot.ch2.acceleration,'Visible','on');
-            set(voiPlot.ch2.acceleration,'Visible','on');
+            set(realPlot(realIndex).ch2.acceleration,'Visible','on');
+            set(voiPlot(voiIndex).ch2.acceleration,'Visible','on');
         else
-            set(realPlot.ch2.acceleration,'Visible','off');
-            set(voiPlot.ch2.acceleration,'Visible','off');
+            set(realPlot(realIndex).ch2.acceleration,'Visible','off');
+            set(voiPlot(voiIndex).ch2.acceleration,'Visible','off');
         end
 end
 % Update handles structure
@@ -202,31 +202,32 @@ contents = get(handles.popupmenu1, 'Value');
 
 realPlot = evalin('base','realPlot');
 voiPlot = evalin('base','voiPlot');
+realIndex = evalin('base','realIndex');
 
 switch contents 
     case 1
         if checkbox3 == 1 
             set(realPlot(realIndex).ch3.coordinate,'Visible','on');
-            set(voiPlotNow.ch3.coordinate,'Visible','on');
+            set(voiPlot(voiIndex).ch3.coordinate,'Visible','on');
         else
-            set(realPlot.ch3.coordinate,'Visible','off');
-            set(voiPlot.ch3.coordinate,'Visible','off');
+            set(realPlot(realIndex).ch3.coordinate,'Visible','off');
+            set(voiPlot(voiIndex).ch3.coordinate,'Visible','off');
         end
     case 2
         if checkbox3 == 1 
-            set(realPlot.ch3.speed,'Visible','on');
-            set(voiPlot.ch3.speed,'Visible','on');
+            set(realPlot(realIndex).ch3.speed,'Visible','on');
+            set(voiPlot(voiIndex).ch3.speed,'Visible','on');
         else
-            set(realPlot.ch3.speed,'Visible','off');
-            set(voiPlot.ch3.speed,'Visible','off');
+            set(realPlot(realIndex).ch3.speed,'Visible','off');
+            set(voiPlot(voiIndex).ch3.speed,'Visible','off');
         end
     case 3
         if checkbox3 == 1 
-            set(realPlot.ch3.acceleration,'Visible','on');
-            set(voiPlot.ch3.acceleration,'Visible','on');
+            set(realPlot(realIndex).ch3.acceleration,'Visible','on');
+            set(voiPlot(voiIndex).ch3.acceleration,'Visible','on');
         else
-            set(realPlot.ch3.acceleration,'Visible','off');
-            set(voiPlot.ch3.acceleration,'Visible','off');
+            set(realPlot(realIndex).ch3.acceleration,'Visible','off');
+            set(voiPlot(voiIndex).ch3.acceleration,'Visible','off');
         end
 end
 
@@ -466,8 +467,13 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 
 % Изменение пунктов меню и настройка под них графика
 contents = get(hObject, 'Value');
+POI = get(handles.checkbox4,'Value');
+Noize = get(handles.checkbox8,'Value');
+Strob = get(handles.checkbox12,'Value');
 
 voiPlot = evalin('base','voiPlot');
+voiIndex = evalin('base','voiIndex');
+realPlot = evalin('base','realPlot');
 realIndex = evalin('base','realIndex');
 switch contents 
     case 1
@@ -479,7 +485,8 @@ switch contents
         ylabel('Координаты, m');
         legend([realPlot(realIndex).ch1.coordinate,realPlot(realIndex).ch2.coordinate,...
             realPlot(realIndex).ch3.coordinate,...
-            voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate]);
+            voiPlot(voiIndex).ch1.coordinate,voiPlot(voiIndex).ch2.coordinate,...
+            voiPlot(voiIndex).ch3.coordinate]);
          % Чекбоксы помех и ПОИ становятся доступны
          set(handles.checkbox4,'Enable','on');
          set(handles.checkbox8,'Enable','on');
@@ -492,22 +499,31 @@ switch contents
         % Задаются имя отсчета координат и легенда
         ylabel('Скорость, m/s');
         legend([realPlot(realIndex).ch1.speed,realPlot(realIndex).ch2.speed,realPlot(realIndex).ch3.speed,...
-            voiPlot.ch1.speed,voiPlot.ch2.speed,voiPlot.ch3.speed]);
+            voiPlot(voiIndex).ch1.speed,voiPlot(voiIndex).ch2.speed,voiPlot(voiIndex).ch3.speed]);
+        
         % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
-        deletePOIPlot();
-        checkboxPOIOff(handles);
-        set(handles.uibuttongroup4,'Visible','off');
+        if (POI == 1)
+            deletePOIPlot();
+            checkboxPOIOff(handles);
+            set(handles.uibuttongroup4,'Visible','off');
+        end
+        
         % Чекбокс помех становится недоступен, убирается вся информация о помехах
         set(handles.checkbox8,'Enable','off','Value',0);
-        deleteNoizePlot();
-        checkboxNoizeOff(handles);
-        set(handles.uibuttongroup5,'Visible','off');
+        if(Noize == 1)
+            deleteNoizePlot();
+            checkboxNoizeOff(handles);
+            set(handles.uibuttongroup5,'Visible','off');
+        end
         
+        % Чекбокс строб становится недоступен, убирается вся информация о помехах
         set(handles.checkbox12,'Enable','off','Value',0);
-        deleteStrobPlot();
-        checkboxStrobOff(handles);
-        set(handles.uibuttongroup6,'Visible','off');
+        if(Strob == 1)
+            deleteStrobPlot();
+            checkboxStrobOff(handles);
+            set(handles.uibuttongroup6,'Visible','off');
+        end
     case 3
         % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
@@ -517,22 +533,32 @@ switch contents
         ylabel('Ускорение, m/s^2');
         legend([realPlot(realIndex).ch1.acceleration,realPlot(realIndex).ch2.acceleration,...
             realPlot(realIndex).ch3.acceleration,...
-            voiPlot.ch1.acceleration,voiPlot.ch2.acceleration,voiPlot.ch3.acceleration]);
+            voiPlot(voiIndex).ch1.acceleration,voiPlot(voiIndex).ch2.acceleration,...
+            voiPlot(voiIndex).ch3.acceleration]);
+        
         % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
-        deletePOIPlot();
-        checkboxPOIOff(handles);
-        set(handles.uibuttongroup4,'Visible','off');
+        if (POI == 1)
+            deletePOIPlot();
+            checkboxPOIOff(handles);
+            set(handles.uibuttongroup4,'Visible','off');
+        end
+        
         % Чекбокс помех становится недоступен, убирается вся информация о помехах
         set(handles.checkbox8,'Enable','off','Value',0);
-        deleteNoizePlot();
-        checkboxNoizeOff(handles);
-        set(handles.uibuttongroup5,'Visible','off');
+        if(Noize == 1)
+            deleteNoizePlot();
+            checkboxNoizeOff(handles);
+            set(handles.uibuttongroup5,'Visible','off');
+        end
         
+        % Чекбокс строб становится недоступен, убирается вся информация о помехах
         set(handles.checkbox12,'Enable','off','Value',0);
-        deleteStrobPlot();
-        checkboxStrobOff(handles);
-        set(handles.uibuttongroup6,'Visible','off');
+        if(Strob == 1)
+            deleteStrobPlot();
+            checkboxStrobOff(handles);
+            set(handles.uibuttongroup6,'Visible','off');
+        end
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -560,6 +586,7 @@ contents = get(hObject,'Value');
 
 Real = evalin('base', 'Real');
 realSize = size(Real);
+
 linesOff();
 checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
@@ -596,12 +623,14 @@ contents = get(hObject,'Value');
 
 VOI = evalin('base', 'VOI');
 voiSize = size(VOI);
+
 linesOff();
 checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
 for i = 1 : voiSize(2)
     if(i == contents)
-        voiCheckboxAssignin(VOI(i));
+        voiIndex = i;
+        assignin('base','voiIndex',voiIndex);
         makeLegendAfterListbox(handles);
         break;
     end

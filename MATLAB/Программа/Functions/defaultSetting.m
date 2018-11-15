@@ -14,14 +14,15 @@ Real = evalin('base','Real');
 VOI = evalin('base','VOI');
 
 allRealCheckboxAssignin(Real);
-voiCheckboxAssignin(VOI(1));
+allVoiCheckboxAssignin(VOI);
 
 realPlot = evalin('base','realPlot');
-realIndex = 1;
-assignin('base','realIndex',realIndex);
+firstIndex = 1;
+assignin('base','realIndex',firstIndex);
 voiPlot = evalin('base','voiPlot');
+assignin('base','voiIndex',firstIndex);
 
 setListboxes(handles);
 
 legend([realPlot(1).ch1.coordinate,realPlot(1).ch2.coordinate,realPlot(1).ch3.coordinate,...
-    voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate]);
+    voiPlot(1).ch1.coordinate,voiPlot(1).ch2.coordinate,voiPlot(1).ch3.coordinate]);

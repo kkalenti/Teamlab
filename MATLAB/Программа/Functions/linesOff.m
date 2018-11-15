@@ -3,9 +3,10 @@ function linesOff()
     realPlot = evalin('base','realPlot');
     realIndex = evalin('base','realIndex');
     voiPlot = evalin('base','voiPlot');
+    voiIndex = evalin('base','voiIndex');
     
     setLinesOff(realPlot(realIndex));
-    setLinesOff(voiPlot);
+    setLinesOff(voiPlot(voiIndex));
 
 % --- Скрытие линий графика
 function setLinesOff(inform)
