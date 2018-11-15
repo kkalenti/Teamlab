@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="..\hungarian-algorithm\Hungarian.cpp" />
     <ClCompile Include="BaseTraceHypo.cpp" />
+    <ClCompile Include="FilterKalman.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Measurements.cpp" />
     <ClCompile Include="ResultOfScan.cpp" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="..\hungarian-algorithm\Hungarian.h" />
     <ClInclude Include="BaseTraceHypo.h" />
+    <ClInclude Include="FilterKalman.h" />
     <ClInclude Include="stadfx.h" />
     <ClInclude Include="Measurements.h" />
     <ClInclude Include="ResultOfScan.h" />

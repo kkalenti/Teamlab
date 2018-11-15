@@ -11,15 +11,16 @@ protected:
 	int Nmiss;
 	//bool UpdateWithM = true; //проверяем способ обновления трассы - через измерения или предсказанное значение перенесется в обновление
 	//mutable mat Pconst = zeros<mat>(N, N);
-	mat P=zeros<mat>(N,N);
-	colvec x=zeros<vec>(N);
-	mat Q = zeros<mat>(N, N);
+	mat P=zeros(N,N);
+	colvec x=zeros(N);
+	mat Q = zeros(N, N);
 public:
 	CBaseTraceHypo();
 	~CBaseTraceHypo();
 	void IncNmiss();
 	void NullNmiss(); //зануление при обновлении 
 	const int GetNmiss();
+	colvec &GetState_X();
 	//void UpdateState(mat P, colvec x); //для обновления по предсказаниям или измерениям
 	//bool GetUpdateWithM();
 };

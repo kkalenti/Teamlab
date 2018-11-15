@@ -24,6 +24,12 @@ const int CBaseTraceHypo::GetNmiss()
 	return this->Nmiss;
 }
 
+colvec &CBaseTraceHypo::GetState_X()
+{
+	return this->x;
+}
+
+
 ////const bool CBaseTraceHypo::GetUpdateWithM()
 //{
 //	return this->GetUpdateWithM;

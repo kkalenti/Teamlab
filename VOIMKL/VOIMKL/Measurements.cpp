@@ -17,12 +17,14 @@ CMeasurements::CMeasurements(CVector coordinates, double vr, double time):CResul
 {
 	this->Nmiss = 0;
 	this->R = get_Rconst();
+	this->reservedForUpdate = false;
 }
 
 CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.detectionTime)
 {
 	this->Nmiss = 0;
 	this->R = get_Rconst();
+	this->reservedForUpdate = false;
 }
 
 CMeasurements::~CMeasurements()
@@ -48,4 +50,14 @@ double CMeasurements::FromDekartToAzimut()
 const mat &CMeasurements::GetR()
 {
 	return this->R;
+}
+
+void CMeasurements::SetReservedForUpdate()
+{
+	this->reservedForUpdate = true;
+}
+
+const bool CMeasurements::GetReservedForUpdate()
+{
+	return this->reservedForUpdate;
 }

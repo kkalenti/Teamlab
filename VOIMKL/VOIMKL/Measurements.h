@@ -8,6 +8,7 @@ class CMeasurements: public CResultOfScan{
 private:
 	int Nmiss;
 	mat R=zeros<mat>(M,M); //double
+	bool reservedForUpdate;
 public:
 	CMeasurements(CVector coordinates, double vr, double time);
 	CMeasurements::CMeasurements(CResultOfScan &newres);
@@ -16,5 +17,7 @@ public:
 	const int GetNmiss();
 	double FromDekartToAzimut();
 	const mat &GetR();
+	void SetReservedForUpdate();
+	const bool GetReservedForUpdate();
 };
 #endif Measurements_H
