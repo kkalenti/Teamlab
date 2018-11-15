@@ -22,7 +22,7 @@ function varargout = untitled(varargin)
 
 % Edit the above text to modify the response to help untitled
 
-% Last Modified by GUIDE v2.5 13-Nov-2018 19:38:00
+% Last Modified by GUIDE v2.5 14-Nov-2018 19:10:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -83,9 +83,22 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 file = uigetfile;
 
+
+
+set(handles.text6,'String',file);
 informationAssigning(file);
 defaultSetting(handles);
 set(hObject,'Enable','off');
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+OrigDlgH = ancestor(hObject, 'figure');
+delete(OrigDlgH);
+untitled;
 
 % --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, eventdata, handles)
@@ -465,8 +478,7 @@ switch contents
         % Задаются имя отсчета координат и легенда
         ylabel('Координаты, m');
         legend([realPlot.ch1.coordinate,realPlot.ch2.coordinate,realPlot.ch3.coordinate,...
-             voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate,],...
-             'Эталон x','Эталон y','Эталон z','ВОИ x','ВОИ y','ВОИ z' );
+             voiPlot.ch1.coordinate,voiPlot.ch2.coordinate,voiPlot.ch3.coordinate]);
          % Чекбоксы помех и ПОИ становятся доступны
          set(handles.checkbox4,'Enable','on');
          set(handles.checkbox8,'Enable','on');
@@ -479,8 +491,7 @@ switch contents
         % Задаются имя отсчета координат и легенда
         ylabel('Скорость, m/s');
         legend([realPlot.ch1.speed,realPlot.ch2.speed,realPlot.ch3.speed,...
-            voiPlot.ch1.speed,voiPlot.ch2.speed,voiPlot.ch3.speed,],...
-            'Эталон Vx','Эталон Vy','Эталон Vz','ВОИ Vx','ВОИ Vy','ВОИ Vz' );
+            voiPlot.ch1.speed,voiPlot.ch2.speed,voiPlot.ch3.speed]);
         % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
         deletePOIPlot();
@@ -504,8 +515,7 @@ switch contents
         % Задаются имя отсчета координат и легенда
         ylabel('Ускорение, m/s^2');
         legend([realPlot.ch1.acceleration,realPlot.ch2.acceleration,realPlot.ch3.acceleration,...
-            voiPlot.ch1.acceleration,voiPlot.ch2.acceleration,voiPlot.ch3.acceleration,],...
-            'Эталон ax','Эталон ay','Эталон az','ВОИ ax','ВОИ ay','ВОИ az' );
+            voiPlot.ch1.acceleration,voiPlot.ch2.acceleration,voiPlot.ch3.acceleration]);
         % Чекбокс ПОИ становится недоступен, убирается вся информация о ПОИ
         set(handles.checkbox4,'Enable','off','Value',0);
         deletePOIPlot();
