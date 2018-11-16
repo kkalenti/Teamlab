@@ -59,7 +59,8 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 % Добавление пути для вспомогательных функций
-path(path,'C:\Users\kosti\Desktop\teamlab\Общий проект\MATLAB\Программа\Functions');
+
+path(path,'Functions');
 
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
