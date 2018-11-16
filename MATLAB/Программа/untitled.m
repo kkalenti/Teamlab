@@ -22,7 +22,7 @@ function varargout = untitled(varargin)
 
 % Edit the above text to modify the response to help untitled
 
-% Last Modified by GUIDE v2.5 14-Nov-2018 19:10:55
+% Last Modified by GUIDE v2.5 15-Nov-2018 20:19:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -107,41 +107,36 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
 
 % Изменение графика в соответствии чекбоксу и меню
-checkbox1 = get(handles.checkbox1,'Value');
-contents = get(handles.popupmenu1, 'Value');
+toogle2 = get(handles.togglebutton2,'Value');
+toogle3 = get(handles.togglebutton3,'Value');
 
 realPlot = evalin('base','realPlot');
 realIndex = evalin('base','realIndex');
+
 voiPlot = evalin('base','voiPlot');
 voiIndex = evalin('base','voiIndex');
 
+if(toogle2 == 1)
+    realSize = size(realPlot);
+    for i = 1 : realSize(2)
+        ch1Plot(handles,realPlot(i));
+    end
 
-switch contents 
-    case 1
-        if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.coordinate,'Visible','on');
-            set(voiPlot(voiIndex).ch1.coordinate,'Visible','on');
-        else
-            set(realPlot(realIndex).ch1.coordinate,'Visible','off');
-            set(voiPlot(voiIndex).ch1.coordinate,'Visible','off');
-        end
-    case 2
-        if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.speed,'Visible','on');
-            set(voiPlot(voiIndex).ch1.speed,'Visible','on');
-        else
-            set(realPlot(realIndex).ch1.speed,'Visible','off');
-            set(voiPlot(voiIndex).ch1.speed,'Visible','off');
-        end
-    case 3
-        if checkbox1 == 1 
-            set(realPlot(realIndex).ch1.acceleration,'Visible','on');
-            set(voiPlot(voiIndex).ch1.acceleration,'Visible','on');
-        else
-            set(realPlot(realIndex).ch1.acceleration,'Visible','off');
-            set(voiPlot(voiIndex).ch1.acceleration,'Visible','off');
-        end
 end
+
+if(toogle3 == 1)
+    voiSize = size(voiPlot);
+    for i = 1 : voiSize(2)
+        ch1Plot(handles,voiPlot(i));
+    end
+
+end
+
+if(toogle2 == 0 && toogle3 == 0)
+ch1Plot(handles,voiPlot(voiIndex));
+ch1Plot(handles,realPlot(realIndex));
+end
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -154,39 +149,34 @@ function checkbox2_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox2
 
 % Изменение графика в соответствии чекбоксу и меню
-checkbox2 = get(handles.checkbox2,'Value');
-contents = get(handles.popupmenu1, 'Value');
+toogle2 = get(handles.togglebutton2,'Value');
+toogle3 = get(handles.togglebutton3,'Value');
 
 realPlot = evalin('base','realPlot');
 realIndex = evalin('base','realIndex');
+
 voiPlot = evalin('base','voiPlot');
 voiIndex = evalin('base','voiIndex');
 
-switch contents 
-    case 1
-        if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.coordinate,'Visible','on');
-            set(voiPlot(voiIndex).ch2.coordinate,'Visible','on');
-        else
-            set(realPlot(realIndex).ch2.coordinate,'Visible','off');
-            set(voiPlot(voiIndex).ch2.coordinate,'Visible','off');
-        end
-    case 2
-        if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.speed,'Visible','on');
-            set(voiPlot(voiIndex).ch2.speed,'Visible','on');
-        else
-            set(realPlot(realIndex).ch2.speed,'Visible','off');
-            set(voiPlot(voiIndex).ch2.speed,'Visible','off');
-        end
-    case 3
-        if checkbox2 == 1 
-            set(realPlot(realIndex).ch2.acceleration,'Visible','on');
-            set(voiPlot(voiIndex).ch2.acceleration,'Visible','on');
-        else
-            set(realPlot(realIndex).ch2.acceleration,'Visible','off');
-            set(voiPlot(voiIndex).ch2.acceleration,'Visible','off');
-        end
+if(toogle2 == 1)
+    realSize = size(realPlot);
+    for i = 1 : realSize(2)
+        ch2Plot(handles,realPlot(i));
+    end
+
+end
+
+if(toogle3 == 1)
+    voiSize = size(voiPlot);
+    for i = 1 : voiSize(2)
+        ch2Plot(handles,voiPlot(i));
+    end
+
+end
+
+if(toogle2 == 0 && toogle3 == 0)
+ch2Plot(handles,voiPlot(voiIndex));
+ch2Plot(handles,realPlot(realIndex));
 end
 % Update handles structure
 guidata(hObject, handles);
@@ -199,40 +189,34 @@ function checkbox3_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox3
 
-% Изменение графика в соответствии чекбоксу и меню
-checkbox3 = get(handles.checkbox3,'Value');
-contents = get(handles.popupmenu1, 'Value');
+toogle2 = get(handles.togglebutton2,'Value');
+toogle3 = get(handles.togglebutton3,'Value');
 
 realPlot = evalin('base','realPlot');
 realIndex = evalin('base','realIndex');
+
 voiPlot = evalin('base','voiPlot');
 voiIndex = evalin('base','voiIndex');
 
-switch contents 
-    case 1
-        if checkbox3 == 1 
-            set(realPlot(realIndex).ch3.coordinate,'Visible','on');
-            set(voiPlot(voiIndex).ch3.coordinate,'Visible','on');
-        else
-            set(realPlot(realIndex).ch3.coordinate,'Visible','off');
-            set(voiPlot(voiIndex).ch3.coordinate,'Visible','off');
-        end
-    case 2
-        if checkbox3 == 1 
-            set(realPlot(realIndex).ch3.speed,'Visible','on');
-            set(voiPlot(voiIndex).ch3.speed,'Visible','on');
-        else
-            set(realPlot(realIndex).ch3.speed,'Visible','off');
-            set(voiPlot(voiIndex).ch3.speed,'Visible','off');
-        end
-    case 3
-        if checkbox3 == 1 
-            set(realPlot(realIndex).ch3.acceleration,'Visible','on');
-            set(voiPlot(voiIndex).ch3.acceleration,'Visible','on');
-        else
-            set(realPlot(realIndex).ch3.acceleration,'Visible','off');
-            set(voiPlot(voiIndex).ch3.acceleration,'Visible','off');
-        end
+if(toogle2 == 1)
+    realSize = size(realPlot);
+    for i = 1 : realSize(2)
+        ch3Plot(handles,realPlot(i));
+    end
+
+end
+
+if(toogle3 == 1)
+    voiSize = size(voiPlot);
+    for i = 1 : voiSize(2)
+        ch3Plot(handles,voiPlot(i));
+    end
+
+end
+
+if(toogle2 == 0 && toogle3 == 0)
+ch3Plot(handles,voiPlot(voiIndex));
+ch3Plot(handles,realPlot(realIndex));
 end
 
 % --- Executes on button press in checkbox4.
@@ -477,14 +461,23 @@ Strob = get(handles.checkbox12,'Value');
 
 voiPlot = evalin('base','voiPlot');
 voiIndex = evalin('base','voiIndex');
+voiSize = size(voiPlot);
+
 realPlot = evalin('base','realPlot');
 realIndex = evalin('base','realIndex');
+realSize = size(realPlot);
+
 switch contents 
     case 1
         % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
-        linesOff();
-        legendOff();
+        legend Off;
+        for i = 1 : realSize(2)
+            setLinesOff(realPlot(i))
+        end
+        for i = 1 : voiSize(2)
+            setLinesOff(voiPlot(i))
+        end
         % Задаются имя отсчета координат и легенда
         ylabel('Координаты, m');
         legend([realPlot(realIndex).ch1.coordinate,realPlot(realIndex).ch2.coordinate,...
@@ -498,8 +491,13 @@ switch contents
     case 2
         % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
-        linesOff();
-        legendOff();
+        for i = 1 : realSize(2)
+            setLinesOff(realPlot(i))
+        end
+        for i = 1 : voiSize(2)
+            setLinesOff(voiPlot(i))
+        end
+        legend Off;
         % Задаются имя отсчета координат и легенда
         ylabel('Скорость, m/s');
         legend([realPlot(realIndex).ch1.speed,realPlot(realIndex).ch2.speed,realPlot(realIndex).ch3.speed,...
@@ -531,8 +529,13 @@ switch contents
     case 3
         % Обнуление данных графика(Чекбоксы, рисунок на графике, легенда)
         checkboxOff(handles);
-        linesOff();
-        legendOff();
+        for i = 1 : realSize(2)
+            setLinesOff(realPlot(i))
+        end
+        for i = 1 : voiSize(2)
+            setLinesOff(voiPlot(i))
+        end
+        legend Off;
         % Задаются имя отсчета координат и легенда
         ylabel('Ускорение, m/s^2');
         legend([realPlot(realIndex).ch1.acceleration,realPlot(realIndex).ch2.acceleration,...
@@ -651,4 +654,101 @@ function listbox2_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in togglebutton2.
+function togglebutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of togglebutton2
+content = get(hObject,'Value');
+
+realPlot = evalin('base','realPlot');
+realSize = size(realPlot);
+realIndex = evalin('base','realIndex');
+
+voiPlot = evalin('base','voiPlot');
+voiSize = size(voiPlot);
+voiIndex = evalin('base','voiIndex');
+
+if (content == 1)
+    linesOff();
+    for i = 1 : realSize(2)
+        ch1Plot(handles,realPlot(i));
+        ch2Plot(handles,realPlot(i));
+        ch3Plot(handles,realPlot(i));
+    end
+    set(handles.listbox1,'Enable','Off');
+    set(handles.listbox2,'Enable','Off');
+    set(handles.togglebutton3,'Enable','Off');
+else
+    for i = 1 : realSize(2)
+        if(realIndex == i)
+            continue;
+        end
+        setLinesOff(realPlot(i))
+    end
+    for i = 1 : voiSize(2)
+        if(voiIndex == i)
+            ch1Plot(handles,voiPlot(i));
+            ch2Plot(handles,voiPlot(i));
+            ch3Plot(handles,voiPlot(i));
+            break;
+        end
+    end
+    set(handles.listbox1,'Enable','On');
+    set(handles.listbox2,'Enable','On');
+    set(handles.togglebutton3,'Enable','On');
+end
+
+
+% --- Executes on button press in togglebutton3.
+function togglebutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of togglebutton3
+
+content = get(hObject,'Value');
+
+voiPlot = evalin('base','voiPlot');
+voiSize = size(voiPlot);
+voiIndex = evalin('base','voiIndex');
+
+realPlot = evalin('base','realPlot');
+realSize = size(realPlot);
+realIndex = evalin('base','realIndex');
+
+if (content == 1)
+    linesOff();
+    for i = 1 : voiSize(2)
+        ch1Plot(handles,voiPlot(i));
+        ch2Plot(handles,voiPlot(i));
+        ch3Plot(handles,voiPlot(i));
+    end
+    set(handles.listbox1,'Enable','Off');
+    set(handles.listbox2,'Enable','Off');
+    set(handles.togglebutton2,'Enable','Off');
+else
+    for i = 1 : voiSize(2)
+        if(voiIndex == i)
+            continue;
+        end
+        setLinesOff(voiPlot(i))
+    end
+    for i = 1 : realSize(2)
+        if(realIndex == i)
+            ch1Plot(handles,realPlot(i));
+            ch2Plot(handles,realPlot(i));
+            ch3Plot(handles,realPlot(i));
+            break;
+        end
+    end
+    set(handles.listbox1,'Enable','On');
+    set(handles.listbox2,'Enable','On');
+    set(handles.togglebutton2,'Enable','On');
 end
