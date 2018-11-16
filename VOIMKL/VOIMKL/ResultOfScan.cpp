@@ -9,5 +9,6 @@ CResultOfScan::CResultOfScan(CVector coordinates, double vr, double time)
 	detectionTime = time;
 }
 
+
 CResultOfScan::~CResultOfScan()
 {}

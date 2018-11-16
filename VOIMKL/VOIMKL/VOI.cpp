@@ -48,7 +48,7 @@ void CVOI::associate()
 			{
 				//FK обновим эту i трассу измерением из assigment[i]
 				BankOfSection[CurrentSector].SetBankTrace()[i].NullNmiss();
-				BankOfSection[CurrentSector].SetBankMeasurements()[i].SetReservedForUpdate();
+				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
 			}
 			else
 			{
@@ -84,6 +84,7 @@ void CVOI::associate()
 				//FK обновим эту i гипотезу измерением из assigment[i]
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncApprove();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNmiss();
+				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
 			}
 			else
 			{
@@ -93,7 +94,7 @@ void CVOI::associate()
 			}
 		}
 	}
-	//BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate(); -ИЛИ НЕ НАДО УДАЛЯТЬ ИЗМЕРЕНИЯ ПОСЛЕ ГИПОТЕЗ?
+	BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
 	{
 		int size = BankOfSection[CurrentSector].GetBankMeasurements().size();
@@ -101,20 +102,26 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < size; j++)
 			{
-				///FK - Измерениеi /Измерениеj вернул невязку v и ее ковариацию S
-				colvec v;//
-				mat S; //потом это будет возвращать FK
-				double D = countNorma(v, S);
-				if (D <= constSimilarityRate)
+				if (i < j) //чтобы не сравнивать одинакове пары 
 				{
-					CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
-					CHypo newHypo(std::move(mes));
-					//FK обновим эту гипотезу измерением
-					BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
+					///FK - Измерениеi /Измерениеj вернул невязку v и ее ковариацию S
+					colvec v;//
+					mat S; //потом это будет возвращать FK
+					double D = countNorma(v, S);
+					if (D <= constSimilarityRate)
+					{
+						CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
+						CHypo newHypo(std::move(mes));
+						//FK обновим эту гипотезу измерением j
+						BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
+						BankOfSection[CurrentSector].SetBankMeasurements()[i].SetReservedForUpdate();
+						BankOfSection[CurrentSector].SetBankMeasurements()[j].SetReservedForUpdate();
+					}
 				}
 			}
-		}			
+		}
 	}
+	BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	BankOfSection[CurrentSector].SectionHypoToTrace(); //переводим гипотезы в трассы
 	BankOfSection[CurrentSector].removeOutdatedObjects(); //удаляем то, что слишком долго лежит в хранилище
 }

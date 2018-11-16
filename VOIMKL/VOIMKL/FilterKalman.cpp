@@ -55,28 +55,31 @@ void CKalmanFilter::Prediction(double dt)
 	//this->P = F * P_0 * F.transpose() + U * Q * U.transpose();
 }
 
-void CKalmanFilter::Predict(CMeasurements firstMeasure, CMeasurements secondMeasure)
+void CKalmanFilter::Predict(CMeasurements firstMeasure, CMeasurements secondMeasure, mat & S_VOI, colvec & v_VOI)
 {
 	P = F * P_Const * F.t() + U * Q * U.t();
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
-	S = R_Meas + H * P * H.t();
+	S_VOI = R_Meas + H * P * H.t();
 //	v = firstMeasure.Coordinates - secondMeasure.Coordinates;
+	v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
 }
 
-void CKalmanFilter::Predict(CBaseTraceHypo Trace, CMeasurements Measure, double dt)
+colvec CKalmanFilter::Predict(CBaseTraceHypo TraceOrHypo, CMeasurements Measure, double dt)
 {
 	this->Dt = dt;
 	update_F(dt);
 	update_U(dt);
 
-	x_pred = F * Trace.GetState_X();
+	x_pred = F * TraceOrHypo.SetState_X();
 	//x_pred = F * x_0;
 	z_pred = H * x_pred;
 	//v = Measure.Coordinates - z_pred;
 
 
-	P = F * P * F.t() + U * Q * U.t();
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t();
 	S = R + H * P * H.t();
+
+	return v;
 }
 
 
@@ -103,24 +106,26 @@ void CKalmanFilter::Update()
 
 }
 
-void CKalmanFilter::UpdateMeasure(CBaseTraceHypo Trace)
+void CKalmanFilter::UpdateMeasure(CBaseTraceHypo TraceOrHypo, CMeasurements measurement)
 {
+	v = measurement.Getz() - x_pred;
 	W = P * H.t() * S.t();
 	P = P - W * S * W.i();
 	x_pred = x_pred + W * v;
 
-	Trace.NullNmiss();
+	//TraceOrHypo.NullNmiss();
 }
 
-void CKalmanFilter::UpdatePredict(CBaseTraceHypo Trace, double dt)
+//изменить функцию
+void CKalmanFilter::UpdatePredict(CBaseTraceHypo TraceOrHypo, double dt)
 {
 	update_F(dt);
 	update_U(dt);
 
-	this->x_pred = F * x_pred;
+	this->x_pred = F * x_pred;//Хранить в трейсилигипотеза предсказанное значение было бы глупо
 	this->P = F * P * F.t() + U * Q * U.t();
 
-	Trace.IncNmiss();
+	//Trace.IncNmiss();
 }
 
 colvec DecartToPolar(const colvec &c)
