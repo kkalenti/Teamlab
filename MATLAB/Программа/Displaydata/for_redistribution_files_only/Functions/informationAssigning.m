@@ -1,6 +1,5 @@
 % --- К рабочей среде привязыаются данные из файла
-function informationAssigning(name, path_my)
-    path(path,path_my);
+function informationAssigning(name)
     file = load (name);
     % --- Проверка на наличие эталоных данных в файле
     if isfield(file,'Real')

@@ -81,10 +81,10 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[file, path] = uigetfile;
+file = uigetfile;
 
 set(handles.text6,'String',file);
-informationAssigning(file, path);
+informationAssigning(file);
 defaultSetting(handles);
 set(hObject,'Enable','off');
 
