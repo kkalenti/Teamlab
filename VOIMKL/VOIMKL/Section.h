@@ -30,5 +30,6 @@ public:
 	std::vector<CMeasurements> &SetBankMeasurements();
 	const std::vector<CMeasurements> &GetBankMeasurements();
 	void SectionHypoToTrace();
+	void DeletMeasurementsAfterUpdate();
 };
 #endif // SECTION_H

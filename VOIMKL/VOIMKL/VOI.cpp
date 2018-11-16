@@ -32,7 +32,12 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				///FK - База/Измерения
+				///FK - Базаi /Измерениеj вернул невязку v и ее ковариацию S
+				colvec v;//
+				mat S; //потом это будет возвращать FK
+				double D = countNorma(v, S);
+				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
 		vector<int> assignment;
@@ -43,15 +48,16 @@ void CVOI::associate()
 			{
 				//FK обновим эту i трассу измерением из assigment[i]
 				BankOfSection[CurrentSector].SetBankTrace()[i].NullNmiss();
+				BankOfSection[CurrentSector].SetBankMeasurements()[i].SetReservedForUpdate();
 			}
 			else
 			{
-				//Обновляем с помощью предсказанного измерения
+				//FK Обновляем с помощью предсказанного измерения
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
 		}
 	}
-
+	BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	if (!BankOfSection[CurrentSector].GetBankHypo().empty())
 	{
 		int sizeRow = BankOfSection[CurrentSector].GetBankHypo().size();
@@ -61,7 +67,12 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-					///FK - База/Измерения
+				///FK - Базаi /Измерениеj вернул невязку v и ее ковариацию S
+				colvec v;//
+				mat S; //потом это будет возвращать FK
+				double D = countNorma(v, S);
+				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
 		vector<int> assignment;
@@ -82,42 +93,27 @@ void CVOI::associate()
 			}
 		}
 	}
-
+	//BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate(); -ИЛИ НЕ НАДО УДАЛЯТЬ ИЗМЕРЕНИЯ ПОСЛЕ ГИПОТЕЗ?
 	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
 	{
 		int size = BankOfSection[CurrentSector].GetBankMeasurements().size();
-		vector <vector<double>> MatrixSet(size, vector<double>(size, 0));
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
 			{
-				if (i>=j) MatrixSet[i][j] = constBigNumber; //заполняем так всю нижнюю диагональ, чтобы не считать для повторений
-				else
+				///FK - Измерениеi /Измерениеj вернул невязку v и ее ковариацию S
+				colvec v;//
+				mat S; //потом это будет возвращать FK
+				double D = countNorma(v, S);
+				if (D <= constSimilarityRate)
 				{
-					///FK - попарно измерения
+					CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
+					CHypo newHypo(std::move(mes));
+					//FK обновим эту гипотезу измерением
+					BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
 				}
 			}
-		}
-		vector<int> assignment;
-		HungAlgo.Solve(MatrixSet, assignment);
-		for (int i = 0; i < size; i++)
-		{
-			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
-			{
-				CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
-				CHypo newHypo(std::move(mes));
-				//FK обновим эту гипотезу измерением из assigment[i]
-				BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
-				//for (int j = 0; j < size; j++)
-				//{
-				//	MatrixSet[i][j] = constBigNumber; //чтобы исключить повторное взятие уже использовнных измерений
-				//	MatrixSet[j][i] = constBigNumber;
-				//}
-				//BankOfSection[CurrentSector].SetBankHypo().erase(BankOfSection[CurrentSector].SetBankHypo().cbegin() + i);
-				//BankOfSection[CurrentSector].SetBankHypo().erase(BankOfSection[CurrentSector].SetBankHypo().cbegin() + assignment[i]);
-				//тут не будет работать, потому что оно находит неоптимальные решения, так еще и измерения удаляются криво
-			}
-		}
+		}			
 	}
 	BankOfSection[CurrentSector].SectionHypoToTrace(); //переводим гипотезы в трассы
 	BankOfSection[CurrentSector].removeOutdatedObjects(); //удаляем то, что слишком долго лежит в хранилище
@@ -172,4 +168,9 @@ void CVOI::TimeToStartAssociation(double time)
 {
 	if (FirstTry) return;
 	associate();
+}
+
+double CVOI::countNorma(colvec &v, mat &predictS)
+{
+	return arma::as_scalar(v.t()*predictS.i()*v);
 }

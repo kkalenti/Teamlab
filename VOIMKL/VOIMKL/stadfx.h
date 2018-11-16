@@ -10,10 +10,13 @@ static const double constSimilarityRate = 9; //порог дл€ D
 static const double constBigNumber = 10000; //дл€ матрицы назначени€, значени€ которые ставим туда, где точно нет решени€
 static int COPIES_COUNT = 0; //счетчик дл€ трасc
 
+//#include "targetver.h"
+
 #include <armadillo>
 #include <stdio.h>
 #include <iostream>
 #include <cstdio>
 #include <math.h>
+#include <tchar.h>
 
 #endif stadfx_H

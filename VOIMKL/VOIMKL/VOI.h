@@ -4,6 +4,7 @@
 #include <Hungarian.h>
 #include "stadfx.h"
 #include "Section.h"
+#include "FilterKalman.h"
 class CSection;
 
 class CVOI{
@@ -14,6 +15,7 @@ private:
 	double FirstAngle;  // первый угол после Вmin
 	int CurrentSector; // текущий сектор, с которым идет работа сейчас
 	HungarianAlgorithm HungAlgo;
+	CKalmanFilter KalmanFilter;
 public:
 	CVOI();
 	~CVOI();
@@ -23,5 +25,6 @@ public:
 	void pushMeasurements(CResultOfScan newres); // получаем измерения в подходящий сектор
 	void pushSectorObserved(double time, double b); // получаем метку времени с углом
 	void TimeToStartAssociation(double time);// проверяем не начать ли ассоциацию
+	double countNorma(colvec &v, mat &predictS);
 };
 #endif VOI_H
