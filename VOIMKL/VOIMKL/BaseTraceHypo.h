@@ -20,7 +20,9 @@ public:
 	void IncNmiss();
 	void NullNmiss(); //зануление при обновлении 
 	const int GetNmiss();
-	colvec &GetState_X();
+	mat &SetP();
+	colvec &SetState_X();
+	mat &SetQ();
 	//void UpdateState(mat P, colvec x); //для обновления по предсказаниям или измерениям
 	//bool GetUpdateWithM();
 };

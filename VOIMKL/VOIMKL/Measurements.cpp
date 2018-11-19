@@ -15,6 +15,9 @@ mat &get_Rconst() {
 
 CMeasurements::CMeasurements(CVector coordinates, double vr, double time):CResultOfScan(coordinates, vr, time)
 {
+	this->z[0] = coordinates.x;
+	this->z[1] = coordinates.y;
+	this->z[2] = coordinates.z;
 	this->Nmiss = 0;
 	this->R = get_Rconst();
 	this->reservedForUpdate = false;
@@ -22,6 +25,9 @@ CMeasurements::CMeasurements(CVector coordinates, double vr, double time):CResul
 
 CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.detectionTime)
 {
+	this->z[0] = newres.Coordinates.x;
+	this->z[1] = newres.Coordinates.y;
+	this->z[2] = newres.Coordinates.z;
 	this->Nmiss = 0;
 	this->R = get_Rconst();
 	this->reservedForUpdate = false;
@@ -44,10 +50,15 @@ const int CMeasurements::GetNmiss()
 
 double CMeasurements::FromDekartToAzimut()
 {
-	return (atan(this->Coordinates.y/this->Coordinates.x));
+	return (atan(this->z[2]/this->z[0]));
 }
 
 const mat &CMeasurements::GetR()
+{
+	return this->R;
+}
+
+mat &CMeasurements::SetR()
 {
 	return this->R;
 }
@@ -60,4 +71,14 @@ void CMeasurements::SetReservedForUpdate()
 const bool CMeasurements::GetReservedForUpdate()
 {
 	return this->reservedForUpdate;
+}
+
+const dcolvec &CMeasurements::Getz()
+{
+	return this->z;
+}
+
+dcolvec &CMeasurements::Setz()
+{
+	return this->z;
 }

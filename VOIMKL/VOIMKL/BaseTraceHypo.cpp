@@ -24,11 +24,20 @@ const int CBaseTraceHypo::GetNmiss()
 	return this->Nmiss;
 }
 
-colvec &CBaseTraceHypo::GetState_X()
+mat &CBaseTraceHypo::SetP()
+{
+	return this->P;
+}
+
+colvec &CBaseTraceHypo::SetState_X()
 {
 	return this->x;
 }
 
+mat &CBaseTraceHypo::SetQ()
+{
+	return this->Q;
+}
 
 ////const bool CBaseTraceHypo::GetUpdateWithM()
 //{

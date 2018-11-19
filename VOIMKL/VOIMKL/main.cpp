@@ -154,5 +154,6 @@ int main(int argc, char** argv)
 	VOI->pushSectorObserved(0.0600, 2000);
 	VOI->pushSectorObserved(0.0700, 4000);
 	VOI->pushSectorObserved(0.0850, 6000);*/
+	system("pause");
 	return 0;
 }
