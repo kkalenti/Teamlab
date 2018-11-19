@@ -10,6 +10,7 @@ public:
 	CResultOfScan(CVector coordinates, double vr, double time);
 	~CResultOfScan();
 	CVector Coordinates;
+	double** CovMat;
 	double DetectionTime; // время обнаружения цели
 	double Vr;  // радиальная скорость 
 private:

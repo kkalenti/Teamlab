@@ -57,7 +57,7 @@ void CImitator::Scan()
 					int fy = returnUniformRandom(10000);	
 					int fz = returnUniformRandom(100000);
 					CAirObject* fake = new CAirObject(fx, fy, fz, stationCoordinates);
-					fake->SendToVoi(currentTime);
+					fake->SendToVoi(currentTime, true);
 				}
 				// если луч и цель совпали
 				if( y == floor(targets[k].GetEpsion() * 180 / 3.14159265 + .5) && i == floor(targets[k].GetBeta() * 180 / 3.14159265 +.5) ) {
@@ -93,7 +93,7 @@ void CImitator::getConfig()  // парсер конфиг файла
 {
 	ifstream config("config.txt");
 	int i = 7; // количество параметров для имитатора
-	int j = 12; // количество параметров
+	int j = 13; // количество параметров
 	int k = 0;
 	char* str = new char[25];
 	while( k < i ) {
@@ -154,9 +154,13 @@ void CImitator::getConfig()  // парсер конфиг файла
 			break;
 		case 10:
 			config.getline(str, '\n');
-			CAirObject::accelerationSko = stod(str);
+			CAirObject::radialSko = stod(str);
 			break;
 		case 11:
+			config.getline(str, '\n');
+			CAirObject::accelerationSko = stod(str);
+			break;
+		case 12:
 			config.getline(str, '\n');
 			CAirObject::typeOfEmulation = atoi(str);
 			break;

@@ -41,6 +41,7 @@ double CAirObject::epsilonSko; // все необходимые среднеквадратические отклонени
 double CAirObject::betaSko;
 double CAirObject::distanceSko;
 double CAirObject::accelerationSko;
+double CAirObject::radialSko;
 int CAirObject::typeOfEmulation; 
 
 void CAirObject::Update(const double time, const double curTime, const CVector& station) // time - время такта
@@ -57,6 +58,14 @@ void CAirObject::Update(const double time, const double curTime, const CVector& 
 	Speed.x += Acceleration.x * time;
 	Speed.y += Acceleration.y * time;
 	Speed.z += Acceleration.z * time;
+	// пересчет радиальной скорости
+	// модуль радиус-вектора
+	double radiusSize = sqrt(pow((Coordinate.x - station.x), 2) + pow((Coordinate.y - station.y), 2) + pow((Coordinate.z - station.z), 2));
+	CVector normir; // нормированный радиус вектор
+	normir.x = (Coordinate.x - station.x) / radiusSize;
+	normir.y = (Coordinate.y - station.y) / radiusSize;
+	normir.z = (Coordinate.z - station.z) / radiusSize;
+	radialSpeed = Speed.x * normir.x + Speed.y * normir.y + Speed.z * normir.z;
 	// влиянеие шумов на ускорения если они есть
 	if( accelerationSko != 0 ) {
 		Acceleration.x += returnGaussRandom(accelerationSko);
@@ -84,22 +93,29 @@ void CAirObject::Update(const double time, const double curTime, const CVector& 
 	}
 }
 
-void CAirObject::SendToVoi(const double curTime)
+void CAirObject::SendToVoi(const double curTime, const bool fake)
 { 
-	// наложение шумов на азимут/угол места/дистанцию
+	// наложение шумов на азимут/угол места/дистанцию/радиальную скорость
+	radialSpeed += returnGaussRandom(radialSko);
 	double ep = this->epsilon + returnGaussRandom(epsilonSko);
 	double bt = this->beta + returnGaussRandom(betaSko);
 	double di = this->distance + returnGaussRandom(distanceSko);
-  // вычисление координат с учетом шума
+    // вычисление координат с учетом шума
 	CVector coordinates; double re = betaSko;
 	coordinates.y = ep * di;   // через синус 
 	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
 	
-	CResultOfScan* package = new CResultOfScan(coordinates, 0, curTime); // формирование пакета данных для передачи на ВОИ
+
+	CResultOfScan* package = new CResultOfScan(coordinates, radialSpeed, curTime); // формирование пакета данных для передачи на ВОИ
 	// здесь нужно отправить пакет на ВОИ
-	saveData(package);
+	if( fake == false ) {
+		saveData(package);
+	}	else {
+		CNoize* noize = new CNoize(coordinates, radialSpeed, curTime);
+		saveData(noize);
+	}
 
 	delete package;
 }
