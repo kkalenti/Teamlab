@@ -1,10 +1,11 @@
 #ifndef Measurements_H
 #define Measurements_H
-#include"ResultOfScan.h"
-#include "stadfx.h"
+#include "ResultOfScan.h"
+#include "stdafx.h"
+
 using namespace arma;
 static mat &get_Rconst();
-class CMeasurements: public CResultOfScan{ 
+class CMeasurements :  public CResultOfScan{
 private:
 	int Nmiss;
 	mat R=zeros<mat>(M,M); //double
