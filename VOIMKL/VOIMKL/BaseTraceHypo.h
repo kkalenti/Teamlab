@@ -14,6 +14,7 @@ protected:
 	mat P=zeros(N,N);
 	colvec x=zeros(N);
 	mat Q = zeros(N, N);
+	double lastTime;
 public:
 	CBaseTraceHypo();
 	~CBaseTraceHypo();
@@ -23,6 +24,9 @@ public:
 	mat &SetP();
 	colvec &SetState_X();
 	mat &SetQ();
+	double GetlastTime(double time);
+	const double SetlastTime();
+
 	//void UpdateState(mat P, colvec x); //для обновления по предсказаниям или измерениям
 	//bool GetUpdateWithM();
 };

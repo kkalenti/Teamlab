@@ -16,10 +16,11 @@ public:
 
 	void InitialVariableMatrix(colvec & x_0, mat P_0);
 	void SetFKMatrix(mat U, mat H, mat F);
-	void InitialNoiseMatrix(mat, mat);
+	void InitialNoiseMatrix(mat R, mat Q);
 
-	mat getMatrix_P();
-	colvec getVector_x();
+	mat & getMatrix_P();
+	void setMatrix_P(mat);
+	colvec & getVector_x();
 	void setDt(double);
 
 	void makeMatrix_Q(mat, double);
@@ -28,30 +29,36 @@ public:
 	void makeMatrix_U();
 	void makeMatrix_F();
 	void makeMatrix_H();
+	void makeDt_squared();
 
 
 	void update_F(double);
 	void update_U(double);
 
-	void Predict(CMeasurements firstMeasure, CMeasurements secondMeasure, mat &, colvec &);
-	colvec Predict(CBaseTraceHypo Trace, CMeasurements Measure, double);
+	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
+	colvec Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
 
-	void UpdateMeasure(CBaseTraceHypo, CMeasurements);
-	void UpdatePredict(CBaseTraceHypo, double);
+	void UpdateMeasure(CBaseTraceHypo&, CMeasurements&);
+	void UpdatePredict(CBaseTraceHypo&, double);
 
 	void Prediction(double);
-	void Measurement(colvec new_z);
+	void Measurement(colvec & new_z);
 	void Measurement();
 	void Update();
 	void UpdateEKF(const colvec &);
+	mat &GetS();
+
+
+	void print_coordinate();
 
 protected:
 	//CKalmanFilter() {}
 
-	int n; // размерность вектора состояний
-	int m; // размерность вектора измерений
-	double Dt; // 
-	double Dt_squared;
+	int flag = 0;
+	int n = 9; // размерность вектора состояний
+	int m = 3; // размерность вектора измерений
+	double Dt = 0; // 
+	double Dt_squared = 0;
 	
 	//mat::fixed<9, 9> P; //  ковариационная матрица ошибки оценки вектора состояния
 	//mat::fixed<9, 9> F; // Матрица перехода между состояниями.
@@ -62,26 +69,40 @@ protected:
 	//mutable mat::fixed<3, 3> R; // Матрица шума измерения
 	//mutable mat::fixed<9, 9> Q; // Матрица шума состояния 
 
-	mat P; //  ковариационная матрица ошибки оценки вектора состояния
-	mat F; // Матрица перехода между состояниями.
-	mat U; // матрица Г
-	mat S; // Матрица обновления
-	mat H; // Матрица наблюдения. Матрица отображающая отношение измерения и состояния
-	mat W; // Вессовая матрица. Матрица коэффициентов усиления.
-	mutable mat R; // Матрица шума измерения
-	mutable mat Q; // Матрица шума состояния 
-	mat Q_3; // Матрица Q размерности 3 на 3
-	mat Q_1; // Матрица Q размерности 1 на 1
-	mat U_9x3; // Матрица U размерности 9 на 3
+
+	//mat P; //  ковариационная матрица ошибки оценки вектора состояния
+	//mat F; // Матрица перехода между состояниями.
+	//mat U; // матрица Г
+	//mat S; // Матрица обновления
+	//
+	//mat H; // Матрица наблюдения. Матрица отображающая отношение измерения и состояния
+	//mat W; // Вессовая матрица. Матрица коэффициентов усиления.
+	//mutable mat R; // Матрица шума измерения
+	//mutable mat Q; // Матрица шума состояния 
+
+	mat P = zeros(9, 9); //  ковариационная матрица ошибки оценки вектора состояния
+	mat F = zeros(9, 9); // Матрица перехода между состояниями.
+	mat U = mat(9, 1); // матрица Г
+	//mat U = zeros(9, 1);
+	mat S = zeros(3, 3); // Матрица обновления
+	mat H = zeros(3, 9); // Матрица наблюдения. Матрица отображающая отношение измерения и состояния
+	mat W = zeros(9, 3); // Вессовая матрица. Матрица коэффициентов усиления.
+	mutable mat R = eye(3,3); // Матрица шума измерения
+	mutable mat Q = mat(1, 1); // Матрица шума состояния
+	//mutable mat Q = zeros(1, 1);
+
+	//mat Q_3; // Матрица Q размерности 3 на 3
+	//mat Q_1; // Матрица Q размерности 1 на 1
+	//mat U_9x3; // Матрица U размерности 9 на 3
 
 	//Априорные данные
-	mutable mat P_Const; //	Начальная ковариационная матрица
-	colvec x_0 = colvec(n); // Начальный вектор состояний. Вектор состояния динамической системы, который является случайным Гауссовским процессом
+	mutable mat P_Const = zeros(9, 9); //	Начальная ковариационная матрица
+	colvec x_0 = colvec(9); // Начальный вектор состояний. Вектор состояния динамической системы, который является случайным Гауссовским процессом
 
-	colvec x_pred;  //Вектор в котором будет хранится предсказанное состояние.
+	colvec x_pred = zeros(9);  //Вектор в котором будет хранится предсказанное состояние.
 	colvec z_pred; //
 	colvec z; //Вектор пришедший с ПОИ. Измерения с РЛС.
-	colvec v; //Вектор рассогласования/невязки.
+	colvec v = zeros(3, 1); //Вектор рассогласования/невязки.
 
 };
 

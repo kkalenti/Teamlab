@@ -1,6 +1,8 @@
 /armadillo
 */Debug
 /Debug
+*.sdf
+*.opensdf
 VOIMKL/Debug/*
 VOINKL/Release/*
 VOIMKL/x64/*
