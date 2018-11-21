@@ -10,6 +10,16 @@ CAirObject::CAirObject()
 	this->epsilon = 0;
 	this->distance = 0;
 	this->aChangesCounter = 0;
+	CovMat = new double*[3];
+	for (int i = 0; i < 3; i++) {
+		CovMat[i] = new double[3];
+		for (int j = 0; j < 3; j++) {
+			CovMat[i][j] = 0;
+		}
+	}
+	CovMat[0][0] = CAirObject::distanceSko;
+	CovMat[1][1] = CAirObject::betaSko;
+	CovMat[2][2] = CAirObject::epsilonSko;
 }
 
 CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
@@ -28,6 +38,16 @@ CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
 	beta = katet2 / projection; // пересчет угла места
 	std::random_device device;
 	gaussGenerator.seed(device());
+	CovMat = new double*[4];
+	for (int i = 0; i < 3; i++) {
+		CovMat[i] = new double[3];
+		for (int j = 0; j < 3; j++) {
+			CovMat[i][j] = 0;
+		}
+	}
+	CovMat[0][0] = CAirObject::distanceSko;
+	CovMat[1][1] = CAirObject::betaSko;
+	CovMat[2][2] = CAirObject::epsilonSko;
 }
 
 CAirObject::~CAirObject() 
@@ -100,15 +120,30 @@ void CAirObject::SendToVoi(const double curTime, const bool fake)
 	double ep = this->epsilon + returnGaussRandom(epsilonSko);
 	double bt = this->beta + returnGaussRandom(betaSko);
 	double di = this->distance + returnGaussRandom(distanceSko);
+	// вычисление ковариационной матрицы
+
+	//CovMat[0][0] = pow(CAirObject::distanceSko, 2);
+	//CovMat[1][1] = pow(di, 2) + pow(CAirObject::betaSko, 2);
+	//CovMat[2][2] = pow(di, 2) + pow(CAirObject::epsilonSko, 2);
+
+
+	double b1 = exp(pow(-CAirObject::betaSko, 2) / 2);
+	double b2 = exp(pow(-CAirObject::epsilonSko, 2) / 2);
+	CovMat[0][0] = (pow((b1 * b2), -2) - 2) * di * pow(cos(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
+		* (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+	CovMat[1][1] = (pow((b1 * b2), -2) - 2) * di * pow(sin(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
+		* (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+	CovMat[2][2] = (pow((b2), -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + (1 / 2) * (pow(di, 2) + CAirObject::distanceSko)
+		* (1 - pow(b2, 4) * cos(2 * ep));
     // вычисление координат с учетом шума
-	CVector coordinates; double re = betaSko;
+	CVector coordinates;
 	coordinates.y = ep * di;   // через синус 
 	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
 	
 
-	CResultOfScan* package = new CResultOfScan(coordinates, radialSpeed, curTime); // формирование пакета данных для передачи на ВОИ
+	CResultOfScan* package = new CResultOfScan(coordinates, radialSpeed, curTime, CovMat); // формирование пакета данных для передачи на ВОИ
 	// здесь нужно отправить пакет на ВОИ
 	if( fake == false ) {
 		saveData(package);

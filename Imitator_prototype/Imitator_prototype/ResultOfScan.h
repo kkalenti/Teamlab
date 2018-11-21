@@ -7,7 +7,7 @@
 
 class CResultOfScan {
 public:
-	CResultOfScan(CVector coordinates, double vr, double time);
+	CResultOfScan(CVector coordinates, double vr, double time, double** cov);
 	~CResultOfScan();
 	CVector Coordinates;
 	double** CovMat;

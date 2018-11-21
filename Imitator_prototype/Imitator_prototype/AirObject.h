@@ -55,6 +55,7 @@ private:
 	double epsilon; // угол места
 	double distance; // расстояние от станции до цели
 	double radialSpeed; // радиальная скорость 
+	double** CovMat; // ковариационная матрица
 	int aChangesCounter; // показывает, какое состояние ускорения на данный момент, если имитатор работает по конфигурации с переменным ускорением
 
 	double returnGaussRandom(double sko);
