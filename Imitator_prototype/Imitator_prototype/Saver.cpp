@@ -176,7 +176,7 @@ int createStruct(CNoize* s) {
 	return(EXIT_SUCCESS);
 }
 //
-int createStruct(CVOI* s) {
+int createStruct(CVoi2* s) {
 	mxArray *VOIArray;
 	mxArray *mx;
 	int status;
@@ -473,7 +473,7 @@ int extendArray(CNoize* s, mxArray *origin) {
 	return(EXIT_SUCCESS);
 }
 //
-int extendArray(CVOI* s, mxArray *origin, int target) {
+int extendArray(CVoi2* s, mxArray *origin, int target) {
 	const char *fieldNames[] = { "x", "y", "z", "Vx", "Vy", "Vz", "ax", "ay", "az", "t" };
 	int status;
 	mxArray *tmp;
@@ -648,7 +648,7 @@ int extendStruct(CReferenceState* s, mxArray *origin, int oldN, int target) {
 	return(EXIT_SUCCESS);
 }
 //
-int extendStruct(CVOI* s, mxArray *origin, int oldN) {
+int extendStruct(CVoi2* s, mxArray *origin, int oldN) {
 	mxArray *extendedStruct;
 	mxArray *mx;
 	int status;
@@ -766,7 +766,7 @@ void saveData(CNoize* s) {
 	mxDestroyArray(mx);
 }
 //
-void saveData(CVOI* s) {
+void saveData(CVoi2* s) {
 	mxArray *mx;
 	mx = matGetVariable(pmat, "VOI");
 	int oldN;

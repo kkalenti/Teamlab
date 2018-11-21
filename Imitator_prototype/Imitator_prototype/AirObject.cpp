@@ -126,15 +126,15 @@ void CAirObject::SendToVoi(const double curTime, const bool fake)
 	//CovMat[1][1] = pow(di, 2) + pow(CAirObject::betaSko, 2);
 	//CovMat[2][2] = pow(di, 2) + pow(CAirObject::epsilonSko, 2);
 
-
-	double b1 = exp(pow(-CAirObject::betaSko, 2) / 2);
+	/*double b1 = exp(pow(-CAirObject::betaSko, 2) / 2);
 	double b2 = exp(pow(-CAirObject::epsilonSko, 2) / 2);
 	CovMat[0][0] = (pow((b1 * b2), -2) - 2) * di * pow(cos(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
 		* (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
 	CovMat[1][1] = (pow((b1 * b2), -2) - 2) * di * pow(sin(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
 		* (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
 	CovMat[2][2] = (pow((b2), -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + (1 / 2) * (pow(di, 2) + CAirObject::distanceSko)
-		* (1 - pow(b2, 4) * cos(2 * ep));
+		* (1 - pow(b2, 4) * cos(2 * ep));*/
+
     // вычисление координат с учетом шума
 	CVector coordinates;
 	coordinates.y = ep * di;   // через синус 

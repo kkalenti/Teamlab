@@ -1,10 +1,10 @@
-﻿Сборка начата 21.11.2018 20:50:24.
+﻿Сборка начата 21.11.2018 21:06:01.
      1>Проект "D:\GitTeam\Teamlab\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt stdafx.cpp
          stdafx.cpp
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt AirObject.cpp Imitator.cpp Imitator_prototype.cpp Noize.cpp ReferenceState.cpp ResultOfScan.cpp Saver.cpp VOI.cpp
-         VOI.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\MATLAB\R2018b\extern\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Imitator_prototype.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt AirObject.cpp Imitator.cpp Imitator_prototype.cpp Noize.cpp ReferenceState.cpp ResultOfScan.cpp Saver.cpp Voi2.cpp
+         Voi2.cpp
          Saver.cpp
      1>Saver.cpp(248): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
      1>Saver.cpp(355): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
@@ -30,10 +30,10 @@
          x64\Debug\ResultOfScan.obj
          x64\Debug\Saver.obj
          x64\Debug\stdafx.obj
-         x64\Debug\VOI.obj
+         x64\Debug\Voi2.obj
          Imitator_prototype.vcxproj -> D:\GitTeam\Teamlab\Imitator_prototype\x64\Debug\Imitator_prototype.exe
      1>Сборка проекта "D:\GitTeam\Teamlab\Imitator_prototype\Imitator_prototype\Imitator_prototype.vcxproj" завершена (целевые объекты Build).
 
 Сборка успешно завершена.
 
-Затраченное время: 00:00:01.20
+Затраченное время: 00:00:01.46

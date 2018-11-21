@@ -13,7 +13,7 @@
 #include "AirObject.h"
 #include "ResultOfScan.h"
 #include "Noize.h"
-#include "VOI.h"
+#include "Voi2.h"
 #include <iostream>
 #include <string>
 #include "Saver.h"

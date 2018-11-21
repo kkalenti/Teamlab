@@ -159,7 +159,7 @@
     <ClInclude Include="Saver.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="VOI.h" />
+    <ClInclude Include="Voi2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AirObject.cpp" />
@@ -175,7 +175,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VOI.cpp" />
+    <ClCompile Include="Voi2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
