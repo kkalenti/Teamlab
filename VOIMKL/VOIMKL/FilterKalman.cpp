@@ -119,6 +119,20 @@ colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Mea
 	return v;
 }
 
+void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
+{
+	double dt = abs(firstMeasure.detectionTime - secondMeasure.detectionTime);
+	dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀÐÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
+	update_F(dt);
+	update_U(dt);
+
+	P = F * P_Const * F.t() + U * Q * U.t();
+	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+	S_VOI = R_Meas + H * P * H.t();
+	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
+	v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
+}
+
 
 void CKalmanFilter::Measurement()
 {
@@ -331,7 +345,7 @@ colvec&  CKalmanFilter::getVector_x()
 	return this->x_pred;
 }
 
-mat &CKalmanFilter::GetS()
+mat CKalmanFilter::GetS()
 {
 	return this->S;
 }

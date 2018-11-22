@@ -22,7 +22,7 @@ public:
 	void setMatrix_P(mat);
 	colvec & getVector_x();
 	void setDt(double);
-	mat & GetS();
+	mat  GetS();
 	colvec & GetV();
 
 	void makeMatrix_Q(mat, double);
@@ -39,6 +39,7 @@ public:
 
 	colvec Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
 	colvec Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
+	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
 
 	void UpdateMeasure(CBaseTraceHypo&, CMeasurements&);
 	void UpdatePredict(CBaseTraceHypo&, double);
