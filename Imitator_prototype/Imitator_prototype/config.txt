@@ -5,9 +5,9 @@ maxBeta:90
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0.01
-SKOforBeta:0.03
-SKOforDistance:7
+SKOforEpsilon:0.0015
+SKOforBeta:0.0015
+SKOforDistance:20
 SKOforRadialSpeed:0.012
 SKOforAcceleration:0
 TypeOfSimulation:3
