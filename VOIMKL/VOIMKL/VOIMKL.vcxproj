@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,31 +22,32 @@
     <ProjectGuid>{0F7F8B60-0A91-4AFF-B60A-F5508CDC2B66}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VOIMKL</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -103,13 +104,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\hungarian-algorithm;..\mkl\include;..\armadillo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\saver\extern\include;..\hungarian-algorithm;..\mkl\include;..\armadillo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\mkl\lib\intel64_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mkl_core.lib;mkl_sequential.lib;mkl_blas95_ilp64.lib;mkl_intel_lp64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\saver\extern\lib\win64\microsoft;..\mkl\lib\intel64_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mkl_core.lib;mkl_sequential.lib;mkl_blas95_ilp64.lib;mkl_intel_lp64.lib;libeng.lib;libmx.lib;libmat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,23 +151,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\hungarian-algorithm\Hungarian.cpp" />
+    <ClCompile Include="AirObject.cpp" />
     <ClCompile Include="BaseTraceHypo.cpp" />
     <ClCompile Include="FilterKalman.cpp" />
+    <ClCompile Include="Imitator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Measurements.cpp" />
+    <ClCompile Include="Noize.cpp" />
+    <ClCompile Include="ReferenceState.cpp" />
     <ClCompile Include="ResultOfScan.cpp" />
+    <ClCompile Include="Saver.cpp" />
     <ClCompile Include="Section.cpp" />
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="VOI.cpp" />
+    <ClCompile Include="Voi2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\hungarian-algorithm\Hungarian.h" />
+    <ClInclude Include="AirObject.h" />
     <ClInclude Include="BaseTraceHypo.h" />
     <ClInclude Include="FilterKalman.h" />
-    <ClInclude Include="stadfx.h" />
+    <ClInclude Include="Imitator.h" />
+    <ClInclude Include="Noize.h" />
+    <ClInclude Include="ReferenceState.h" />
+    <ClInclude Include="Saver.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Measurements.h" />
     <ClInclude Include="ResultOfScan.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="VOI.h" />
+    <ClInclude Include="Voi2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="config.txt" />
+    <Text Include="Raid1.txt" />
+    <Text Include="Raid2.txt" />
+    <Text Include="Raid3.txt" />
+    <Text Include="Raid4.txt" />
+    <Text Include="Raid5.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

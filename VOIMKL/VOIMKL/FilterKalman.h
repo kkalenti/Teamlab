@@ -1,8 +1,8 @@
 #ifndef FilterKalman_H
 #define FilterKalman_H
-#include "stadfx.h"
 #include "BaseTraceHypo.h"
 #include "Measurements.h"
+#include <armadillo>
 
 using namespace std;
 using namespace arma;

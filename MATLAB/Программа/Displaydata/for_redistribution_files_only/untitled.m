@@ -59,7 +59,8 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 % Добавление пути для вспомогательных функций
-path(path,'C:\Users\kosti\Desktop\teamlab\Общий проект\MATLAB\Программа\Functions');
+
+path(path,'Functions');
 
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -81,10 +82,10 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-file = uigetfile;
+[file, path] = uigetfile;
 
 set(handles.text6,'String',file);
-informationAssigning(file);
+informationAssigning(file, path);
 defaultSetting(handles);
 set(hObject,'Enable','off');
 

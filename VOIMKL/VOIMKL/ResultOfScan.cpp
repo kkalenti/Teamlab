@@ -1,14 +1,16 @@
-#include "ResultOfScan.h"
+#include "stdafx.h"
 
-CResultOfScan::CResultOfScan(CVector coordinates, double vr, double time)
+CResultOfScan::CResultOfScan(CVector coordinates, double vr, double time /*, double** cov*/)
 {
 	this->Coordinates.x = coordinates.x;
 	this->Coordinates.y = coordinates.y;
 	this->Coordinates.z = coordinates.z;
 	this->Vr = vr;
-	detectionTime = time;
+	DetectionTime = time;
+	//CovMat = cov;
 }
 
-
 CResultOfScan::~CResultOfScan()
-{}
+{
+
+}

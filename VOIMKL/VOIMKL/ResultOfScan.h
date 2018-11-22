@@ -1,17 +1,18 @@
+// Дата: 02.11.18
+// Автор: Пипчук А.А.
+// Описание: описывается класс, предназаначенный для сохранения зашумленных данных о воздушном объекте, которые передаются на вторичную обработку
+#include "stdafx.h"
 #ifndef ResultOfScan_H
 #define ResultOfScan_H
 
-struct CVector {
-	double x, y, z;
-};
-
 class CResultOfScan {
 public:
-	CResultOfScan(CVector coordinates, double vr, double time);
+	CResultOfScan(CVector coordinates, double vr, double time/*, double** cov*/);
 	~CResultOfScan();
 	CVector Coordinates;
-	double detectionTime;
-	double Vr;  // радиальная скорость
+	//double** CovMat;
+	double DetectionTime; // время обнаружения цели
+	double Vr;  // радиальная скорость 
 private:
 };
 #endif ResultOfScan_H

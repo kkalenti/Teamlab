@@ -1,10 +1,12 @@
 #ifndef VOI_H
 #define VOI_H
+#include "stdafx.h"
 #include <vector>
 #include <Hungarian.h>
-#include "stadfx.h"
 #include "Section.h"
 #include "FilterKalman.h"
+#include "ResultOfScan.h"
+
 class CSection;
 
 class CVOI{

@@ -1,4 +1,6 @@
-#include "Measurements.h"
+
+#include "stdafx.h"
+
 using namespace std;
 
 mat &get_Rconst() {
@@ -13,7 +15,7 @@ mat &get_Rconst() {
 	return RCONST;
 }
 
-CMeasurements::CMeasurements(CVector coordinates, double vr, double time):CResultOfScan(coordinates, vr, time)
+CMeasurements::CMeasurements(CVector coordinates, double vr, double time) :CResultOfScan(coordinates, vr, time)
 {
 	this->z[0] = coordinates.x;
 	this->z[1] = coordinates.y;
@@ -23,7 +25,7 @@ CMeasurements::CMeasurements(CVector coordinates, double vr, double time):CResul
 	this->reservedForUpdate = false;
 }
 
-CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.detectionTime)
+CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.DetectionTime)
 {
 	this->z[0] = newres.Coordinates.x;
 	this->z[1] = newres.Coordinates.y;

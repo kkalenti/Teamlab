@@ -1,6 +1,4 @@
-#include "FilterKalman.h"
-
-
+#include "stdafx.h"
 
 CKalmanFilter::CKalmanFilter()
 {
@@ -84,7 +82,7 @@ void CKalmanFilter::Prediction(double dt)
 
 colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
 {
-	double dt = abs(firstMeasure.detectionTime - secondMeasure.detectionTime);
+	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
 	update_F(dt);
 	update_U(dt);
 
@@ -102,7 +100,7 @@ colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &second
 colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
 {
 	//this->Dt = dt;
-	double dt = abs(TraceOrHypo.SetlastTime() - Measure.detectionTime);
+	double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
 	update_F(dt);
 	update_U(dt);
 

@@ -1,6 +1,6 @@
 #ifndef BaseTraceHypo_H
 #define BaseTraceHypo_H
-#include "stadfx.h"
+#include <armadillo>
 #include "Measurements.h"
 
 using namespace arma;
@@ -38,6 +38,7 @@ public:
 	CTrace();
 	CTrace(CHypo &&hypo);
 	~CTrace();
+	const int GetId();
 };
 
 class CHypo : public CBaseTraceHypo{
