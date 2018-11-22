@@ -32,7 +32,6 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				colvec v = zeros(3);
 				v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 				double D = countNorma(v, KalmanFilter.GetS());
@@ -46,7 +45,6 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				(BankOfSection[CurrentSector].SetBankTrace())[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
@@ -55,11 +53,27 @@ void CVOI::associate()
 			}
 			else
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
+				double dt = 0.1;//временное решение
 				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], dt);
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
+
+			CVector ToVoi2Coordinate;
+			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[0];
+			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[3];
+			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[6];
+			CVector ToVoi2Speed;
+			ToVoi2Speed.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[1];
+			ToVoi2Speed.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[4];
+			ToVoi2Speed.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[7];
+			CVector ToVoi2Acceleration;
+			ToVoi2Acceleration.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[2];
+			ToVoi2Acceleration.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[5];
+			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[8];
+			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
+			BankOfSection[CurrentSector].SetBankTrace()[i].SetlastTime(),
+			BankOfSection[CurrentSector].SetBankTrace()[i].GetId()));
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
@@ -73,7 +87,6 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				colvec v=KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 				double D = countNorma(v, KalmanFilter.GetS());
 				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
@@ -86,7 +99,6 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
@@ -96,8 +108,8 @@ void CVOI::associate()
 			}
 			else
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
+				double dt = 0.1;//временное решение
 				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], dt);
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
@@ -120,17 +132,6 @@ void CVOI::associate()
 					v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);
 					//S = KalmanFilter.GetS();
-					cout << "size = " << S.size();
-					mat q;
-					/*S(0, 0) = 1;
-					S(0, 1) = 2;
-					S(0, 2) = 3;
-					S(1, 0) = 4;
-					S(1, 1) = 5;
-					S(1, 2) = 6;
-					S(2, 0) = 7;
-					S(2, 1) = 8;
-					S(2, 2) = 9;*/
 					
 					double D = countNorma(v, S); //ERROR*********************************
 					if (D <= constSimilarityRate)

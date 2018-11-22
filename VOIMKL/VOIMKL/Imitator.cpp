@@ -59,7 +59,7 @@ void CImitator::Scan()
 					int fy = returnUniformRandom(10000);	
 					int fz = returnUniformRandom(100000);
 					CAirObject* fake = new CAirObject(fx, fy, fz, stationCoordinates);
-					//fake->SendToVoi(GeneralVoi, currentTime, true);
+					fake->SendToVoi(*GeneralVoi, currentTime, true);
 				}
 				// если луч и цель совпали
 				if( y == floor(targets[k].GetEpsion() * 180 / 3.14159265 + .5) && i == floor(targets[k].GetBeta() * 180 / 3.14159265 +.5) ) {
@@ -68,11 +68,11 @@ void CImitator::Scan()
 						continue;
 					}
 					targets[k].SendToDb(k, currentTime);    // отправка эталонных данных о цели в базу данных
-					//targets[k].SendToVoi(*GeneralVoi, currentTime);    // отправка цели на ВОИ с наложением шумов
+					targets[k].SendToVoi(*GeneralVoi, currentTime);    // отправка цели на ВОИ с наложением шумов
 				}
 			}
 		}
-		//GeneralVoi->pushSectorObserved(currentTime,i+1);
+		GeneralVoi->pushSectorObserved(currentTime,(i+1)*10);
 	}
 	if( numberOfSteps > 0 ) { // если время моделирования не истекло, открываем новый период обзора
 		cout << "\n/////////////////////////////////////////////////////////////////////////////////////";

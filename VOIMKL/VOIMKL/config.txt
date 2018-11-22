@@ -1,7 +1,7 @@
 Station:0,0,0
-numberOfSteps:360000
+numberOfSteps:36000
 timeOfTakt:0.001
-maxBeta:90
+maxBeta:40
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
