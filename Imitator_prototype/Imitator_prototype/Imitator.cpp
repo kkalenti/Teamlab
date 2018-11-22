@@ -32,11 +32,12 @@ CImitator::CImitator()
 			init("Raid5.txt", true);
 			break;
 	}
+	// SetSizeZone(minBeta, maxBeta);
 }
 
 CImitator::~CImitator()
 {
-	closeMat();  // !!!!!
+	closeMat();
 	delete[] targets;
 }
 
@@ -70,6 +71,7 @@ void CImitator::Scan()
 				}
 			}
 		}
+		//pushSectorObserved(currentTime, i+1);
 	}
 	if( numberOfSteps > 0 ) { // если время моделирования не истекло, открываем новый период обзора
 		cout << "\n/////////////////////////////////////////////////////////////////////////////////////";
