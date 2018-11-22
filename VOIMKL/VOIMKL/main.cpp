@@ -155,17 +155,8 @@ int main(int argc, char** argv)
 	voi->pushSectorObserved(0.0600, 2000);
 	voi->pushSectorObserved(0.0700, 4000);
 	voi->pushSectorObserved(0.0850, 6000);
-		mat P_Const;
-		P_Const << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << endr;
-		//P_Const.print("Pconst:");
+
+	//	//P_Const.print("Pconst:");
 //cout << "Pconst:" << endl << P_Const << endl;
 
 
@@ -200,54 +191,67 @@ int main(int argc, char** argv)
 	FK.Measurement(z);
 	FK.Update();*/
 
-	double x = 1.2;
-	double y = 3.7;
-	double c = -4.4;
-	double a = 0.1;
-	double Hz = 100.0; // Frequency of Vision System
-	double dt = 1.0 / Hz;//
-	double	T = 1.0;// # s measuremnt tim
-	double	m = int(T / dt);// # number of measurements
-	double ret = 0.1;
 
-	colvec x_0 = zeros(9, 1);
-	x_0 << x << endr << 0 << endr << 0 << endr << y << endr << 0 << endr << 0 << endr << c << endr << 0 << endr << 0 << endr;
-	x_0.print("X0:");
 
-	CKalmanFilter FK;
-	FK.InitialVariableMatrix(x_0, P_Const);
-	mat Q = zeros(1, 1);
-	Q(0, 0) = 0.1;
-	//Q << 0.1;
-	mat R = zeros(3, 3);
-	R << 1 << 0 << 0 <<endr
-		<< 0 << 1 << 0 << endr
-		<< 0 << 0 << 1 << endr;
-	FK.InitialNoiseMatrix(R, Q);
-	colvec new_z = zeros(3, 1);
-	FK.makeMatrix_H();
+	//mat P_Const;
+	//P_Const << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+	//<< 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+	//<< 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+	//<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
+	//<< 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << endr
+	//<< 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << endr
+	//<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
+	//<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << endr
+	//<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << endr;
 
-	for (int i = 0; i < 10; i++)
-	{
-		FK.Prediction(ret);
+	//double x = 1.2;
+	//double y = 3.7;
+	//double c = -4.4;
+	//double a = 0.1;
+	//double Hz = 100.0; // Frequency of Vision System
+	//double dt = 1.0 / Hz;//
+	//double	T = 1.0;// # s measuremnt tim
+	//double	m = int(T / dt);// # number of measurements
+	//double ret = 0.1;
 
-		ret = (double)rand() / ((double)rand() + 0.1);
-		x = x + (ret - floor(ret));
-		ret = (double)rand() / ((double)rand() + 0.1);
-		y = y + (ret - floor(ret));
-		ret = (double)rand() / ((double)rand() + 0.1);
-		c = c - (ret - floor(ret));
+	//colvec x_0 = zeros(9, 1);
+	//x_0 << x << endr << 0 << endr << 0 << endr << y << endr << 0 << endr << 0 << endr << c << endr << 0 << endr << 0 << endr;
+	//x_0.print("X0:");
 
-		//new_z << x << endr << 0 << endr << 0 << endr << y << endr << 0 << endr << 0 << endr << c << endr << 0 << endr << 0 << endr;
-		new_z << x << endr << y << endr << c << endr;
-		FK.Measurement(new_z);
-		FK.Update();
-		//FK.print_coordinate();
+	//CKalmanFilter FK;
+	//FK.InitialVariableMatrix(x_0, P_Const);
+	//mat Q = zeros(1, 1);
+	//Q(0, 0) = 0.1;
+	////Q << 0.1;
+	//mat R = zeros(3, 3);
+	//R << 1 << 0 << 0 <<endr
+	//	<< 0 << 1 << 0 << endr
+	//	<< 0 << 0 << 1 << endr;
+	//FK.InitialNoiseMatrix(R, Q);
+	//colvec new_z = zeros(3, 1);
+	//FK.makeMatrix_H();
 
-		
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	FK.Prediction(ret);
 
-		
-	}
+	//	ret = (double)rand() / ((double)rand() + 0.1);
+	//	x = x + (ret - floor(ret));
+	//	ret = (double)rand() / ((double)rand() + 0.1);
+	//	y = y + (ret - floor(ret));
+	//	ret = (double)rand() / ((double)rand() + 0.1);
+	//	c = c - (ret - floor(ret));
+
+	//	//new_z << x << endr << 0 << endr << 0 << endr << y << endr << 0 << endr << 0 << endr << c << endr << 0 << endr << 0 << endr;
+	//	new_z << x << endr << y << endr << c << endr;
+	//	FK.Measurement(new_z);
+	//	FK.Update();
+	//	//FK.print_coordinate();
+
+	//	
+
+	//	
+	//}
 
 
 

@@ -32,9 +32,9 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				
 				double dt = 0;//Узнать, что тут Кириллу нужно
-				colvec v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
+				colvec v = zeros(9);
+				v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 				double D = countNorma(v, KalmanFilter.GetS());
 				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
@@ -115,10 +115,11 @@ void CVOI::associate()
 			{
 				if (i < j) //чтобы не сравнивать одинаковые пары 
 				{
-					colvec v;
+					colvec v = zeros(3);
 					mat S; 
-					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);
-					double D = countNorma(v, S);
+					v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
+					S = KalmanFilter.GetS();
+					double D = countNorma(v, S); //error
 					if (D <= constSimilarityRate)
 					{
 						CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
