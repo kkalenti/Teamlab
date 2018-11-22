@@ -22,6 +22,8 @@ public:
 	void setMatrix_P(mat);
 	colvec & getVector_x();
 	void setDt(double);
+	mat  GetS();
+	colvec & GetV();
 
 	void makeMatrix_Q(mat, double);
 	void makeMatrix_Q();
@@ -35,8 +37,9 @@ public:
 	void update_F(double);
 	void update_U(double);
 
-	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
+	colvec Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
 	colvec Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
+	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
 
 	void UpdateMeasure(CBaseTraceHypo&, CMeasurements&);
 	void UpdatePredict(CBaseTraceHypo&, double);
@@ -46,7 +49,7 @@ public:
 	void Measurement();
 	void Update();
 	void UpdateEKF(const colvec &);
-	mat &GetS();
+	
 
 
 	void print_coordinate();
@@ -100,9 +103,9 @@ protected:
 	colvec x_0 = colvec(9); // Начальный вектор состояний. Вектор состояния динамической системы, который является случайным Гауссовским процессом
 
 	colvec x_pred = zeros(9);  //Вектор в котором будет хранится предсказанное состояние.
-	colvec z_pred; //
+	colvec z_pred = zeros(3); //
 	colvec z; //Вектор пришедший с ПОИ. Измерения с РЛС.
-	colvec v = zeros(3, 1); //Вектор рассогласования/невязки.
+	colvec v = zeros(3); //Вектор рассогласования/невязки.
 
 };
 

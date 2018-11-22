@@ -82,7 +82,7 @@ void CKalmanFilter::Prediction(double dt)
 	flag++;
 }
 
-void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
+colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
 {
 	double dt = abs(firstMeasure.detectionTime - secondMeasure.detectionTime);
 	update_F(dt);
@@ -90,9 +90,13 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 
 	P = F * P_Const * F.t() + U * Q * U.t();
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
-	S_VOI = R_Meas + H * P * H.t();
-	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
-	v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
+
+	if (firstMeasure.detectionTime > secondMeasure.detectionTime)
+		this->v = firstMeasure.Setz() - secondMeasure.Setz();
+	else
+		this->v = secondMeasure.Setz() - firstMeasure.Setz();
+
+	return v;
 }
 
 colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
@@ -102,16 +106,31 @@ colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Mea
 	update_F(dt);
 	update_U(dt);
 
-	x_pred = F * TraceOrHypo.SetState_X();
+	x_pred = F * TraceOrHypo.SetState_X(); //9991
 	//x_pred = F * x_0;
-	z_pred = H * x_pred;
+	z_pred = H * x_pred; //3991
+	v = Measure.Getz() - z_pred;
 	//v = Measure.Coordinates - z_pred;
 
 
-	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t();
-	S = R + H * P * H.t();
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
+	S = R + H * P * H.t(); // 33+39*99*93
 
 	return v;
+}
+
+void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
+{
+	double dt = abs(firstMeasure.detectionTime - secondMeasure.detectionTime);
+	dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀÐÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
+	update_F(dt);
+	update_U(dt);
+
+	P = F * P_Const * F.t() + U * Q * U.t();
+	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+	S_VOI = R_Meas + H * P * H.t();
+	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
+	v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
 }
 
 
@@ -326,7 +345,7 @@ colvec&  CKalmanFilter::getVector_x()
 	return this->x_pred;
 }
 
-mat &CKalmanFilter::GetS()
+mat CKalmanFilter::GetS()
 {
 	return this->S;
 }
@@ -336,18 +355,13 @@ void CKalmanFilter::setDt(double Dt)
 	this->Dt = Dt;
 }
 
+colvec &CKalmanFilter::GetV()
+{
+	return this->v;
+}
+
 void CKalmanFilter::print_coordinate()
 {
 	x_pred.print("X_PRED:");
 }
 
-//
-//mat & CKalmanFilter::GetS()
-//{
-//	return this->S;
-//}
-
-//void CKalmanFilter::print_coordinate()
-//{
-//	x_pred.print("X_PRED:");
-//}

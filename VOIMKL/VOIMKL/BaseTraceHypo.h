@@ -11,8 +11,8 @@ protected:
 	int Nmiss;
 	//bool UpdateWithM = true; //проверяем способ обновления трассы - через измерения или предсказанное значение перенесется в обновление
 	//mutable mat Pconst = zeros<mat>(N, N);
-	mat P=zeros(N,N);
-	colvec x=zeros(N);
+	mat P = zeros(N,N);
+	colvec x = zeros(N);
 	mat Q = zeros(N, N);
 	double lastTime;
 public:
