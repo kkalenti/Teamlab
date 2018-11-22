@@ -1,5 +1,6 @@
-#include "VOI.h"
 #include "stdafx.h"
+#include "VOI.h"
+
 using namespace std;
 
 CVOI::CVOI() : BankOfSection(1)
@@ -33,8 +34,6 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				colvec v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 				double D = countNorma(v, KalmanFilter.GetS());
 				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
@@ -47,7 +46,6 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				(BankOfSection[CurrentSector].SetBankTrace())[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
@@ -92,8 +90,8 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				colvec v=KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
+
 				double D = countNorma(v, KalmanFilter.GetS());
 				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
@@ -105,7 +103,6 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
@@ -124,6 +121,8 @@ void CVOI::associate()
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
+
+
 	
 	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
 	{

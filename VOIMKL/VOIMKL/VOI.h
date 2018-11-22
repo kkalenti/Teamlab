@@ -1,8 +1,8 @@
 #ifndef VOI_H
 #define VOI_H
+#include "stdafx.h"
 #include <vector>
 #include <Hungarian.h>
-#include "stdafx.h"
 #include "Section.h"
 #include "FilterKalman.h"
 #include "ResultOfScan.h"

@@ -32,8 +32,8 @@ CImitator::CImitator()
 			init("Raid5.txt", true);
 			break;
 	}
-//	GeneralVoi = new CVOI();
-	//GeneralVoi->SetSizeZone(minBeta, maxBeta);
+	GeneralVoi = new CVOI();
+	GeneralVoi->SetSizeZone(minBeta, maxBeta);
 }
 
 CImitator::~CImitator()
@@ -59,7 +59,7 @@ void CImitator::Scan()
 					int fy = returnUniformRandom(10000);	
 					int fz = returnUniformRandom(100000);
 					CAirObject* fake = new CAirObject(fx, fy, fz, stationCoordinates);
-					//fake->SendToVoi(*GeneralVoi, currentTime, true);
+					//fake->SendToVoi(GeneralVoi, currentTime, true);
 				}
 				// если луч и цель совпали
 				if( y == floor(targets[k].GetEpsion() * 180 / 3.14159265 + .5) && i == floor(targets[k].GetBeta() * 180 / 3.14159265 +.5) ) {
@@ -72,7 +72,7 @@ void CImitator::Scan()
 				}
 			}
 		}
-		//GeneralVoi->pushSectorObserved(currentTime,i);
+		//GeneralVoi->pushSectorObserved(currentTime,i+1);
 	}
 	if( numberOfSteps > 0 ) { // если время моделирования не истекло, открываем новый период обзора
 		cout << "\n/////////////////////////////////////////////////////////////////////////////////////";

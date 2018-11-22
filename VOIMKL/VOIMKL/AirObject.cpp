@@ -11,15 +11,13 @@ CAirObject::CAirObject()
 	this->distance = 0;
 	this->aChangesCounter = 0;
 	CovMat = new double*[3];
-	for (int i = 0; i < 3; i++) {
-		CovMat[i] = new double[3];
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < 4; i++) {
+		CovMat[i] = new double[4];
+		for (int j = 0; j < 4; j++) {
 			CovMat[i][j] = 0;
 		}
 	}
-	CovMat[0][0] = CAirObject::distanceSko;
-	CovMat[1][1] = CAirObject::betaSko;
-	CovMat[2][2] = CAirObject::epsilonSko;
+	CovMat[3][3] = CAirObject::radialSko;
 }
 
 CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
@@ -39,15 +37,13 @@ CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
 	std::random_device device;
 	gaussGenerator.seed(device());
 	CovMat = new double*[4];
-	for (int i = 0; i < 3; i++) {
-		CovMat[i] = new double[3];
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < 4; i++) {
+		CovMat[i] = new double[4];
+		for (int j = 0; j < 4; j++) {
 			CovMat[i][j] = 0;
 		}
 	}
-	CovMat[0][0] = CAirObject::distanceSko;
-	CovMat[1][1] = CAirObject::betaSko;
-	CovMat[2][2] = CAirObject::epsilonSko;
+	CovMat[3][3] = CAirObject::radialSko;
 }
 
 CAirObject::~CAirObject() 
@@ -126,14 +122,24 @@ void CAirObject::Update(const double time, const double curTime, const CVector& 
 //	//CovMat[1][1] = pow(di, 2) + pow(CAirObject::betaSko, 2);
 //	//CovMat[2][2] = pow(di, 2) + pow(CAirObject::epsilonSko, 2);
 //
-//	/*double b1 = exp(pow(-CAirObject::betaSko, 2) / 2);
-//	double b2 = exp(pow(-CAirObject::epsilonSko, 2) / 2);
-//	CovMat[0][0] = (pow((b1 * b2), -2) - 2) * di * pow(cos(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
-//		* (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-//	CovMat[1][1] = (pow((b1 * b2), -2) - 2) * di * pow(sin(bt), 2) * pow(cos(ep), 2) + (1 / 4) * (pow(di, 2) + CAirObject::distanceSko)
-//		* (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-//	CovMat[2][2] = (pow((b2), -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + (1 / 2) * (pow(di, 2) + CAirObject::distanceSko)
-//		* (1 - pow(b2, 4) * cos(2 * ep));*/
+//double b1 = exp(-1 * pow(CAirObject::betaSko, 2) / 2);
+//double b2 = exp(-1 * pow(CAirObject::epsilonSko, 2) / 2);
+//
+//CovMat[0][0] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(cos(bt), 2) * pow(cos(ep), 2) + 0.25
+//* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+//CovMat[1][1] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(sin(bt), 2) * pow(cos(ep), 2) + 0.25
+//* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+//CovMat[2][2] = (pow(b2, -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + 0.5 * (pow(di, 2) + pow(CAirObject::distanceSko, 2))
+//* (1 - pow(b2, 4) * cos(2 * ep));
+//CovMat[0][1] = (pow(b1 * b2, -2) - 2) * pow(di, 2) * sin(bt) * cos(bt) * pow(cos(ep), 2) + 0.25
+//* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * pow(b1, 4) * sin(2 * bt) * (1 + pow(b2, 4) * cos(2 * ep));
+//CovMat[1][0] = CovMat[0][1];
+//CovMat[0][2] = (pow(b1, -1) * pow(b2, -1) - pow(b1, -1) - b1) * pow(di, 2) * cos(bt) * sin(ep) * cos(ep) + 0.5
+//* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * cos(bt) * sin(2 * ep);
+//CovMat[2][0] = CovMat[0][2];
+//CovMat[1][2] = (pow(b1, -1) * pow(b2, -2) - pow(b1, -1) - b1) * pow(di, 2) * sin(bt) * sin(ep) * cos(ep) + 0.5
+//* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * sin(bt) * sin(2 * ep);
+//CovMat[2][1] = CovMat[1][2];
 //
 //    // вычисление координат с учетом шума
 //	CVector coordinates;

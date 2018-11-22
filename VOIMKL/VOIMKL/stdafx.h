@@ -15,24 +15,21 @@ struct CVector {
 };
 
 #include "targetver.h"
-
 #include <armadillo>
 #include <stdio.h>
 #include <iostream>
 #include <cstdio>
 #include <math.h>
 #include <tchar.h>
-
+#include <string>
 
 #include "Imitator.h"
 #include "AirObject.h"
 #include "ResultOfScan.h"
 #include "Noize.h"
 #include "Voi2.h"
-#include <string>
 #include "Saver.h"
 #include "ReferenceState.h"
-
 #include "VOI.h"
 #include "BaseTraceHypo.h"
 #include "FilterKalman.h"

@@ -44,7 +44,7 @@ public:
 	~CAirObject();
 
 	void Update(const double time, const double curTime, const CVector& station); // обновление параметров воздушного объекта
-	//void SendToVoi(CVOI &cvoi, const double curTime, const bool fake = false); // отправка данных на вторичную обработку
+	//void SendToVoi(CVOI cvoi, const double curTime, const bool fake = false); // отправка данных на вторичную обработку
 	void SendToDb(const int numTarget, const double curTime); // отправка данных в базу данных
 	double GetBeta() { return beta; }
 	double GetEpsion() { return epsilon; }

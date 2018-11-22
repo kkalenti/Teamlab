@@ -1,8 +1,8 @@
+#include "stdafx.h" //для структур Real
 #include <iostream>
 #include <stdio.h>
 #include <string.h> /* For strcmp() */
 #include <stdlib.h> /* For EXIT_FAILURE, EXIT_SUCCESS */
-#include "stdafx.h" //для структур Real
 #include "mat.h"
 
 using namespace std;

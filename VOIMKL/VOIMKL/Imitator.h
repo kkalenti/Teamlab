@@ -12,6 +12,8 @@
 #include "VOI.h"
 #include "stdafx.h"
 
+class CVOI;
+
 class CImitator {
 public:
 	CImitator();
@@ -19,9 +21,9 @@ public:
 	void Scan();
 private:
 	
+	CVOI *GeneralVoi;
 	CVector stationCoordinates;
 	CAirObject* targets;
-//	CVOI *GeneralVoi;
 
 	int numberOfTargets;
 	int numberOfSteps;  // длительность модели в тактах
