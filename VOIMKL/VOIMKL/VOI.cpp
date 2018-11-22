@@ -1,4 +1,5 @@
 #include "VOI.h"
+#include "stdafx.h"
 using namespace std;
 
 CVOI::CVOI() : BankOfSection(1)
@@ -49,7 +50,7 @@ void CVOI::associate()
 				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				(BankOfSection[CurrentSector].SetBankTrace())[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].detectionTime);
+				(BankOfSection[CurrentSector].SetBankTrace())[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
 				BankOfSection[CurrentSector].SetBankTrace()[i].NullNmiss();
 				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
 			}
@@ -57,11 +58,29 @@ void CVOI::associate()
 			{
 				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], dt);
+				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i],dt);
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
+			CVector ToVoi2Coordinate;
+			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[0];
+			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[3];
+			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[6];
+			CVector ToVoi2Speed;
+			ToVoi2Speed.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[1];
+			ToVoi2Speed.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[4];
+			ToVoi2Speed.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[7];
+			CVector ToVoi2Acceleration;
+			ToVoi2Acceleration.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[2];
+			ToVoi2Acceleration.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[5];
+			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[8];
+
+			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
+				BankOfSection[CurrentSector].SetBankTrace()[i].SetlastTime(), 
+				BankOfSection[CurrentSector].SetBankTrace()[i].GetId()));
+			
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
+		
 	}
 	
 	if (!BankOfSection[CurrentSector].GetBankHypo().empty())
@@ -89,7 +108,7 @@ void CVOI::associate()
 				double dt = 0;//Узнать, что тут Кириллу нужно
 				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].detectionTime);
+				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncApprove();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNmiss();
 				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
