@@ -1,4 +1,5 @@
-#include "BaseTraceHypo.h"
+#include "stdafx.h"
+
 using namespace std;
 
 CBaseTraceHypo::CBaseTraceHypo()
@@ -79,6 +80,7 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 		}
 	}
 	this->Q = constQ;
+	this->lastTime = newM.DetectionTime;
 }
 
 CHypo::~CHypo()
@@ -105,4 +107,19 @@ CTrace CHypo::HypoToTrace()
 {
 	CTrace resTrace(std::move(*this));
 	return resTrace;
+}
+
+double CBaseTraceHypo::GetlastTime(double time)
+{
+	return this->lastTime = time;
+}
+
+const double CBaseTraceHypo::SetlastTime()
+{
+	return this->lastTime;
+}
+
+const int CTrace::GetId()
+{
+	return this->ID;
 }
