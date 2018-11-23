@@ -13,3 +13,5 @@ VOIMKL/x64/*
 in
 *.sdf
 *.suo
+VOIMKL/VOIMKL/SavedData.mat
+VOIMKL/VOIMKL.sdf
