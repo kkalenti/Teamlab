@@ -1,5 +1,5 @@
 Station:0,0,0
-numberOfSteps:36000
+numberOfSteps:3600
 timeOfTakt:0.001
 maxBeta:6
 minBeta:0

@@ -15,23 +15,40 @@ mat &get_Rconst() {
 	return RCONST;
 }
 
-CMeasurements::CMeasurements(CVector coordinates, double vr, double time) :CResultOfScan(coordinates, vr, time)
+mat &rewriteR(double **cov){
+	static mat RCONST = zeros<mat>(M, M);
+	for (int i = 0; i < M ; i++)
+	{
+		for (int j = 0; j < M + 1; j++)
+		{
+			if (j < M)
+			{
+				RCONST(i,j) = cov[i][j];
+			}
+		}
+	}
+	return RCONST;
+}
+
+CMeasurements::CMeasurements(CVector coordinates, double vr, double time, double **cov) :CResultOfScan(coordinates, vr, time, cov)
 {
 	this->z[0] = coordinates.x;
 	this->z[1] = coordinates.y;
 	this->z[2] = coordinates.z;
 	this->Nmiss = 0;
 	this->R = get_Rconst();
+	this->R = rewriteR(cov);
 	this->reservedForUpdate = false;
 }
 
-CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.DetectionTime)
+CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.DetectionTime, newres.CovMat)
 {
 	this->z[0] = newres.Coordinates.x;
 	this->z[1] = newres.Coordinates.y;
 	this->z[2] = newres.Coordinates.z;
 	this->Nmiss = 0;
 	this->R = get_Rconst();
+	this->R = rewriteR(newres.CovMat);
 	this->reservedForUpdate = false;
 }
 

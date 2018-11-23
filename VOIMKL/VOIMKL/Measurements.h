@@ -5,6 +5,7 @@
 
 using namespace arma;
 static mat &get_Rconst();
+static mat &rewriteR(double **cov);
 class CMeasurements :  public CResultOfScan{
 private:
 	int Nmiss;
@@ -12,7 +13,7 @@ private:
 	bool reservedForUpdate;
 	dcolvec z = zeros(M);
 public:
-	CMeasurements(CVector coordinates, double vr, double time);
+	CMeasurements(CVector coordinates, double vr, double time, double **cov);
 	CMeasurements::CMeasurements(CResultOfScan &newres);
 	~CMeasurements();
 	void IncNmiss();
