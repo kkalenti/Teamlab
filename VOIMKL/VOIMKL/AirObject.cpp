@@ -118,28 +118,24 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	double di = this->distance + returnGaussRandom(distanceSko);
 	// вычисление ковариационной матрицы
 
-	//CovMat[0][0] = pow(CAirObject::distanceSko, 2);
-	//CovMat[1][1] = pow(di, 2) + pow(CAirObject::betaSko, 2);
-	//CovMat[2][2] = pow(di, 2) + pow(CAirObject::epsilonsko, 2);
-
 	double b1 = exp(-1 * pow(CAirObject::betaSko, 2) / 2);
 	double b2 = exp(-1 * pow(CAirObject::epsilonSko, 2) / 2);
 
-CovMat[0][0] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(cos(bt), 2) * pow(cos(ep), 2) + 0.25
-* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-CovMat[1][1] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(sin(bt), 2) * pow(cos(ep), 2) + 0.25
-* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-CovMat[2][2] = (pow(b2, -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + 0.5 * (pow(di, 2) + pow(CAirObject::distanceSko, 2))
-* (1 - pow(b2, 4) * cos(2 * ep));
-CovMat[0][1] = (pow(b1 * b2, -2) - 2) * pow(di, 2) * sin(bt) * cos(bt) * pow(cos(ep), 2) + 0.25
-* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * pow(b1, 4) * sin(2 * bt) * (1 + pow(b2, 4) * cos(2 * ep));
-CovMat[1][0] = CovMat[0][1];
-CovMat[0][2] = (pow(b1, -1) * pow(b2, -1) - pow(b1, -1) - b1) * pow(di, 2) * cos(bt) * sin(ep) * cos(ep) + 0.5
-* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * cos(bt) * sin(2 * ep);
-CovMat[2][0] = CovMat[0][2];
-CovMat[1][2] = (pow(b1, -1) * pow(b2, -2) - pow(b1, -1) - b1) * pow(di, 2) * sin(bt) * sin(ep) * cos(ep) + 0.5
-* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * sin(bt) * sin(2 * ep);
-CovMat[2][1] = CovMat[1][2];
+	CovMat[0][0] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(cos(bt), 2) * pow(cos(ep), 2) + 0.25
+	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+	CovMat[1][1] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(sin(bt), 2) * pow(cos(ep), 2) + 0.25
+	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
+	CovMat[2][2] = (pow(b2, -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + 0.5 * (pow(di, 2) + pow(CAirObject::distanceSko, 2))
+	* (1 - pow(b2, 4) * cos(2 * ep));
+	CovMat[0][1] = (pow(b1 * b2, -2) - 2) * pow(di, 2) * sin(bt) * cos(bt) * pow(cos(ep), 2) + 0.25
+	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * pow(b1, 4) * sin(2 * bt) * (1 + pow(b2, 4) * cos(2 * ep));
+	CovMat[1][0] = CovMat[0][1];
+	CovMat[0][2] = (pow(b1, -1) * pow(b2, -1) - pow(b1, -1) - b1) * pow(di, 2) * cos(bt) * sin(ep) * cos(ep) + 0.5
+	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * cos(bt) * sin(2 * ep);
+	CovMat[2][0] = CovMat[0][2];
+	CovMat[1][2] = (pow(b1, -1) * pow(b2, -2) - pow(b1, -1) - b1) * pow(di, 2) * sin(bt) * sin(ep) * cos(ep) + 0.5
+	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * sin(bt) * sin(2 * ep);
+	CovMat[2][1] = CovMat[1][2];
 
     // вычисление координат с учетом шума
 	CVector coordinates;
@@ -147,7 +143,6 @@ CovMat[2][1] = CovMat[1][2];
 	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
-	
 
 	CResultOfScan* packagedb = new CResultOfScan(coordinates, radialSpeed, curtime /* cov*/); // формирование пакета данных для передачи на вои
 	CResultOfScan package(coordinates, radialSpeed, curtime /* cov*/);
@@ -155,6 +150,7 @@ CovMat[2][1] = CovMat[1][2];
 	
 	if( fake == false ) {
 		saveData(packagedb);
+		cout << "\nNoised Coordinates     X=" << coordinates.x << "  Y=" << coordinates.y << "  Z=" << coordinates.z << "\n";
 	}	else {
 		CNoize* Noize = new CNoize(coordinates, radialSpeed, curtime);
 		saveData(Noize);
@@ -165,9 +161,10 @@ CovMat[2][1] = CovMat[1][2];
 
 void CAirObject::SendToDb(const int numTarget, const double curTime)
 {
-	cout << "\NumberOfTarget number " << numTarget << " found!\nCoordinates without noise    X=" << Coordinate.x << " / Y=" << Coordinate.y << " / Z="
-		<< Coordinate.z << "      after " << curTime << "sec";
-	cout << "\nacceleration " << Acceleration.x << " / " << Acceleration.y << " / " << Acceleration.z << "  speed " << Speed.x << " / " << Speed.y << " / " << Speed.z;
+	cout << "\nTarget " << numTarget << ":\nPerfect Coordinates    X=" << Coordinate.x << "  Y=" << Coordinate.y << "  Z="
+		<< Coordinate.z << " ---------------------- DetectionTime: " << curTime << "sec";
+	cout << "\n      Accelerations    " << Acceleration.x << " / " << Acceleration.y << " / " << Acceleration.z << "      Speeds    "
+		<< Speed.x << " / " << Speed.y << " / " << Speed.z;
 	CReferenceState* RefPackage = new CReferenceState(Coordinate, Speed, Acceleration, curTime, numTarget); // формирование пакета данных для передачи в базу данных
 	saveData(RefPackage);
 	delete RefPackage;
