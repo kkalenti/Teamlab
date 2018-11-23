@@ -118,6 +118,7 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	double di = this->distance + returnGaussRandom(distanceSko);
 	// вычисление ковариационной матрицы
 
+
 	double b1 = exp(-1 * pow(CAirObject::betaSko, 2) / 2);
 	double b2 = exp(-1 * pow(CAirObject::epsilonSko, 2) / 2);
 
@@ -144,8 +145,8 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
 
-	CResultOfScan* packagedb = new CResultOfScan(coordinates, radialSpeed, curtime /* cov*/); // формирование пакета данных для передачи на вои
-	CResultOfScan package(coordinates, radialSpeed, curtime /* cov*/);
+	CResultOfScan* packagedb = new CResultOfScan(coordinates, radialSpeed, curtime, CovMat); // формирование пакета данных для передачи на вои
+	CResultOfScan package(coordinates, radialSpeed, curtime, CovMat);
 	voi.pushMeasurements(package);
 	
 	if( fake == false ) {
