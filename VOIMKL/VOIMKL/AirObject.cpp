@@ -17,7 +17,7 @@ CAirObject::CAirObject()
 			CovMat[i][j] = 0;
 		}
 	}
-	CovMat[3][3] = CAirObject::radialSko;
+	CovMat[3][3] = pow(CAirObject::radialSko, 2);
 }
 
 CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
@@ -43,7 +43,7 @@ CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
 			CovMat[i][j] = 0;
 		}
 	}
-	CovMat[3][3] = CAirObject::radialSko;
+	CovMat[3][3] = pow(CAirObject::radialSko, 2);
 }
 
 CAirObject::~CAirObject() 

@@ -72,7 +72,7 @@ void CImitator::Scan()
 				}
 			}
 		}
-		GeneralVoi->pushSectorObserved(currentTime,(i+1)*10);
+		GeneralVoi->pushSectorObserved(currentTime,i+1);
 	}
 	if( numberOfSteps > 0 ) { // если время моделирования не истекло, открываем новый период обзора
 		cout << "\n/////////////////////////////////////////////////////////////////////////////////////";

@@ -22,7 +22,7 @@ public:
 	void setMatrix_P(mat);
 	colvec & getVector_x();
 	void setDt(double);
-	mat  GetS();
+	mat  &GetS();
 	colvec & GetV();
 
 	void makeMatrix_Q(mat, double);
@@ -84,8 +84,9 @@ protected:
 	//mutable mat Q; // Матрица шума состояния 
 
 	mat P = zeros(9, 9); //  ковариационная матрица ошибки оценки вектора состояния
+	//mat F = zeros(9, 9); // Матрица перехода между состояниями.
 	mat F = zeros(9, 9); // Матрица перехода между состояниями.
-	mat U = mat(9, 1); // матрица Г
+	mat U = zeros(9, 1); // матрица Г
 	//mat U = zeros(9, 1);
 	mat S = zeros(3, 3); // Матрица обновления
 	mat H = zeros(3, 9); // Матрица наблюдения. Матрица отображающая отношение измерения и состояния

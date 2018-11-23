@@ -32,7 +32,7 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				colvec v = zeros(3);
+				colvec v = arma::zeros(3);
 				v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 				double D = countNorma(v, KalmanFilter.GetS());
 				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
@@ -127,11 +127,10 @@ void CVOI::associate()
 			{
 				if (i < j) //чтобы не сравнивать одинаковые пары 
 				{
-					colvec v = zeros(3);
-					mat S = zeros(3, 3); 
-					v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
-					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);
-					//S = KalmanFilter.GetS();
+					colvec v = arma::zeros(3);
+					mat S = arma::zeros(3, 3);
+					//v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
+					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);	
 					
 					double D = countNorma(v, S); //ERROR*********************************
 					if (D <= constSimilarityRate)
@@ -205,5 +204,15 @@ void CVOI::TimeToStartAssociation(double time)
 
 double CVOI::countNorma(colvec &v, mat &predictS)
 {
+	double res = 0;
+	res = arma::as_scalar(v.t()*predictS.i()*v);
+	//double res = 1;
+	/*mat x = predictS.i();
+	x.print("x:");
+	v.print("v:");
+	mat q = v.t();
+	q.print("v.t:");*/
+
+	//double res = 0;
 	return arma::as_scalar(v.t()*predictS.i()*v);
 }

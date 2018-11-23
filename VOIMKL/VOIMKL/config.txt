@@ -1,7 +1,7 @@
 Station:0,0,0
 numberOfSteps:36000
 timeOfTakt:0.001
-maxBeta:40
+maxBeta:6
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
@@ -10,7 +10,7 @@ SKOforBeta:0.03
 SKOforDistance:7
 SKOforRadialSpeed:0.012
 SKOforAcceleration:0
-TypeOfSimulation:3
+TypeOfSimulation:1
 
 // Types of simulation
 // 1 = равномерное прямолинейное движение 1 цели вдоль оси Х в сторону станции

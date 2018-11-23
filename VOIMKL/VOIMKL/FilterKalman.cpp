@@ -2,15 +2,17 @@
 
 CKalmanFilter::CKalmanFilter()
 {
-	//P_Const << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-	//  << 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-	//  << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-	//  << 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
-	//  << 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << endr
-	//  << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << 0 << endr
-	//  << 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
-	//  << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << endr
-	//  << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 100 << endr;
+	
+	
+	P_Const << 100<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 1500*1500 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 10000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 10000 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 10000 << endr;
 
 	/*P_Const <<  10000, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 10000, 0, 0, 0, 0, 0, 0, 0,
@@ -86,6 +88,16 @@ colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &second
 	update_F(dt);
 	update_U(dt);
 
+	double w1 = P_Const(0, 0);
+	double w2 = P_Const(0, 1);
+	double w3 = P_Const(0, 2);
+	double w4 = P_Const(1, 0);
+	double w5 = P_Const(1, 1);
+	double w6 = P_Const(1, 2);
+	double w7 = P_Const(2, 0);
+	double w8 = P_Const(2, 1);
+	double w9 = P_Const(2, 2);
+	
 	P = F * P_Const * F.t() + U * Q * U.t();
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
 
@@ -120,15 +132,38 @@ colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Mea
 void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
 {
 	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
-	dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀÐÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
+	//dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀÐÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
+	//dt = 2;
 	update_F(dt);
 	update_U(dt);
+	double w1 = P_Const(0, 0);
+	double w2 = P_Const(0, 1);
+	double w3 = P_Const(0, 2);
+	double w4 = P_Const(1, 0);
+	double w5 = P_Const(1, 1);
+	double w6 = P_Const(1, 2);
+	double w7 = P_Const(2, 0);
+	double w8 = P_Const(2, 1);
+	double w9 = P_Const(2, 2);
+	F.print("F:");
+	U.print("U:");
+	P_Const.print("P:");
 
+	Q(0, 0) = 6;
 	P = F * P_Const * F.t() + U * Q * U.t();
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
 	S_VOI = R_Meas + H * P * H.t();
+	S_VOI.print("S_VOI:");
 	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
-	v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
+	dcolvec first = firstMeasure.Setz();
+	first.print("first:");
+	dcolvec second = secondMeasure.Setz();
+	second(2) = 2976;
+	second.print("second:");
+
+	//v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
+	v_VOI = first - second;
+	v_VOI.print("v_VOI:");
 }
 
 
@@ -169,7 +204,7 @@ void CKalmanFilter::Update()
 
 void CKalmanFilter::UpdateMeasure(CBaseTraceHypo &TraceOrHypo, CMeasurements &measurement)
 {
-
+	colvec x_pred = zeros(9);
 	v = measurement.Getz() - x_pred;
 	W = P * H.t() * S.t();
 	P = P - W * S * W.i();
@@ -263,9 +298,9 @@ void CKalmanFilter::makeMatrix_F()
 
 void CKalmanFilter::update_F(double dt)
 {
-	double ddt = dt * dt;
-	this->Dt = dt;
-	this->Dt_squared = (dt * dt) / 2;
+	//double ddt = dt * dt;
+	/*this->Dt = dt;
+	this->Dt_squared = (dt * dt) / 2;*/
 
 	/*this->F <<
 	1, 0, 0, dt, 0, 0, ddt, 0, 0,
@@ -277,15 +312,20 @@ void CKalmanFilter::update_F(double dt)
 	0, 0, 0, 0, 0, 0, 1, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 1, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 1;*/
+	double dt_squared = (dt * dt) / 2;
+	//this->U << dt_squared, dt_squared, dt_squared, dt, dt, dt, 1, 1, 1;
+	/*this->U << dt_squared << endr << dt << endr << 1 << endr << dt_squared << endr
+		<< dt << endr << 1 << endr << dt_squared << endr << dt << endr << 1;*/
 
-	this->F << 1 << Dt << Dt_squared << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 1 << Dt << 0 << 0 << 0 << 0 << 0 << 0 << endr
+
+	this->F << 1 << dt << dt_squared << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 1 << dt << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 1 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 1 << Dt << Dt_squared << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 1 << Dt << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 1 << dt << dt_squared << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 1 << dt << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 1 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << Dt_squared << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 1 << dt << dt_squared << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << dt << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << endr;
 
 }
@@ -343,7 +383,7 @@ colvec&  CKalmanFilter::getVector_x()
 	return this->x_pred;
 }
 
-mat CKalmanFilter::GetS()
+mat &CKalmanFilter::GetS()
 {
 	return this->S;
 }

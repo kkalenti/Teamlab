@@ -770,14 +770,14 @@ void saveData(CVoi2* s) {
 	mxArray *mx;
 	mx = matGetVariable(pmat, "VOI");
 	int oldN;
-	if (mx == NULL && s->NumberOfTarget == 1) {
+	if (mx == NULL && (s->NumberOfTarget+1) == 1) {
 		createStruct(s);
 	}
-	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget){ //новая цель
+	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
 		extendStruct(s, mx, oldN);
 	}
 	else { //новая дата
-		extendArray(s, mx, s->NumberOfTarget);
+		extendArray(s, mx, s->NumberOfTarget+1);
 	}
 
 	mxSetData(mx, NULL);
