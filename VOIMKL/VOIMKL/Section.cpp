@@ -123,7 +123,9 @@ void CSection::DeletMeasurementsAfterUpdate()
 	int size= this->BankMeasurements.size();
 	for (int i = 0; i < size; i++)
 	{
-		if (BankMeasurements[i].GetReservedForUpdate())
+		if (BankMeasurements[i].GetReservedForUpdate()){
 			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
+			size--;
+		}
 	}
 }

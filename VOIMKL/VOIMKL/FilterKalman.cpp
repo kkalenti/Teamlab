@@ -88,16 +88,6 @@ colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &second
 	update_F(dt);
 	update_U(dt);
 
-	double w1 = P_Const(0, 0);
-	double w2 = P_Const(0, 1);
-	double w3 = P_Const(0, 2);
-	double w4 = P_Const(1, 0);
-	double w5 = P_Const(1, 1);
-	double w6 = P_Const(1, 2);
-	double w7 = P_Const(2, 0);
-	double w8 = P_Const(2, 1);
-	double w9 = P_Const(2, 2);
-	
 	P = F * P_Const * F.t() + U * Q * U.t();
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
 
@@ -136,21 +126,22 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 	//dt = 2;
 	update_F(dt);
 	update_U(dt);
-	double w1 = P_Const(0, 0);
-	double w2 = P_Const(0, 1);
-	double w3 = P_Const(0, 2);
-	double w4 = P_Const(1, 0);
-	double w5 = P_Const(1, 1);
-	double w6 = P_Const(1, 2);
-	double w7 = P_Const(2, 0);
-	double w8 = P_Const(2, 1);
-	double w9 = P_Const(2, 2);
+	//double w1 = P_Const(0, 0);
+	//double w2 = P_Const(0, 1);
+	//double w3 = P_Const(0, 2);
+	//double w4 = P_Const(1, 0);
+	//double w5 = P_Const(1, 1);
+	//double w6 = P_Const(1, 2);
+	//double w7 = P_Const(2, 0);
+	//double w8 = P_Const(2, 1);
+	//double w9 = P_Const(2, 2);
 	F.print("F:");
 	U.print("U:");
 	P_Const.print("P:");
 
 	Q(0, 0) = 6;
 	P = F * P_Const * F.t() + U * Q * U.t();
+	P.print("P which i need:");
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
 	S_VOI = R_Meas + H * P * H.t();
 	S_VOI.print("S_VOI:");
@@ -164,6 +155,9 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 	//v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
 	v_VOI = first - second;
 	v_VOI.print("v_VOI:");
+
+	this->v = v_VOI;
+	this->S = S_VOI;
 }
 
 
@@ -204,12 +198,27 @@ void CKalmanFilter::Update()
 
 void CKalmanFilter::UpdateMeasure(CBaseTraceHypo &TraceOrHypo, CMeasurements &measurement)
 {
-	colvec x_pred = zeros(9);
-	v = measurement.Getz() - x_pred;
-	W = P * H.t() * S.t();
-	P = P - W * S * W.i();
+	//colvec x_pred = zeros(9);
+	//v = measurement.Getz() - x_pred;
+	/*x_pred(0) = 10000;
+	x_pred(3) = 999;
+	x_pred(6) = 21;*/
+	v(0) = measurement.Getz()(0) - x_pred(0);
+	v(1) = measurement.Getz()(1) - x_pred(3);
+	v(2) = measurement.Getz()(2) - x_pred(6);
+	x_pred.print("x_pred:");
+	v.print("v:");
+	S.print("S:");
+	P.print("P:");
+	H.print("H:");
+	mat p_new = TraceOrHypo.SetP();
+	p_new.print("pnew");
+	W = P * H.t() * S.t();//93 = 99*93*33
+	W.print("W:");
+	P = P - W * S * W.t();//99 = 99 - 93*33*39
+	P.print("P:");
 	x_pred = x_pred + W * v;
-
+	x_pred.print("x_pred:");
 	//TraceOrHypo.NullNmiss();
 }
 
