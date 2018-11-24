@@ -117,28 +117,6 @@ void CVOI::associate()
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
 			}
-
-			CVector ToVoi2Coordinate;
-			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[0];
-			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[3];
-			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[6];
-			CVector ToVoi2Speed;
-			ToVoi2Speed.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[1];
-			ToVoi2Speed.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[4];
-			ToVoi2Speed.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[7];
-			CVector ToVoi2Acceleration;
-			ToVoi2Acceleration.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[2];
-			ToVoi2Acceleration.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[5];
-			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[8];
-			/*CVector testvector;
-			testvector.x=5;
-			testvector.y = 5;
-			testvector.z = 5;
-			CVoi2* test = new CVoi2(testvector, testvector, testvector,5,0);
-			saveData(test);*/
-			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
-				BankOfSection[CurrentSector].SetBankHypo()[i].SetlastTime(),
-				0));
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
