@@ -13,7 +13,7 @@ private:
 	std::vector<CTrace> BankTrace;
 	std::vector<CHypo> BankHypo;
 	double AzimutMin, AzimutMax; // границы этого сектора
-	double Lasttime; // последнее время, когда обновляли этот сектор
+	double Lasttime; // последнее время, когда обновляли этот сектор. ПО СУТИ ЭТО ТЕКУЩЕЕ ВРЕМЯ!!!
 public:
 	CSection();
 	~CSection();

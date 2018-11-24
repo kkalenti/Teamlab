@@ -56,6 +56,42 @@ void CKalmanFilter::SetFKMatrix(mat U, mat F, mat H)
 	this->H = H;
 }
 
+void CKalmanFilter::Measurement()
+{
+	z_pred = H * x_pred;
+	v = z - z_pred;
+	S = R + H * P * H.t();
+	flag++;
+}
+
+void CKalmanFilter::Measurement(colvec & new_z)
+{
+	this->z = new_z;
+	//H.print("H:");
+	z_pred = H * x_pred;
+	//x_pred.print("xp:");
+	//z_pred.print("zp:");
+	v = z - z_pred;
+	//v.print("v:");
+	S = R + H * P * H.t();
+	//S.print("s:");
+	flag++;
+}
+
+void CKalmanFilter::Update()
+{
+	W = P * H.t() * S.i();
+	//W.print("W:");
+	x_pred = x_pred + W * v;
+	x_pred.print("xp:");
+	P = P - W * S * W.t();
+	//P.print("P:");
+	flag++;
+	cout << "\n\nflag:" << flag << endl;
+
+}
+
+
 void CKalmanFilter::Prediction(double dt)
 {
 
@@ -119,6 +155,27 @@ colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Mea
 	return v;
 }
 
+colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
+{
+	//this->Dt = dt;
+	//double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
+	double dt = abs(CurrentTime - TraceOrHypo.SetlastTime());
+	update_F(dt);
+	update_U(dt);
+
+	x_pred = F * TraceOrHypo.SetState_X(); //9991
+	////x_pred = F * x_0;
+	//z_pred = H * x_pred; //3991
+	//v = Measure.Getz() - z_pred;
+	////v = Measure.Coordinates - z_pred;
+
+
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
+	//S = R + H * P * H.t(); // 33+39*99*93
+
+	return v;
+}
+
 void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
 {
 	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
@@ -161,40 +218,6 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 }
 
 
-void CKalmanFilter::Measurement()
-{
-	z_pred = H * x_pred;
-	v = z - z_pred;
-	S = R + H * P * H.t();
-	flag++;
-}
-
-void CKalmanFilter::Measurement(colvec & new_z)
-{
-	this->z = new_z;
-	//H.print("H:");
-	z_pred = H * x_pred;
-	//x_pred.print("xp:");
-	//z_pred.print("zp:");
-	v = z - z_pred;
-	//v.print("v:");
-	S = R + H * P * H.t();
-	//S.print("s:");
-	flag++;
-}
-
-void CKalmanFilter::Update()
-{
-	W = P * H.t() * S.i();
-	//W.print("W:");
-	x_pred = x_pred + W * v;
-	x_pred.print("xp:");
-	P = P - W * S * W.t();
-	//P.print("P:");
-	flag++;
-	cout << "\n\nflag:" << flag << endl;
-
-}
 
 void CKalmanFilter::UpdateMeasure(CBaseTraceHypo &TraceOrHypo, CMeasurements &measurement)
 {
@@ -221,8 +244,9 @@ void CKalmanFilter::UpdateMeasure(CBaseTraceHypo &TraceOrHypo, CMeasurements &me
 }
 
 //изменить функцию
-void CKalmanFilter::UpdatePredict(CBaseTraceHypo &TraceOrHypo, double dt)
+void CKalmanFilter::UpdatePredict(CBaseTraceHypo &TraceOrHypo, double CurrentTime)
 {
+	double dt = CurrentTime - TraceOrHypo.SetlastTime();
 	update_F(dt);
 	update_U(dt);
 
