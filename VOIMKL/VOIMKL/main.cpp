@@ -8,9 +8,13 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	srand(time(NULL));
+	createMatFile();
+	
 	CImitator* imitator = new CImitator();
 	imitator->Scan();
+
 	delete imitator;
+	closeMat();
 	_getch();
 	return 0;
 }
