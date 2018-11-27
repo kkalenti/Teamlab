@@ -28,6 +28,7 @@ struct CVector {
 #include "ResultOfScan.h"
 #include "Noize.h"
 #include "Voi2.h"
+#include "Hypo2.h"
 #include "Saver.h"
 #include "ReferenceState.h"
 #include "VOI.h"
