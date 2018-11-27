@@ -45,6 +45,7 @@ class CHypo : public CBaseTraceHypo{
 	friend class CTrace;
 private:
 	int Napprove;
+	int ID_hyp;
 public:
 	CHypo(CMeasurements &newM);
 	~CHypo();

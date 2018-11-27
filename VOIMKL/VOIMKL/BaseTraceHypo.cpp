@@ -81,6 +81,8 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	}
 	this->Q = constQ;
 	this->lastTime = newM.DetectionTime;
+	this->ID_hyp = COPIES_COUNT2;
+	COPIES_COUNT2++;
 }
 
 CHypo::~CHypo()
