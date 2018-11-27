@@ -53,9 +53,9 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				double dt = 0.1;//временное решение
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], dt);
+				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());	
+				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());
+				BankOfSection[CurrentSector].SetBankTrace()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
 
@@ -108,9 +108,12 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				double dt = 0.1;//временное решение
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], dt);
+				/*int newsize=BankOfSection[CurrentSector].SetBankMeasurements().size;
+				double timefirst=BankOfSection[CurrentSector].SetBankMeasurements()[newsize].DetectionTime;*/
+				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
+				//KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
+				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
+				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
 			}
@@ -131,7 +134,6 @@ void CVOI::associate()
 					mat S = arma::zeros(3, 3);
 					//v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);	
-					
 					double D = countNorma(v, S); //ERROR*********************************
 					if (D <= constSimilarityRate)
 					{
