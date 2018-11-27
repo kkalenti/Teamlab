@@ -53,5 +53,6 @@ public:
 	void IncApprove();
 	void NullNapprove();//
 	CTrace HypoToTrace();
+	const int GetId_hyp();
 };
 #endif BaseTraceHypo_H

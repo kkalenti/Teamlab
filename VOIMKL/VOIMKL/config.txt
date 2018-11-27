@@ -1,15 +1,15 @@
 Station:0,0,0
-numberOfSteps:360000
+numberOfSteps:36000
 timeOfTakt:0.001
 maxBeta:90
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0.0015
-SKOforBeta:0.0003
-SKOforDistance:20
-SKOforRadialSpeed:0.0015
-SKOforAcceleration:0
+SKOforEpsilon:0.0001
+SKOforBeta:0.0001
+SKOforDistance:1
+SKOforRadialSpeed:5
+SKOforAcceleration:0.00001
 TypeOfSimulation:1
 
 // Types of simulation

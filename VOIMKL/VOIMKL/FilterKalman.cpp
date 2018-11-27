@@ -6,13 +6,13 @@ CKalmanFilter::CKalmanFilter()
 	
 	P_Const << 100<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 1500*1500 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 10000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 1000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 10000 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 1000 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 10000 << endr;
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1000 << endr;
 
 	/*P_Const <<  10000, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 10000, 0, 0, 0, 0, 0, 0, 0,
@@ -134,7 +134,7 @@ colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &second
 
 	return v;
 }
-
+// update with measurement
 colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
 {
 	//this->Dt = dt;
@@ -154,7 +154,7 @@ colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Mea
 
 	return v;
 }
-
+// update with measurement
 colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
 {
 	//this->Dt = dt;
@@ -200,13 +200,17 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 	P = F * P_Const * F.t() + U * Q * U.t();
 	//P.print("P which i need:");
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+	/*mat R_Meas = zeros(3, 3);
+	R_Meas << 0.001 << 0.001 << 0.001 << endr
+		<< 0.001 << 0.001 << 0.001 << endr
+		<< 0.001 << 0.001 << 0.001 << endr;*/
 	S_VOI = R_Meas + H * P * H.t();
 	//S_VOI.print("S_VOI:");
 	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
 	dcolvec first = firstMeasure.Setz();
 	//first.print("first:");
 	dcolvec second = secondMeasure.Setz();
-	second(2) = 2976;
+	//second(2) = 2976;
 	//second.print("second:");
 
 	//v_VOI = firstMeasure.Setz() - secondMeasure.Setz();

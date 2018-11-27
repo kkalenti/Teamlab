@@ -53,7 +53,7 @@ void CImitator::Scan()
 			numberOfSteps--;
 			for (int k = 0; k < this->numberOfTargets; k++) {
 				targets[k].Update(this->timeOfTakt, this->currentTime, this->stationCoordinates);  // пересчет параметров воздушных целей
-				if (returnPoissonRandom(10) > 21) {
+				if (returnPoissonRandom(10) > 100) {
 					cout << "\nFake target sended\n";
 					int fx = returnUniformRandom(100000);
 					int fy = returnUniformRandom(10000);	
