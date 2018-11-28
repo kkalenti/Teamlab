@@ -23,6 +23,7 @@ void CVOI::SetSizeZone(double bmin, double bmax)
 
 void CVOI::associate()
 {
+	// проверка наличия трасс
 	if (!BankOfSection[CurrentSector].GetBankTrace().empty())
 	{
 		int sizeRow = BankOfSection[CurrentSector].GetBankTrace().size();
@@ -78,6 +79,7 @@ void CVOI::associate()
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
 	
+	// проверка наличия гипотез
 	if (!BankOfSection[CurrentSector].GetBankHypo().empty())
 	{
 		int sizeRow = BankOfSection[CurrentSector].GetBankHypo().size();
@@ -117,10 +119,26 @@ void CVOI::associate()
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
 			}
+			CVector ToVoi2Coordinate;
+			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[0];
+			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[3];
+			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[6];
+			CVector ToVoi2Speed;
+			ToVoi2Speed.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[1];
+			ToVoi2Speed.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[4];
+			ToVoi2Speed.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[7];
+			CVector ToVoi2Acceleration;
+			ToVoi2Acceleration.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[2];
+			ToVoi2Acceleration.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[5];
+			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[8];
+			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
+				BankOfSection[CurrentSector].SetBankHypo()[i].SetlastTime(),
+				BankOfSection[CurrentSector].SetBankHypo()[i].GetId_hyp()));
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
 	
+	// проверка наличия измерений
 	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
 	{
 		int size = BankOfSection[CurrentSector].GetBankMeasurements().size();
@@ -139,7 +157,7 @@ void CVOI::associate()
 					{
 						CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
 						CHypo newHypo(std::move(mes));
-						KalmanFilter.UpdateMeasure(newHypo, BankOfSection[CurrentSector].SetBankMeasurements()[j]);
+						//KalmanFilter.UpdateMeasure(newHypo, BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 						BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
 						BankOfSection[CurrentSector].SetBankMeasurements()[i].SetReservedForUpdate();
 						BankOfSection[CurrentSector].SetBankMeasurements()[j].SetReservedForUpdate();
