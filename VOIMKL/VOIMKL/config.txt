@@ -10,8 +10,13 @@ SKOforBeta:0.0003
 SKOforDistance:20
 SKOforRadialSpeed:0.0015
 SKOforAcceleration:0
-TypeOfSimulation:1
+FakeTargetIntensity:1
+LostMeasurements:0
+TypeOfSimulation:2
 
+// Lost measurements 1 = есть 0 = отсутствуют
+// Fake target intensity
+// 0 = без фейковых целей 1 = нормальное количество фейковых целей 2 = много фейковых целей
 // Types of simulation
 // 1 = равномерное прямолинейное движение 1 цели вдоль оси Х в сторону станции
 // 2 = тип 1, только с двумя целями (летят параллельно)

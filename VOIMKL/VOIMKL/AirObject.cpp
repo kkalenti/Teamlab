@@ -59,6 +59,8 @@ double CAirObject::distanceSko;
 double CAirObject::accelerationSko;
 double CAirObject::radialSko;
 int CAirObject::typeOfEmulation; 
+int CAirObject::fakeTargetIntensity;
+int CAirObject::lostMeasurements;
 
 void CAirObject::Update(const double time, const double curTime, const CVector& station) // time - время такта
 {                
@@ -173,6 +175,9 @@ void CAirObject::SendToDb(const int numTarget, const double curTime)
 
 double CAirObject::returnGaussRandom(double sko)
 {
+	if (sko == 0) {
+		return 0;
+	}
 	std::normal_distribution<double> range(0, sko);
 	return range(gaussGenerator);
 }

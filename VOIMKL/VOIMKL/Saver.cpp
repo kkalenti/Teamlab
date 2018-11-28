@@ -237,6 +237,68 @@ int createStruct(CVoi2* s) {
 
 	return(EXIT_SUCCESS);
 }
+//
+int createStruct(CHypo2* s) {
+	mxArray *VOIArray;
+	mxArray *mx;
+	int status;
+	const char *fieldNames[] = { "x", "y", "z", "Vx", "Vy", "Vz", "ax", "ay", "az", "t" };
+
+	VOIArray = mxCreateStructMatrix(1, 1, 10, fieldNames);//???, ÷ели, измерени€(x,y,z...)
+
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.x, sizeof(&s->Coordinate.x));
+	mxSetField(VOIArray, 0, fieldNames[0], mx);//2 аргумент - цель
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.y, sizeof(&s->Coordinate.y));
+	mxSetField(VOIArray, 0, fieldNames[1], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.z, sizeof(&s->Coordinate.z));
+	mxSetField(VOIArray, 0, fieldNames[2], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.x, sizeof(s->Speed.x));
+	mxSetField(VOIArray, 0, fieldNames[3], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.y, sizeof(s->Speed.y));
+	mxSetField(VOIArray, 0, fieldNames[4], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.z, sizeof(s->Speed.z));
+	mxSetField(VOIArray, 0, fieldNames[5], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.x, sizeof(s->Acceleration.x));
+	mxSetField(VOIArray, 0, fieldNames[6], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.y, sizeof(s->Acceleration.y));
+	mxSetField(VOIArray, 0, fieldNames[7], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.z, sizeof(s->Acceleration.z));
+	mxSetField(VOIArray, 0, fieldNames[8], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->DetectionTime, sizeof(s->DetectionTime));
+	mxSetField(VOIArray, 0, fieldNames[9], mx);
+
+	status = matPutVariable(pmat, "Hypo", VOIArray);//засовываем в .mat
+	if (status != 0) {
+		printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
+		return(EXIT_FAILURE);
+	}
+
+	mxSetData(VOIArray, NULL);
+	mxDestroyArray(VOIArray);
+	mxSetData(mx, NULL);
+	mxDestroyArray(mx);
+
+	return(EXIT_SUCCESS);
+}
 //–асширение field (новые данные по известной цели)
 int extendArray(CReferenceState* s, mxArray *origin, int target) {
 	const char *fieldNames[] = { "x", "y", "z", "Vx", "Vy", "Vz", "ax", "ay", "az", "t" };
@@ -575,6 +637,109 @@ int extendArray(CVoi2* s, mxArray *origin, int target) {
 
 	return(EXIT_SUCCESS);
 }
+//
+int extendArray(CHypo2* s, mxArray *origin, int target) {
+	const char *fieldNames[] = { "x", "y", "z", "Vx", "Vy", "Vz", "ax", "ay", "az", "t" };
+	int status;
+	mxArray *tmp;
+	mxArray *mx;
+	int n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
+
+	//Coordinate.x
+	tmp = mxGetField(origin, target - 1, fieldNames[0]);//лучше не трогать индекс
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);//расшир€ю
+	for (int i = 0; i<n; i++) {//вставка старых данных
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Coordinate.x, sizeof(s->Coordinate.x));//вставка новых данных
+	mxSetField(origin, target - 1, fieldNames[0], mx);//засовываю в структуру(поле)
+	//Coordinate.y
+	tmp = mxGetField(origin, target - 1, fieldNames[1]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Coordinate.y, sizeof(s->Coordinate.y));
+	mxSetField(origin, target - 1, fieldNames[1], mx);
+	//Coordinate.z
+	tmp = mxGetField(origin, target - 1, fieldNames[2]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Coordinate.z, sizeof(s->Coordinate.z));
+	mxSetField(origin, target - 1, fieldNames[2], mx);
+	//Speed.x
+	tmp = mxGetField(origin, target - 1, fieldNames[3]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Speed.x, sizeof(s->Speed.x));
+	mxSetField(origin, target - 1, fieldNames[3], mx);
+	//Speed.y
+	tmp = mxGetField(origin, target - 1, fieldNames[4]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Speed.y, sizeof(s->Speed.y));
+	mxSetField(origin, target - 1, fieldNames[4], mx);
+	//Speed.z
+	tmp = mxGetField(origin, target - 1, fieldNames[5]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Speed.z, sizeof(s->Speed.z));
+	mxSetField(origin, target - 1, fieldNames[5], mx);
+	//Acceleration.x
+	tmp = mxGetField(origin, target - 1, fieldNames[6]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Acceleration.x, sizeof(s->Acceleration.x));
+	mxSetField(origin, target - 1, fieldNames[6], mx);
+	//Acceleration.y
+	tmp = mxGetField(origin, target - 1, fieldNames[7]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Acceleration.y, sizeof(s->Acceleration.y));
+	mxSetField(origin, target - 1, fieldNames[7], mx);
+	//Acceleration.z
+	tmp = mxGetField(origin, target - 1, fieldNames[8]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->Acceleration.z, sizeof(s->Acceleration.z));
+	mxSetField(origin, target - 1, fieldNames[8], mx);
+	//DetectionTime
+	tmp = mxGetField(origin, target - 1, fieldNames[9]);
+	mx = mxCreateDoubleMatrix(1, n + 1, mxREAL);
+	for (int i = 0; i<n; i++) {
+		memcpy((void *)(mxGetPr(mx) + i), (void *)(mxGetPr(tmp) + i), sizeof(mxGetPr(tmp)));
+	}
+	memcpy((void *)(mxGetPr(mx) + n), &s->DetectionTime, sizeof(s->DetectionTime));
+	mxSetField(origin, target - 1, fieldNames[9], mx);
+	//
+
+	status = matPutVariable(pmat, "Hypo", origin);//засовываем в .mat
+	if (status != 0) {//проверка
+		printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
+		return(EXIT_FAILURE);
+	}
+
+	mxSetData(tmp, NULL);
+	mxDestroyArray(tmp);
+	mxSetData(mx, NULL);
+	mxDestroyArray(mx);
+
+	return(EXIT_SUCCESS);
+}
 //–асширение структуры (нова€ цель)
 int extendStruct(CReferenceState* s, mxArray *origin, int oldN, int target) {
 	mxArray *extendedStruct;
@@ -719,6 +884,78 @@ int extendStruct(CVoi2* s, mxArray *origin, int oldN) {
 
 	return(EXIT_SUCCESS);
 }
+//
+int extendStruct(CHypo2* s, mxArray *origin, int oldN) {
+	mxArray *extendedStruct;
+	mxArray *mx;
+	int status;
+	const char *fieldNames[] = { "x", "y", "z", "Vx", "Vy", "Vz", "ax", "ay", "az", "t" };
+
+	extendedStruct = mxCreateStructMatrix(1, oldN + 1, 10, fieldNames);//расшир€ем
+
+	mxArray *tmp;
+	for (int j = 0; j < oldN; j++) {//горизонталь
+		for (int i = 0; i < 10; i++){//вертикаль
+			tmp = mxGetField(origin, j, fieldNames[i]);
+			mxSetField(extendedStruct, j, fieldNames[i], tmp);
+		}
+	}
+
+	//«аносим новые данные в только что расширенную структуру
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.x, sizeof(&s->Coordinate.x));
+	mxSetField(extendedStruct, oldN, fieldNames[0], mx);//2 аргумент - цель
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.y, sizeof(&s->Coordinate.y));
+	mxSetField(extendedStruct, oldN, fieldNames[1], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Coordinate.z, sizeof(&s->Coordinate.z));
+	mxSetField(extendedStruct, oldN, fieldNames[2], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.x, sizeof(s->Speed.x));
+	mxSetField(extendedStruct, oldN, fieldNames[3], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.y, sizeof(s->Speed.y));
+	mxSetField(extendedStruct, oldN, fieldNames[4], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Speed.z, sizeof(s->Speed.z));
+	mxSetField(extendedStruct, oldN, fieldNames[5], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.x, sizeof(s->Acceleration.x));
+	mxSetField(extendedStruct, oldN, fieldNames[6], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.y, sizeof(s->Acceleration.y));
+	mxSetField(extendedStruct, oldN, fieldNames[7], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->Acceleration.z, sizeof(s->Acceleration.z));
+	mxSetField(extendedStruct, oldN, fieldNames[8], mx);
+	//
+	mx = mxCreateDoubleMatrix(1, 1, mxREAL);
+	memcpy((void *)(mxGetPr(mx)), &s->DetectionTime, sizeof(s->DetectionTime));
+	mxSetField(extendedStruct, oldN, fieldNames[9], mx);
+	//
+
+	status = matPutVariable(pmat, "Hypo", extendedStruct);//засовываем в .mat
+	if (status != 0) {
+		printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
+		return(EXIT_FAILURE);
+	}
+
+	mxSetData(extendedStruct, NULL);
+	mxDestroyArray(extendedStruct);
+	mxSetData(mx, NULL);
+	mxDestroyArray(mx);
+
+	return(EXIT_SUCCESS);
+}
 //ѕрием данных
 void saveData(CReferenceState* s) {
 	mxArray *mx;
@@ -778,6 +1015,24 @@ void saveData(CVoi2* s) {
 	}
 	else { //нова€ дата
 		extendArray(s, mx, s->NumberOfTarget+1);
+	}
+
+	mxSetData(mx, NULL);
+	mxDestroyArray(mx);
+}
+//
+void saveData(CHypo2* s) {
+	mxArray *mx;
+	mx = matGetVariable(pmat, "Hypo");
+	int oldN;
+	if (mx == NULL && (s->NumberOfTarget + 1) == 1) {
+		createStruct(s);
+	}
+	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget + 1){ //нова€ цель
+		extendStruct(s, mx, oldN);
+	}
+	else { //нова€ дата
+		extendArray(s, mx, s->NumberOfTarget + 1);
 	}
 
 	mxSetData(mx, NULL);

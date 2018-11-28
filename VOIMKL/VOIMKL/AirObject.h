@@ -38,6 +38,8 @@ public:
 	static double distanceSko;
 	static double accelerationSko;
 	static double radialSko;
+	static int fakeTargetIntensity;
+	static int lostMeasurements;
 	static int typeOfEmulation; // выбор конфигурации налета
 
 	CAirObject();
