@@ -3,7 +3,6 @@ function defaultSetting(handles)
 set(handles.uibuttongroup1,'Visible','on');
 set(handles.uibuttongroup7,'Visible','on');
 set(handles.uipanel3,'Visible','on');
-set(handles.pushbutton3,'Visible','on');
 set(handles.togglebutton4,'Visible','on');
 
 grid on;

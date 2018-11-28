@@ -644,8 +644,9 @@ contents = get(hObject,'Value');
 
 Real = evalin('base', 'Real');
 realSize = size(Real);
-realPlot = evalin('base','realPlot');
 
+linesOff();
+checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
 for i = 1:realSize(2)
     if(i == contents)
@@ -660,10 +661,10 @@ for i = 1 : realSize(2)
     setLinesOff(realPlot(i))
 end
 for i = 1 : realSize(2)
-    if(realIndex == i)
-        ch1Plot(handles,realPlot(i));
-        ch2Plot(handles,realPlot(i));
-        ch3Plot(handles,realPlot(i));
+    if(voiIndex == i)
+        ch1Plot(handles,voiPlot(i));
+        ch2Plot(handles,voiPlot(i));
+        ch3Plot(handles,voiPlot(i));
         break;
     end
 end
@@ -692,26 +693,15 @@ contents = get(hObject,'Value');
 
 VOI = evalin('base', 'VOI');
 voiSize = size(VOI);
-voiPlot = evalin('base','voiPlot');
 
+linesOff();
+checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
 for i = 1 : voiSize(2)
     if(i == contents)
         voiIndex = i;
         assignin('base','voiIndex',voiIndex);
         makeLegendAfterListbox(handles);
-        break;
-    end
-end
-
-for i = 1 : voiSize(2)
-    setLinesOff(voiPlot(i))
-end
-for i = 1 : voiSize(2)
-    if(voiIndex == i)
-        ch1Plot(handles,voiPlot(i));
-        ch2Plot(handles,voiPlot(i));
-        ch3Plot(handles,voiPlot(i));
         break;
     end
 end
