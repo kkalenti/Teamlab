@@ -63,8 +63,8 @@ axes(handles.axes1);
 
 path(path,'Functions');
 
-%path_my = cd;
-%assignin('base','path_my',path_my);
+path_my = cd;
+assignin('base','path_my',path_my);
 
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -86,13 +86,13 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%path_my = evalin('base','path_my');
-[file, path_my] = uigetfile('*.mat;');
-%TODO: не добавляется путь по умалчанию
-assignin('base','path_my',path_my);
+path_my = evalin('base','path_my');
+[file, path_my] = uigetfile('*.mat;','Select file',path_my);
 
-if isequal(file,0)
-    return;
+if isequal(file,0) 
+    return;  
+else
+    assignin('base','path_my',path_my);
 end
 
 axes(handles.axes2);
