@@ -42,11 +42,6 @@ mat &CBaseTraceHypo::SetQ()
 	return this->Q;
 }
 
-////const bool CBaseTraceHypo::GetUpdateWithM()
-//{
-//	return this->GetUpdateWithM;
-//}
-
 CTrace::CTrace() :CBaseTraceHypo()
 {
 	this->ID = COPIES_COUNT;
