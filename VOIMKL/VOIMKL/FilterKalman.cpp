@@ -6,13 +6,13 @@ CKalmanFilter::CKalmanFilter()
 	
 	P_Const << 100<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 1500*1500 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 10000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 1000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 10000 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 1000 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 10000 << endr;
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1000 << endr;
 
 	/*P_Const <<  10000, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 10000, 0, 0, 0, 0, 0, 0, 0,
@@ -56,117 +56,6 @@ void CKalmanFilter::SetFKMatrix(mat U, mat F, mat H)
 	this->H = H;
 }
 
-void CKalmanFilter::Prediction(double dt)
-{
-
-	//setDt(0.2);
-	//makeDt_squared();
-	update_F(dt);
-	update_U(dt);
-	//makeMatrix_Q();
-
-	if (flag / 3 > 0)
-	{
-		x_pred = F * x_pred;
-		//x_pred.print("X_pred:");
-	}
-	else
-	{
-		this->x_pred = F * x_0;
-		//x_pred.print("X_pred:");
-	}
-
-	this->P = F * P_Const * F.t() + U * Q * U.t();
-	//P.print("P:");
-	//this->P = F * P_0 * F.transpose() + U * Q * U.transpose();
-	flag++;
-}
-
-colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
-{
-	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
-	update_F(dt);
-	update_U(dt);
-
-	double w1 = P_Const(0, 0);
-	double w2 = P_Const(0, 1);
-	double w3 = P_Const(0, 2);
-	double w4 = P_Const(1, 0);
-	double w5 = P_Const(1, 1);
-	double w6 = P_Const(1, 2);
-	double w7 = P_Const(2, 0);
-	double w8 = P_Const(2, 1);
-	double w9 = P_Const(2, 2);
-	
-	P = F * P_Const * F.t() + U * Q * U.t();
-	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
-
-	if (firstMeasure.DetectionTime > secondMeasure.DetectionTime)
-		this->v = firstMeasure.Setz() - secondMeasure.Setz();
-	else
-		this->v = secondMeasure.Setz() - firstMeasure.Setz();
-
-	return v;
-}
-
-colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
-{
-	//this->Dt = dt;
-	double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
-	update_F(dt);
-	update_U(dt);
-
-	x_pred = F * TraceOrHypo.SetState_X(); //9991
-	//x_pred = F * x_0;
-	z_pred = H * x_pred; //3991
-	v = Measure.Getz() - z_pred;
-	//v = Measure.Coordinates - z_pred;
-
-
-	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
-	S = R + H * P * H.t(); // 33+39*99*93
-
-	return v;
-}
-
-void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
-{
-	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
-	//dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀĞÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
-	//dt = 2;
-	update_F(dt);
-	update_U(dt);
-	double w1 = P_Const(0, 0);
-	double w2 = P_Const(0, 1);
-	double w3 = P_Const(0, 2);
-	double w4 = P_Const(1, 0);
-	double w5 = P_Const(1, 1);
-	double w6 = P_Const(1, 2);
-	double w7 = P_Const(2, 0);
-	double w8 = P_Const(2, 1);
-	double w9 = P_Const(2, 2);
-	F.print("F:");
-	U.print("U:");
-	P_Const.print("P:");
-
-	Q(0, 0) = 6;
-	P = F * P_Const * F.t() + U * Q * U.t();
-	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
-	S_VOI = R_Meas + H * P * H.t();
-	S_VOI.print("S_VOI:");
-	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
-	dcolvec first = firstMeasure.Setz();
-	first.print("first:");
-	dcolvec second = secondMeasure.Setz();
-	second(2) = 2976;
-	second.print("second:");
-
-	//v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
-	v_VOI = first - second;
-	v_VOI.print("v_VOI:");
-}
-
-
 void CKalmanFilter::Measurement()
 {
 	z_pred = H * x_pred;
@@ -202,20 +91,166 @@ void CKalmanFilter::Update()
 
 }
 
+
+void CKalmanFilter::Prediction(double dt)
+{
+
+	//setDt(0.2);
+	//makeDt_squared();
+	update_F(dt);
+	update_U(dt);
+	//makeMatrix_Q();
+
+	if (flag / 3 > 0)
+	{
+		x_pred = F * x_pred;
+		//x_pred.print("X_pred:");
+	}
+	else
+	{
+		this->x_pred = F * x_0;
+		//x_pred.print("X_pred:");
+	}
+
+	this->P = F * P_Const * F.t() + U * Q * U.t();
+	//P.print("P:");
+	//this->P = F * P_0 * F.transpose() + U * Q * U.transpose();
+	flag++;
+}
+
+colvec CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
+{
+	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
+	update_F(dt);
+	update_U(dt);
+
+	P = F * P_Const * F.t() + U * Q * U.t();
+	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+
+	if (firstMeasure.DetectionTime > secondMeasure.DetectionTime)
+		this->v = firstMeasure.Setz() - secondMeasure.Setz();
+	else
+		this->v = secondMeasure.Setz() - firstMeasure.Setz();
+
+	return v;
+}
+// update with measurement
+colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
+{
+	//this->Dt = dt;
+	double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
+	update_F(dt);
+	update_U(dt);
+
+	x_pred = F * TraceOrHypo.SetState_X(); //9991
+	//x_pred = F * x_0;
+	z_pred = H * x_pred; //3991
+	v = Measure.Getz() - z_pred;
+	//v = Measure.Coordinates - z_pred;
+
+
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
+	S = R + H * P * H.t(); // 33+39*99*93
+
+	return v;
+}
+// update with measurement
+colvec  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
+{
+	//this->Dt = dt;
+	//double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
+	double dt = abs(CurrentTime - TraceOrHypo.SetlastTime());
+	update_F(dt);
+	update_U(dt);
+
+	x_pred = F * TraceOrHypo.SetState_X(); //9991
+	////x_pred = F * x_0;
+	//z_pred = H * x_pred; //3991
+	//v = Measure.Getz() - z_pred;
+	////v = Measure.Coordinates - z_pred;
+
+
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
+	//S = R + H * P * H.t(); // 33+39*99*93
+
+	return v;
+}
+
+void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
+{
+	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
+	//dt = 0.1; // ÈÑÏÎËÜÇÓÅÒÑß ÏÎÊÀ ÌÀĞÈÍÀ ÍÅ ÁÓÄÅÒ ÏÎËÓ×ÀÒÜ ÄÀÍÍÛÅ ÎÒ ÀËÅÊÑÅß
+	//dt = 2;
+	update_F(dt);
+	update_U(dt);
+	//double w1 = P_Const(0, 0);
+	//double w2 = P_Const(0, 1);
+	//double w3 = P_Const(0, 2);
+	//double w4 = P_Const(1, 0);
+	//double w5 = P_Const(1, 1);
+	//double w6 = P_Const(1, 2);
+	//double w7 = P_Const(2, 0);
+	//double w8 = P_Const(2, 1);
+	//double w9 = P_Const(2, 2);
+	//F.print("F:");
+	//U.print("U:");
+	//P_Const.print("P:");
+
+	Q(0, 0) = 6;
+	P = F * P_Const * F.t() + U * Q * U.t();
+	//P.print("P which i need:");
+	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+	/*mat R_Meas = zeros(3, 3);
+	R_Meas << 0.001 << 0.001 << 0.001 << endr
+		<< 0.001 << 0.001 << 0.001 << endr
+		<< 0.001 << 0.001 << 0.001 << endr;*/
+	S_VOI = R_Meas + H * P * H.t();
+	//S_VOI.print("S_VOI:");
+	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
+	dcolvec first = firstMeasure.Setz();
+	//first.print("first:");
+	dcolvec second = secondMeasure.Setz();
+	//second(2) = 2976;
+	//second.print("second:");
+
+	//v_VOI = firstMeasure.Setz() - secondMeasure.Setz();
+	v_VOI = first - second;
+	//v_VOI.print("v_VOI:");
+
+	this->v = v_VOI;
+	this->S = S_VOI;
+}
+
+
+
 void CKalmanFilter::UpdateMeasure(CBaseTraceHypo &TraceOrHypo, CMeasurements &measurement)
 {
-	colvec x_pred = zeros(9);
-	v = measurement.Getz() - x_pred;
-	W = P * H.t() * S.t();
-	P = P - W * S * W.i();
+	//colvec x_pred = zeros(9);
+	//v = measurement.Getz() - x_pred;
+	/*x_pred(0) = 10000;
+	x_pred(3) = 999;
+	x_pred(6) = 21;*/
+	v(0) = measurement.Getz()(0) - x_pred(0);
+	v(1) = measurement.Getz()(1) - x_pred(3);
+	v(2) = measurement.Getz()(2) - x_pred(6);
+	///*x_pred.print("x_pred:");
+	//v.print("v:");
+	//S.print("S:");
+	//P.print("P:");
+	//*/H.print("H:");
+	W = P * H.t() * S.t();//93 = 99*93*33
+	//W.print("W:");
+	P = P - W * S * W.t();//99 = 99 - 93*33*39
+	//P.print("P:");
 	x_pred = x_pred + W * v;
-
+	//x_pred.print("x_pred:");
 	//TraceOrHypo.NullNmiss();
 }
 
 //èçìåíèòü ôóíêöèş
-void CKalmanFilter::UpdatePredict(CBaseTraceHypo &TraceOrHypo, double dt)
+void CKalmanFilter::UpdatePredict(CBaseTraceHypo &TraceOrHypo, double CurrentTime)
 {
+	double dt = CurrentTime - TraceOrHypo.SetlastTime();
 	update_F(dt);
 	update_U(dt);
 

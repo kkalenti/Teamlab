@@ -113,6 +113,7 @@ void CSection::SectionHypoToTrace()
 		{
 			CTrace newTrace = BankHypo[i].HypoToTrace();
 			this->BankHypo.erase(this->BankHypo.cbegin() + i);
+			i--;
 			this->BankTrace.push_back(newTrace);
 		}			
 	}
@@ -123,8 +124,7 @@ void CSection::DeletMeasurementsAfterUpdate()
 	int size= this->BankMeasurements.size();
 	for (int i = 0; i < BankMeasurements.size(); i++)
 	{
-		if (BankMeasurements[i].GetReservedForUpdate())
-		{
+		if (BankMeasurements[i].GetReservedForUpdate()){
 			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
 			i--;
 		}		

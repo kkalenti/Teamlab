@@ -1,19 +1,22 @@
 Station:0,0,0
-numberOfSteps:3600
+numberOfSteps:360000
 timeOfTakt:0.001
-maxBeta:6
+maxBeta:90
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0.01
-SKOforBeta:0.03
-SKOforDistance:7
-SKOforRadialSpeed:0.012
+SKOforEpsilon:0.0015
+SKOforBeta:0.0003
+SKOforDistance:20
+SKOforRadialSpeed:0.0015
 SKOforAcceleration:0
 FakeTargetIntensity:0
 LostMeasurements:0
 TypeOfSimulation:1
 
+// Lost measurements 1 = есть 0 = отсутствуют
+// Fake target intensity
+// 0 = без фейковых целей 1 = нормальное количество фейковых целей 2 = много фейковых целей
 // Types of simulation
 // 1 = равномерное прямолинейное движение 1 цели вдоль оси Х в сторону станции
 // 2 = тип 1, только с двумя целями (летят параллельно)

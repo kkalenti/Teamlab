@@ -3,6 +3,9 @@
 /Debug
 *.sdf
 *.opensdf
+VOIMKL/*.v12.suo
+VOIMKL/*.sdf
+VOIMKL/*.opensdf
 VOIMKL/Debug/*
 VOINKL/Release/*
 VOIMKL/x64/*

@@ -56,6 +56,7 @@ CTrace::CTrace(CHypo &&hypo)
 	x = std::move(hypo.x);
 	P = std::move(hypo.P);
 	Q = std::move(hypo.Q);
+	this->lastTime = hypo.lastTime;
 	this->ID = COPIES_COUNT;
 	COPIES_COUNT++;
 	this->Nmiss = 0;
@@ -86,6 +87,8 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	this->P(8, 8) = 1000 * 1000;
 	this->Q = constQ;
 	this->lastTime = newM.DetectionTime;
+	this->ID_hyp = COPIES_COUNT2;
+	COPIES_COUNT2++;
 }
 
 CHypo::~CHypo()
@@ -127,4 +130,9 @@ const double CBaseTraceHypo::SetlastTime()
 const int CTrace::GetId()
 {
 	return this->ID;
+}
+
+const int CHypo::GetId_hyp()
+{
+	return this->ID_hyp;
 }

@@ -9,6 +9,7 @@ static const double constQ=1;
 static const double constSimilarityRate = 9; //порог для D
 static const double constBigNumber = 10000; //для матрицы назначения, значения которые ставим туда, где точно нет решения
 static int COPIES_COUNT = 0; //счетчик для трасc
+static int COPIES_COUNT2 = 0; //счетчик для гипотез
 
 struct CVector {
 	double x, y, z;
@@ -28,6 +29,7 @@ struct CVector {
 #include "ResultOfScan.h"
 #include "Noize.h"
 #include "Voi2.h"
+#include "Hypo2.h"
 #include "Saver.h"
 #include "ReferenceState.h"
 #include "VOI.h"

@@ -22,7 +22,7 @@ function varargout = untitled(varargin)
 
 % Edit the above text to modify the response to help untitled
 
-% Last Modified by GUIDE v2.5 15-Nov-2018 20:19:58
+% Last Modified by GUIDE v2.5 27-Nov-2018 17:44:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,9 +58,13 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+axes(handles.axes1);
 % Добавление пути для вспомогательных функций
 
 path(path,'Functions');
+
+path_my = cd;
+assignin('base','path_my',path_my);
 
 % UIWAIT makes untitled wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -82,22 +86,46 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[file, path] = uigetfile;
+path_my = evalin('base','path_my');
+[file, path_my] = uigetfile('*.mat;','Select file',path_my);
+
+if isequal(file,0) 
+    return;  
+else
+    assignin('base','path_my',path_my);
+end
+
+axes(handles.axes2);
+cla('reset');
+
+axes(handles.axes1);
+cla('reset');
+
+set(handles.axes1,'Visible','On');
+set(handles.axes2,'Visible','Off');
+set(handles.listbox1,'Enable','On');
+set(handles.listbox2,'Enable','On');    
+set(handles.togglebutton4,'String','3D');
+checkboxOff(handles);
+checkboxPOIOff(handles);
+checkboxNoizeOff(handles);
+checkboxStrobOff(handles);
+set(handles.checkbox4,'Value',0);
+set(handles.checkbox8,'Value',0);
+set(handles.checkbox12,'Value',0);
+set(handles.checkbox12,'Enable','on');
+set(handles.uibuttongroup4,'Visible','off');    
+set(handles.uibuttongroup5,'Visible','off');    
+set(handles.uibuttongroup6,'Visible','off');     
+set(handles.togglebutton2,'Enable','On');        
+set(handles.togglebutton3,'Enable','On');
+set(handles.togglebutton2,'Value',0);        
+set(handles.togglebutton3,'Value',0);
+set(handles.togglebutton4,'Value',0);
 
 set(handles.text6,'String',file);
-informationAssigning(file, path);
+informationAssigning(file, path_my);
 defaultSetting(handles);
-set(hObject,'Enable','off');
-
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-OrigDlgH = ancestor(hObject, 'figure');
-delete(OrigDlgH);
-untitled;
 
 % --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, eventdata, handles)
@@ -229,14 +257,26 @@ function checkbox4_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox4
 
 content = get(hObject,'Value');
-POI = evalin('base','POI');
-if (content == 1)
-    poiCheckboxAssignin(POI);
-    set(handles.uibuttongroup4,'Visible','on');
+
+    POI = evalin('base','POI');
+
+dimentionValue = get(handles.togglebutton4,'Value');
+if (dimentionValue == 0)
+    if (content == 1)
+        poiCheckboxAssignin(POI);
+        set(handles.uibuttongroup4,'Visible','on');
+    else
+        deletePOIPlot();
+        checkboxPOIOff(handles);
+        set(handles.uibuttongroup4,'Visible','off');
+    end
 else
-    deletePOIPlot();
-    checkboxPOIOff(handles);
-    set(handles.uibuttongroup4,'Visible','off');
+    if (content == 1)
+        make3D(POI,2);
+    else
+        poi3dPlot = evalin('base','poi3dPlot');
+        delete(poi3dPlot);
+    end
 end
 
 % --- Executes on button press in checkbox5.
@@ -303,8 +343,10 @@ function checkbox8_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox8
 
+dimentionValue = get(handles.togglebutton4,'Value');
 content = get(hObject,'Value');
 Noize = evalin('base','Noize');
+if (dimentionValue == 0)
 if (content == 1)
     noizeCheckboxAssignin(Noize);
     set(handles.uibuttongroup5,'Visible','on');
@@ -312,6 +354,14 @@ else
     deleteNoizePlot();
     checkboxNoizeOff(handles);
     set(handles.uibuttongroup5,'Visible','off');
+end
+else
+    if (content == 1)
+        make3D(Noize,3);
+    else
+        Noize3dPlot = evalin('base','Noize3dPlot');
+        delete(Noize3dPlot);
+    end
 end
 
 
@@ -594,15 +644,26 @@ contents = get(hObject,'Value');
 
 Real = evalin('base', 'Real');
 realSize = size(Real);
+realPlot = evalin('base','realPlot');
 
-linesOff();
-checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
 for i = 1:realSize(2)
     if(i == contents)
         realIndex = i;
         assignin('base','realIndex',realIndex);
         makeLegendAfterListbox(handles);
+        break;
+    end
+end
+
+for i = 1 : realSize(2)
+    setLinesOff(realPlot(i))
+end
+for i = 1 : realSize(2)
+    if(realIndex == i)
+        ch1Plot(handles,realPlot(i));
+        ch2Plot(handles,realPlot(i));
+        ch3Plot(handles,realPlot(i));
         break;
     end
 end
@@ -631,15 +692,26 @@ contents = get(hObject,'Value');
 
 VOI = evalin('base', 'VOI');
 voiSize = size(VOI);
+voiPlot = evalin('base','voiPlot');
 
-linesOff();
-checkboxOff(handles);
 % Привязывание к чекбоксам выбранной цели
 for i = 1 : voiSize(2)
     if(i == contents)
         voiIndex = i;
         assignin('base','voiIndex',voiIndex);
         makeLegendAfterListbox(handles);
+        break;
+    end
+end
+
+for i = 1 : voiSize(2)
+    setLinesOff(voiPlot(i))
+end
+for i = 1 : voiSize(2)
+    if(voiIndex == i)
+        ch1Plot(handles,voiPlot(i));
+        ch2Plot(handles,voiPlot(i));
+        ch3Plot(handles,voiPlot(i));
         break;
     end
 end
@@ -666,43 +738,53 @@ function togglebutton2_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of togglebutton2
 content = get(hObject,'Value');
+dimentionValue = get(handles.togglebutton4,'Value');
+if (dimentionValue == 0)
+    realPlot = evalin('base','realPlot');
+    realSize = size(realPlot);
+    realIndex = evalin('base','realIndex');
 
-realPlot = evalin('base','realPlot');
-realSize = size(realPlot);
-realIndex = evalin('base','realIndex');
-
-voiPlot = evalin('base','voiPlot');
-voiSize = size(voiPlot);
-voiIndex = evalin('base','voiIndex');
-
-if (content == 1)
-    linesOff();
-    for i = 1 : realSize(2)
-        ch1Plot(handles,realPlot(i));
-        ch2Plot(handles,realPlot(i));
-        ch3Plot(handles,realPlot(i));
+    voiPlot = evalin('base','voiPlot');
+    voiSize = size(voiPlot);
+    voiIndex = evalin('base','voiIndex');
+    if (content == 1)
+        linesOff();
+        for i = 1 : realSize(2)
+            ch1Plot(handles,realPlot(i));
+            ch2Plot(handles,realPlot(i));
+            ch3Plot(handles,realPlot(i));
+        end
+        set(handles.listbox1,'Enable','Off');
+        set(handles.listbox2,'Enable','Off');
+        set(handles.togglebutton3,'Enable','Off');
+    else
+        for i = 1 : realSize(2)
+            if(realIndex == i)
+                continue;
+            end
+            setLinesOff(realPlot(i))
+        end
+        for i = 1 : voiSize(2)
+            if(voiIndex == i)
+                ch1Plot(handles,voiPlot(i));
+                ch2Plot(handles,voiPlot(i));
+                ch3Plot(handles,voiPlot(i));
+                break;
+            end
+        end
+        set(handles.listbox1,'Enable','On');
+        set(handles.listbox2,'Enable','On');
+        set(handles.togglebutton3,'Enable','On');
     end
-    set(handles.listbox1,'Enable','Off');
-    set(handles.listbox2,'Enable','Off');
-    set(handles.togglebutton3,'Enable','Off');
 else
-    for i = 1 : realSize(2)
-        if(realIndex == i)
-            continue;
-        end
-        setLinesOff(realPlot(i))
+    Real = evalin('base','Real');
+    if (content == 1)
+        make3D(Real,content);
+        set(handles.togglebutton3,'Enable','Off');
+    else
+        make3D(Real,content);
+        set(handles.togglebutton3,'Enable','On');
     end
-    for i = 1 : voiSize(2)
-        if(voiIndex == i)
-            ch1Plot(handles,voiPlot(i));
-            ch2Plot(handles,voiPlot(i));
-            ch3Plot(handles,voiPlot(i));
-            break;
-        end
-    end
-    set(handles.listbox1,'Enable','On');
-    set(handles.listbox2,'Enable','On');
-    set(handles.togglebutton3,'Enable','On');
 end
 
 
@@ -716,40 +798,129 @@ function togglebutton3_Callback(hObject, eventdata, handles)
 
 content = get(hObject,'Value');
 
-voiPlot = evalin('base','voiPlot');
-voiSize = size(voiPlot);
-voiIndex = evalin('base','voiIndex');
+dimentionValue = get(handles.togglebutton4,'Value');
+if (dimentionValue == 0)
+    realPlot = evalin('base','realPlot');
+    realSize = size(realPlot);
+    realIndex = evalin('base','realIndex');
 
-realPlot = evalin('base','realPlot');
-realSize = size(realPlot);
-realIndex = evalin('base','realIndex');
-
-if (content == 1)
-    linesOff();
-    for i = 1 : voiSize(2)
-        ch1Plot(handles,voiPlot(i));
-        ch2Plot(handles,voiPlot(i));
-        ch3Plot(handles,voiPlot(i));
+    voiPlot = evalin('base','voiPlot');
+    voiSize = size(voiPlot);
+    voiIndex = evalin('base','voiIndex');
+    if (content == 1)
+        linesOff();
+        for i = 1 : voiSize(2)
+            ch1Plot(handles,voiPlot(i));
+            ch2Plot(handles,voiPlot(i));
+            ch3Plot(handles,voiPlot(i));
+        end
+        set(handles.listbox1,'Enable','Off');
+        set(handles.listbox2,'Enable','Off');
+        set(handles.togglebutton2,'Enable','Off');
+    else
+        for i = 1 : voiSize(2)
+            if(voiIndex == i)
+                continue;
+            end
+            setLinesOff(voiPlot(i))
+        end
+        for i = 1 : realSize(2)
+            if(realIndex == i)
+                ch1Plot(handles,realPlot(i));
+                ch2Plot(handles,realPlot(i));
+                ch3Plot(handles,realPlot(i));
+                break;
+            end
+        end
+        set(handles.listbox1,'Enable','On');
+        set(handles.listbox2,'Enable','On');
+        set(handles.togglebutton2,'Enable','On');
     end
+else
+    VOI = evalin('base','VOI');
+    if (content == 1)
+        make3D(VOI,content);
+        set(handles.togglebutton2,'Enable','Off');
+    else
+        make3D(VOI,content);
+        set(handles.togglebutton2,'Enable','On');
+    end
+end
+
+% --- Executes on button press in togglebutton4.
+function togglebutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+value = get(hObject,'Value');
+realPlot = evalin('base','realPlot');
+    voiPlot = evalin('base','voiPlot');
+    
+try
+   poiPlot = evalin('base','poiPlot');
+   deletePOIPlot();
+catch
+end
+
+try
+   noizePlot = evalin('base','noizePlot');
+   deleteNoizePlot();
+catch
+end
+
+try
+   strobPlot = evalin('base','strobPlot');
+   deleteStrobPlot();
+catch
+end
+
+if (value == 1)
+    legend('off');
+    axes(handles.axes2);
+    set(hObject,'String','2D');
+    
+    set(handles.axes2,'Visible','On');
+    set(handles.axes1,'Visible','Off');
     set(handles.listbox1,'Enable','Off');
     set(handles.listbox2,'Enable','Off');
-    set(handles.togglebutton2,'Enable','Off');
-else
-    for i = 1 : voiSize(2)
-        if(voiIndex == i)
-            continue;
-        end
-        setLinesOff(voiPlot(i))
-    end
-    for i = 1 : realSize(2)
-        if(realIndex == i)
-            ch1Plot(handles,realPlot(i));
-            ch2Plot(handles,realPlot(i));
-            ch3Plot(handles,realPlot(i));
-            break;
-        end
-    end
+    set(handles.uibuttongroup1,'Visible','Off');
+    
+    checkboxOff(handles);
+    checkboxPOIOff(handles);
+    checkboxNoizeOff(handles);
+    checkboxStrobOff(handles);
+    set(handles.checkbox4,'Value',0);
+    set(handles.checkbox8,'Value',0);
+    set(handles.checkbox12,'Value',0);
+    set(handles.checkbox12,'Enable','Off');
+    set(handles.uibuttongroup4,'Visible','off');    
+    set(handles.uibuttongroup5,'Visible','off');    
+    set(handles.uibuttongroup6,'Visible','off');     
+    set(handles.togglebutton2,'Enable','On');        
+    set(handles.togglebutton3,'Enable','On');
+    set(handles.togglebutton2,'Value',0);        
+    set(handles.togglebutton3,'Value',0);
+    
+    allLinesOff();
+else 
+    cla('reset');
+    set(hObject,'String','3D');
+    axes(handles.axes1);
+    legend([realPlot(1).ch1.coordinate,realPlot(1).ch2.coordinate,realPlot(1).ch3.coordinate,...
+        voiPlot(1).ch1.coordinate,voiPlot(1).ch2.coordinate,voiPlot(1).ch3.coordinate]);
+    set(handles.axes1,'Visible','On');
+    set(handles.axes2,'Visible','Off');
     set(handles.listbox1,'Enable','On');
     set(handles.listbox2,'Enable','On');
-    set(handles.togglebutton2,'Enable','On');
+    set(handles.uibuttongroup1,'Visible','On');
+    set(handles.uibuttongroup7,'Visible','On');
+    
+    set(handles.checkbox12,'Enable','On');
+    set(handles.checkbox4,'Value',0);
+    set(handles.checkbox8,'Value',0);
+    set(handles.checkbox12,'Value',0);
+    set(handles.togglebutton2,'Value',0);        
+    set(handles.togglebutton3,'Value',0);
+    set(handles.togglebutton2,'Enable','On');        
+    set(handles.togglebutton3,'Enable','On');
 end

@@ -23,6 +23,7 @@ void CVOI::SetSizeZone(double bmin, double bmax)
 
 void CVOI::associate()
 {
+	// проверка наличия трасс
 	if (!BankOfSection[CurrentSector].GetBankTrace().empty())
 	{
 		int sizeRow = BankOfSection[CurrentSector].GetBankTrace().size();
@@ -53,9 +54,9 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				double dt = 0.1;//временное решение
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], dt);
+				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());	
+				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());
+				BankOfSection[CurrentSector].SetBankTrace()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
 
@@ -78,6 +79,7 @@ void CVOI::associate()
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
 	
+	// проверка наличия гипотез
 	if (!BankOfSection[CurrentSector].GetBankHypo().empty())
 	{
 		int sizeRow = BankOfSection[CurrentSector].GetBankHypo().size();
@@ -108,12 +110,12 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
 				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
 			}
+			
 			CVector ToHypo2Coordinate;
 			ToHypo2Coordinate.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[0];
 			ToHypo2Coordinate.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[3];
@@ -133,6 +135,7 @@ void CVOI::associate()
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
 	
+	// проверка наличия измерений
 	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
 	{
 		int size = BankOfSection[CurrentSector].GetBankMeasurements().size();

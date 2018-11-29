@@ -9,8 +9,6 @@ CImitator::CImitator()
 	eqGenerator.seed(device());
 	poGenerator.seed(device());
 
-	createMatFile();
-
 	getConfig();
 
 	this->currentTime = 0;
@@ -38,7 +36,6 @@ CImitator::CImitator()
 
 CImitator::~CImitator()
 {
-	closeMat(); 
 	delete[] targets;
 }
 
@@ -53,7 +50,7 @@ void CImitator::Scan()
 			numberOfSteps--;
 			for (int k = 0; k < this->numberOfTargets; k++) {
 				targets[k].Update(this->timeOfTakt, this->currentTime, this->stationCoordinates);  // пересчет параметров воздушных целей
-				if (returnPoissonRandom(10) > 21) {
+				if (returnPoissonRandom(10) > CAirObject::fakeTargetIntensity) {
 					cout << "\nFake target sended\n";
 					int fx = returnUniformRandom(100000);
 					int fy = returnUniformRandom(10000);	
@@ -63,7 +60,7 @@ void CImitator::Scan()
 				}
 				// если луч и цель совпали
 				if( y == floor(targets[k].GetEpsion() * 180 / 3.14159265 + .5) && i == floor(targets[k].GetBeta() * 180 / 3.14159265 +.5) ) {
-					if (returnUniformRandom(10) == 10) { // измерить не удалось с вероятностью 0.1
+					if (CAirObject::lostMeasurements && returnUniformRandom(10) == 10) { // измерить не удалось с вероятностью 0.1
 						cout << "\nMeasurement missed";
 						continue;
 					}
@@ -82,12 +79,18 @@ void CImitator::Scan()
 
 int CImitator::returnUniformRandom(int max)
 {
+	if (max == 0) {
+		return 0;
+	}
 	std::uniform_int_distribution<int> range(0, max);
 	return range(eqGenerator);
 }
 
 int CImitator::returnPoissonRandom(int lambda)
 {
+	if (lambda == 0) {
+		return 0;
+	}
 	std::poisson_distribution<int> range(lambda);
 	return range(poGenerator);
 }
@@ -96,8 +99,9 @@ void CImitator::getConfig()  // парсер конфиг файла
 {
 	ifstream config("config.txt");
 	int i = 7; // количество параметров для имитатора
-	int j = 13; // количество параметров
+	int j = 15; // количество параметров
 	int k = 0;
+	int buf = 0;
 	char* str = new char[25];
 	while( k < i ) {
 		if( config.is_open() ) {
@@ -144,26 +148,43 @@ void CImitator::getConfig()  // парсер конфиг файла
 		config.getline(str, 20, ':');
 		switch( k ) {
 		case 7:
-			config.getline(str, '\n');
+			config.getline(str, 40,'\n');
 			CAirObject::epsilonSko = stod(str);
 			break;
 		case 8:
-			config.getline(str, '\n');
+			config.getline(str, 40,'\n');
 			CAirObject::betaSko = stod(str);
 			break;
 		case 9:
-			config.getline(str, '\n');
+			config.getline(str, 40,'\n');
 			CAirObject::distanceSko = stod(str);
 			break;
 		case 10:
-			config.getline(str, '\n');
+			config.getline(str, 40,'\n');
 			CAirObject::radialSko = stod(str);
 			break;
 		case 11:
-			config.getline(str, '\n');
+			config.getline(str, 40,'\n');
 			CAirObject::accelerationSko = stod(str);
 			break;
 		case 12:
+			config.getline(str, '\n');
+			 buf = atoi(str);
+			 if (buf == 0){
+				 CAirObject::fakeTargetIntensity = 100;
+			 }
+			 if (buf == 1){
+				 CAirObject::fakeTargetIntensity = 21;
+			 }
+			 if (buf == 2){
+				 CAirObject::fakeTargetIntensity = 19;
+			 }
+			break;
+		case 13:
+			config.getline(str, '\n');
+			CAirObject::lostMeasurements = atoi(str);
+			break;
+		case 14:
 			config.getline(str, '\n');
 			CAirObject::typeOfEmulation = atoi(str);
 			break;
