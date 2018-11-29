@@ -10,6 +10,8 @@ SKOforBeta:0.03
 SKOforDistance:7
 SKOforRadialSpeed:0.012
 SKOforAcceleration:0
+FakeTargetIntensity:0
+LostMeasurements:0
 TypeOfSimulation:1
 
 // Types of simulation

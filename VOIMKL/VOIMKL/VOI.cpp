@@ -108,12 +108,27 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				double dt = 0.1;//временное решение
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], dt);
+				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
+				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
+				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
 				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
 			}
+			CVector ToHypo2Coordinate;
+			ToHypo2Coordinate.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[0];
+			ToHypo2Coordinate.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[3];
+			ToHypo2Coordinate.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[6];
+			CVector ToHypo2Speed;
+			ToHypo2Speed.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[1];
+			ToHypo2Speed.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[4];
+			ToHypo2Speed.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[7];
+			CVector ToHypo2Acceleration;
+			ToHypo2Acceleration.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[2];
+			ToHypo2Acceleration.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[5];
+			ToHypo2Acceleration.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[8];
+			saveData(new CHypo2(ToHypo2Coordinate, ToHypo2Speed, ToHypo2Acceleration,
+				BankOfSection[CurrentSector].SetBankHypo()[i].SetlastTime(),
+				BankOfSection[CurrentSector].SetBankHypo()[i].GetId_hyp()));
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
@@ -129,10 +144,8 @@ void CVOI::associate()
 				{
 					colvec v = arma::zeros(3);
 					mat S = arma::zeros(3, 3);
-					//v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
 					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);	
-					
-					double D = countNorma(v, S); //ERROR*********************************
+					double D = countNorma(v, S); 
 					if (D <= constSimilarityRate)
 					{
 						CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
@@ -204,15 +217,5 @@ void CVOI::TimeToStartAssociation(double time)
 
 double CVOI::countNorma(colvec &v, mat &predictS)
 {
-	double res = 0;
-	res = arma::as_scalar(v.t()*predictS.i()*v);
-	//double res = 1;
-	/*mat x = predictS.i();
-	x.print("x:");
-	v.print("v:");
-	mat q = v.t();
-	q.print("v.t:");*/
-
-	//double res = 0;
 	return arma::as_scalar(v.t()*predictS.i()*v);
 }

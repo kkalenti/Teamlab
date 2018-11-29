@@ -121,12 +121,12 @@ void CSection::SectionHypoToTrace()
 void CSection::DeletMeasurementsAfterUpdate()
 {
 	int size= this->BankMeasurements.size();
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < BankMeasurements.size(); i++)
 	{
 		if (BankMeasurements[i].GetReservedForUpdate())
 		{
 			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
-			size--;
+			i--;
 		}		
 	}
 }
