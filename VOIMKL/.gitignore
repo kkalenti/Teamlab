@@ -3,8 +3,7 @@
 /Debug
 *.sdf
 *.opensdf
-VOIMKL/*.v12.suo
-VOIMKL/*.sdf
+*.v12.suo
 VOIMKL/*.opensdf
 VOIMKL/Debug/*
 VOINKL/Release/*
@@ -14,5 +13,3 @@ VOIMKL/x64/*
 */Release
 */x64
 in
-/VOIMKL/*.sdf
-/VOIMKL/*.v12.suo
