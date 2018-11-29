@@ -8,7 +8,9 @@ CBaseTraceHypo::CBaseTraceHypo()
 }
 
 CBaseTraceHypo::~CBaseTraceHypo()
-{}
+{
+
+}
 
 void CBaseTraceHypo::IncNmiss()
 {
@@ -73,12 +75,13 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	this->x(3) = newM.Coordinates.y;
 	this->x(6) = newM.Coordinates.z;
 	this->Napprove = 0;
-	for (int i1 = 0, r1=0; r1 < M; i1+=3, r1++)
+	for (int i1 = 0, r1 = 0; r1 < M; i1 += 3, r1++)
 	{
-		for (int i2 = 0, r2=0; r2 < M; i2 +=3, r2++)
+		for (int i2 = 0, r2 = 0; r2 < M; i2 += 3, r2++)
 		{
 			this->P(i1, i2) = newM.SetR()(r1, r2); //т.к. матрица R меньше P
 		}
+	}
 	this->P(1, 1) = 1500 * 1500;
 	this->P(4, 4) = 1500 * 1500;
 	this->P(7, 7) = 1500 * 1500;
