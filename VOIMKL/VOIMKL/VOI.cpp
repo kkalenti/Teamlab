@@ -143,10 +143,8 @@ void CVOI::associate()
 			{
 				if (i < j) //чтобы не сравнивать одинаковые пары 
 				{
-					colvec v = arma::zeros(3);
-					mat S = arma::zeros(3, 3);
-					KalmanFilter.Predict(BankMeasurements[i], BankMeasurements[j], S, v);	
-					double D = countNorma(KalmanFilter.GetV(), S); 
+					KalmanFilter.Predict(BankMeasurements[i], BankMeasurements[j]);	
+					double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
 					if (D <= constSimilarityRate)
 					{
 						CMeasurements mes = BankMeasurements[i];

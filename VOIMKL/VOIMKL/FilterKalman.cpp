@@ -118,20 +118,20 @@ void CKalmanFilter::Prediction(double dt)
 	flag++;
 }
 
-void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
-{
-	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
-	this->update_F(dt);
-	update_U(dt);
-
-	P = F * P_Const * F.t() + U * Q * U.t();
-	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
-
-	if (firstMeasure.DetectionTime > secondMeasure.DetectionTime)
-		this->v = firstMeasure.Setz() - secondMeasure.Setz();
-	else
-		this->v = secondMeasure.Setz() - firstMeasure.Setz();
-}
+//void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
+//{
+//	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
+//	this->update_F(dt);
+//	update_U(dt);
+//
+//	P = F * P_Const * F.t() + U * Q * U.t();
+//	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
+//
+//	if (firstMeasure.DetectionTime > secondMeasure.DetectionTime)
+//		this->v = firstMeasure.Setz() - secondMeasure.Setz();
+//	else
+//		this->v = secondMeasure.Setz() - firstMeasure.Setz();
+//}
 
 // update with measurement
 void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
@@ -164,35 +164,27 @@ void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
 	//S = R + H * P * H.t(); // 33+39*99*93
 }
 
-void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat & S_VOI, colvec & v_VOI)
+void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure)
 {
 	double dt = abs(firstMeasure.DetectionTime - secondMeasure.DetectionTime);
 	update_F(dt);
 	update_U(dt);
-
 	/*this->F.print("F:");
 	this->U.print("U:");
 	*///P_Const.print("P_const:");
-
 	Q(0, 0) = 6;
 	P = F * P_Const * F.t() + U * Q * U.t();
-
 	//P.print("P res:");
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
 	//R_Meas.print("R");
-	
-	S_VOI = R_Meas + H * P * H.t();
+	this->S = R_Meas + H * P * H.t();
 	//S_VOI.print("S_VOI:");
 	//  v = firstMeasure.Coordinates - secondMeasure.Coordinates;
-	dcolvec first = firstMeasure.Setz();
-	
-	dcolvec second = secondMeasure.Setz();
-
-	v_VOI = first - second;
+	if (firstMeasure.DetectionTime > secondMeasure.DetectionTime)
+		this->v = firstMeasure.Setz() - secondMeasure.Setz();
+	else
+		this->v = secondMeasure.Setz() - firstMeasure.Setz();
 	//v_VOI.print("v_VOI:");
-
-	this->v = v_VOI;
-	this->S = S_VOI;
 }
 
 

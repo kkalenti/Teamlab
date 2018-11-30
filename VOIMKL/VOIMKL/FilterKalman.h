@@ -37,8 +37,8 @@ public:
 	void update_F(double);
 	void update_U(double);
 
-	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
 	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
+	//void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
 	void Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
 	void Predict(CBaseTraceHypo &Trace, double CurrentTime);
 
