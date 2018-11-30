@@ -13,6 +13,7 @@ protected:
 	colvec x = zeros(N); 
 	mat Q = zeros(N, N);
 	double lastTime;
+	double CurrentSector;
 public:
 	CBaseTraceHypo();
 	~CBaseTraceHypo();
@@ -20,10 +21,15 @@ public:
 	void NullNmiss(); //зануление счетчика пропусков при обновлении 
 	const int GetNmiss(); 
 	mat &SetP();
+	void GetP(mat &ppred);
 	colvec &SetState_X();
+	void GetState_X(colvec &xpred);
 	mat &SetQ();
 	double GetlastTime(double time);
 	const double SetlastTime();
+	double FromDekartToAzimut();
+	void SetCurrentSector(int Sector);
+	const int GetCurrentSector();
 };
 
 class CTrace: public CBaseTraceHypo{

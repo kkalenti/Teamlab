@@ -12,6 +12,7 @@ private:
 	mat R=zeros<mat>(M,M); //double
 	bool reservedForUpdate; //флаг помечающий на удаление - т.к. удалять сразу нельзя, это сдвинет вектор решений из венгерского алгоритма
 	dcolvec z = zeros(M);
+	int CurrentSector;
 public:
 	CMeasurements(CVector coordinates, double vr, double time, double **cov);
 	CMeasurements::CMeasurements(CResultOfScan &newres);
@@ -25,5 +26,7 @@ public:
 	const bool GetReservedForUpdate();
 	const dcolvec &Getz();
 	dcolvec &Setz();
+	void SetCurrentSector(int Sector);
+	const int GetCurrentSector();
 };
 #endif Measurements_H

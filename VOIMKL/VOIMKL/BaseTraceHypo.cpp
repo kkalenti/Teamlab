@@ -32,9 +32,19 @@ mat &CBaseTraceHypo::SetP()
 	return this->P;
 }
 
+void CBaseTraceHypo::GetP(mat &ppred)
+{
+	this->P = ppred;
+}
+
 colvec &CBaseTraceHypo::SetState_X()
 {
 	return this->x;
+}
+
+void CBaseTraceHypo::GetState_X(colvec &xpred)
+{
+	this->x = xpred;
 }
 
 mat &CBaseTraceHypo::SetQ()
@@ -57,6 +67,7 @@ CTrace::CTrace(CHypo &&hypo)
 	this->ID = COPIES_COUNT;
 	COPIES_COUNT++;
 	this->Nmiss = 0;
+	this->CurrentSector = 0;
 }
 
 CTrace::~CTrace()
@@ -87,6 +98,7 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	this->lastTime = newM.DetectionTime;
 	this->ID_hyp = COPIES_COUNT2;
 	COPIES_COUNT2++;
+	this->CurrentSector = 0;
 }
 
 CHypo::~CHypo()
@@ -133,4 +145,19 @@ const int CTrace::GetId()
 const int CHypo::GetId_hyp()
 {
 	return this->ID_hyp;
+}
+
+double CBaseTraceHypo::FromDekartToAzimut()
+{
+	return (atan(this->x[6] / this->x[0]));
+}
+
+void CBaseTraceHypo::SetCurrentSector(int Sector)
+{
+	this->CurrentSector = Sector;
+}
+
+const int CBaseTraceHypo::GetCurrentSector()
+{
+	return this->CurrentSector;
 }
