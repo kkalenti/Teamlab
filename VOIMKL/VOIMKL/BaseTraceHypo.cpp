@@ -83,7 +83,10 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	this->P(1, 1) = 1500 * 1500;
 	this->P(4, 4) = 1500 * 1500;
 	this->P(7, 7) = 1500 * 1500;
-	this->P.print("Hypo constr P");
+	this->P(2, 2) = 2000 * 100;
+	this->P(5, 5) = 1000 * 100;
+	this->P(8, 8) = 3000 * 100;
+	//this->P.print("Hypo constr P");
 
 	this->Q = constQ;
 	this->lastTime = newM.DetectionTime;

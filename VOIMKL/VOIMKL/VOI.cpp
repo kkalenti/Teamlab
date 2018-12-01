@@ -60,7 +60,7 @@ void CVOI::associate()
 				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
 			}
 
-			CVector ToVoi2Coordinate;
+			/*CVector ToVoi2Coordinate;
 			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[0];
 			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[3];
 			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[6];
@@ -74,7 +74,7 @@ void CVOI::associate()
 			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[8];
 			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
 			BankOfSection[CurrentSector].SetBankTrace()[i].SetlastTime(),
-			BankOfSection[CurrentSector].SetBankTrace()[i].GetId()));
+			BankOfSection[CurrentSector].SetBankTrace()[i].GetId()));*/
 		}
 		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
 	}
@@ -108,7 +108,7 @@ void CVOI::associate()
 				BankOfSection[CurrentSector].SetBankHypo()[i].NullNmiss();
 				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
 			}
-			else
+			else	
 			{
 				/*int newsize=BankOfSection[CurrentSector].SetBankMeasurements().size;
 				double timefirst=BankOfSection[CurrentSector].SetBankMeasurements()[newsize].DetectionTime;*/

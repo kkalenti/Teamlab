@@ -21,7 +21,7 @@ public:
 	mat & getMatrix_P();
 	void setMatrix_P(mat);
 	colvec & getVector_x();
-	void setDt(double);
+	void setDt_Dt_squared(double);
 	mat  &GetS();
 	colvec & GetV();
 

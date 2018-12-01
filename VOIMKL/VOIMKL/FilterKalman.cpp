@@ -6,13 +6,27 @@ CKalmanFilter::CKalmanFilter()
 	
 	P_Const << 100<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 1500*1500 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 1000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 10000 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 1000 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 10000 << 0 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 100 << 0 << 0 << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1500 * 1500 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1000 << endr;
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 10000 << endr;
+
+	/*P_Const << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 10000 * 1 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 100 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+
+
+		<< 0 << 0 << 0 << 5000 << 0 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 100 * 10000 << 0 << 0 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 100000 << 0 << 0 << 0 << endr
+
+
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 1000 << 0 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 30000 * 1 << 0 << endr
+		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 300000 << endr;*/
 
 	/*P_Const <<  10000, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 10000, 0, 0, 0, 0, 0, 0, 0,
@@ -196,7 +210,7 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 	//U.print("U:");
 	//P_Const.print("P:");
 
-	Q(0, 0) = 6;
+	//Q(0, 0) = 6;
 	P = F * P_Const * F.t() + U * Q * U.t();
 	//P.print("P which i need:");
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();
@@ -321,14 +335,15 @@ void CKalmanFilter::makeMatrix_F()
 	0, 0, 0, 0, 0, 0, 0, 1, Dt,
 	0, 0, 0, 0, 0, 0, 0, 0, 1;*/
 	this->F << 1 << Dt << Dt_squared << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 1 << Dt << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 1 << 0 << 0 << 0 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 1 << Dt << Dt_squared << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 1 << Dt << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 1 << 0 << 0 << 0 << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << Dt_squared << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << endr
-		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << endr;
+			<< 0 << 1 << Dt << 0 << 0 << 0 << 0 << 0 << 0 << endr
+			<< 0 << 0 << 1 << 0 << 0 << 0 << 0 << 0 << 0 << endr
+			<< 0 << 0 << 0 << 1 << Dt << Dt_squared << 0 << 0 << 0 << endr
+			<< 0 << 0 << 0 << 0 << 1 << Dt << 0 << 0 << 0 << endr
+			<< 0 << 0 << 0 << 0 << 0 << 1 << 0 << 0 << 0 << endr
+			<< 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << Dt_squared << endr
+			<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << Dt << endr
+			<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << endr;
+	F.print("F print *********************************:");
 }
 
 void CKalmanFilter::update_F(double dt)
@@ -363,6 +378,8 @@ void CKalmanFilter::update_F(double dt)
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << dt << endr
 		<< 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << endr;
 
+	F.print("F print *********************************:");
+
 }
 void CKalmanFilter::makeMatrix_H()
 {
@@ -387,6 +404,7 @@ void CKalmanFilter::makeMatrix_U()
 	//this->U << Dt_squared, Dt_squared, Dt_squared, Dt, Dt, Dt, 1, 1, 1;
 	this->U << Dt_squared << endr << Dt << endr << 1 << endr << Dt_squared << endr
 		<< Dt << endr << 1 << endr << Dt_squared << endr << Dt << endr << 1;
+	U.print("U ************************:");
 }
 
 void CKalmanFilter::update_U(double dt)
@@ -395,6 +413,7 @@ void CKalmanFilter::update_U(double dt)
 	//this->U << dt_squared, dt_squared, dt_squared, dt, dt, dt, 1, 1, 1;
 	this->U << dt_squared << endr << dt << endr << 1 << endr << dt_squared << endr
 		<< dt << endr << 1 << endr << dt_squared << endr << dt << endr << 1;
+	U.print("U ************************:");
 }
 
 mat & CKalmanFilter::getMatrix_P()
@@ -423,9 +442,10 @@ mat &CKalmanFilter::GetS()
 	return this->S;
 }
 
-void CKalmanFilter::setDt(double Dt)
+void CKalmanFilter::setDt_Dt_squared(double Dt)
 {
 	this->Dt = Dt;
+	this->Dt_squared = ((Dt * Dt) / 2);
 }
 
 colvec &CKalmanFilter::GetV()

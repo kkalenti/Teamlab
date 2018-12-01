@@ -162,10 +162,10 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 
 void CAirObject::SendToDb(const int numTarget, const double curTime)
 {
-	cout << "\nTarget " << numTarget << ":\nPerfect Coordinates    X=" << Coordinate.x << "  Y=" << Coordinate.y << "  Z="
+	/*cout << "\nTarget " << numTarget << ":\nPerfect Coordinates    X=" << Coordinate.x << "  Y=" << Coordinate.y << "  Z="
 		<< Coordinate.z << " ---------------------- DetectionTime: " << curTime << "sec";
 	cout << "\n      Accelerations    " << Acceleration.x << " / " << Acceleration.y << " / " << Acceleration.z << "      Speeds    "
-		<< Speed.x << " / " << Speed.y << " / " << Speed.z;
+		<< Speed.x << " / " << Speed.y << " / " << Speed.z;*/
 	CReferenceState* RefPackage = new CReferenceState(Coordinate, Speed, Acceleration, curTime, numTarget); // формирование пакета данных для передачи в базу данных
 	saveData(RefPackage);
 	delete RefPackage;

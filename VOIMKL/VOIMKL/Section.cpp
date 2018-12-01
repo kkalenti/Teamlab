@@ -112,6 +112,7 @@ void CSection::SectionHypoToTrace()
 		if (BankHypo[i].GetNapprove() == HypoApprove)
 		{
 			CTrace newTrace = BankHypo[i].HypoToTrace();
+			BankHypo[0].SetP().print("P IN SECTION HYPO TO TRACE");
 			this->BankHypo.erase(this->BankHypo.cbegin() + i);
 			i--;
 			this->BankTrace.push_back(newTrace);
