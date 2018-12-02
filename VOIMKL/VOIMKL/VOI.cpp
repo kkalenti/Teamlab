@@ -33,9 +33,15 @@ void CVOI::associate()
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]);
-				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
-				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D;
+				KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]); //рассчитываем предсказанное значение
+				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
+				//сравниваем норму и коэффициент схожести и проверяем шаг, на котором поступило измерение
+				//к трассам необходимо привязывать только измерения с прошлого шага (т.к. трасса в любом 
+				//случае продолжается на каждом шаге и старые измерения не нужны. Если обе проверки
+				//дали положительный результат, значит эту пару трасса-измерение можно использовать 
+				//в дальнейших поисках. Иначе помещаем на место соответствующее паре по индексам большое число
+				//которое позволит исключить эту пару из набора возможных решений
+				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D; 
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
@@ -43,22 +49,31 @@ void CVOI::associate()
 		HungAlgo.Solve(MatrixSet, assignment);
 		for (int i = 0; i < sizeRow; i++)
 		{
-			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
+		//венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,
+		// на этот случай нужна проверка, что выбранная пара не была отброшена на предыдущем этапе
+		// -1 может быть помещен в вектор решений, если для этого элемента не было поставлено в соответствие
+		//ни одно решение 
+			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) 
 			{
 				KalmanFilter.Predict(BankTrace[i], BankMeasurements[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankTrace[i], BankMeasurements[assignment[i]]);
-				BankTrace[i].NullNmiss();
+				BankTrace[i].NullNmiss(); //зануляем счетчик пропусков т.к. трасса подтвердилась обновлением измерением
 				ChangeSectorHypoTrace(BankTrace[i]);
-				BankMeasurements[assignment[i]].SetReservedForUpdate();
+				//помечаем использованное измерение
+				//на последующее удаление. Нельзя сразу удалить чтобы не сбить индексацию в 
+				//векторе решений
+				BankMeasurements[assignment[i]].SetReservedForUpdate();	
 			}
 			else
 			{
+				//в эту ветку трасса попадет, если для нее не было найдено подходящее решение и ее
+				//необходимо продолжить предсказанным значением
 				KalmanFilter.Predict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				KalmanFilter.UpdatePredict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
-				BankTrace[i].IncNmiss();
+				BankTrace[i].IncNmiss(); //прибавляем счетчик пропусков т.к. трасса не была обновлена измерением
 				ChangeSectorHypoTrace(BankTrace[i]);
 			}
-
+			//сохранение
 			CVector ToVoi2Coordinate;
 			ToVoi2Coordinate.x = BankTrace[i].SetState_X()[0];
 			ToVoi2Coordinate.y = BankTrace[i].SetState_X()[3];
@@ -74,10 +89,13 @@ void CVOI::associate()
 			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
 			BankTrace[i].SetlastTime(), BankTrace[i].GetId()));
 		}
-		this->DeletMeasurementsAfterUpdate();
+		this->DeletMeasurementsAfterUpdate(); //удалить измерения здесь, чтобы в дальнейшем была корректная 
+		//работа с размером вектора банка измерений
+		
 	}
 	
-	// проверка наличия гипотез
+	// проверка наличия гипотез - аналогично работе с трассами
+	//исключение - у гипотез есть счетчик подтверждений, после которых их переводят в трассы
 	if (!BankHypo.empty())
 	{
 		int sizeRow = BankHypo.size();
@@ -134,23 +152,24 @@ void CVOI::associate()
 	}
 	
 	// проверка наличия измерений
-	if (!BankMeasurements.empty())
+	if (BankMeasurements.size()>1)
 	{
 		int size = BankMeasurements.size();
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
 			{
-				if (i < j) //чтобы не сравнивать одинаковые пары 
+				if (i < j) //чтобы не сравнивать одинаковые пары измерений и измерения с самими собой
 				{
 					KalmanFilter.Predict(BankMeasurements[i], BankMeasurements[j]);	
 					double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
-					if (D <= constSimilarityRate)
-					{
-						CMeasurements mes = BankMeasurements[i];
-						CHypo newHypo(std::move(mes));
+					//основанием для завязки гипотезы служит соответствующая норма
+					//измерения могут использоваться в нескольких гипотезах
+					if (D <= constSimilarityRate) 
+					{	
+						CHypo newHypo(std::move(BankMeasurements[i])); //создаем гипотезу из измерения
 						KalmanFilter.Predict(newHypo, BankMeasurements[j]);
-						KalmanFilter.UpdateMeasure(newHypo, BankMeasurements[j]);
+						KalmanFilter.UpdateMeasure(newHypo, BankMeasurements[j]); //обновляем вновь созданную гипотезу
 						BankHypo.push_back(newHypo);
 						BankMeasurements[i].SetReservedForUpdate();
 						BankMeasurements[j].SetReservedForUpdate();
