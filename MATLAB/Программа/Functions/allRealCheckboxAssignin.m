@@ -3,7 +3,7 @@
 function allRealCheckboxAssignin(Real)
 
 realSize = size(Real);
-cmap = hsv(realSize(2)*6);
+cmap = hsv(realSize(2)*9);
 for i = 1:realSize(2)
     real(i).ch1.coordinate = plot(Real(i).t(:),Real(i).x(:),'-o','Color',cmap(i,:),...
         'Visible','off','DisplayName', 'Эталон x');

@@ -1,7 +1,7 @@
 function allVoiCheckboxAssignin(Voi)
 
 voiSize = size(Voi);
-cmap = hsv(voiSize(2)*6);
+cmap = hsv(voiSize(2)*9);
 for i = 1:voiSize(2)
     voi(i).ch1.coordinate = plot(Voi(i).t(:),Voi(i).x(:),'-.s','Color',cmap(i*4,:),...
         'Visible','off','DisplayName', 'бнх x');

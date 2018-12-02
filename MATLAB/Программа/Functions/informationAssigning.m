@@ -14,6 +14,12 @@ function informationAssigning(name, path_my)
     else
         makeEmptyVOI();
     end
+    % --- Проверка на наличие данных гипотез в файле
+    if isfield(file,'Hypo')
+        assignin('base','Hypo',file.Hypo);
+    else
+        makeEmptyHypo();
+    end
     % --- Проверка на наличие данных ПОИ в файле
     if isfield(file,'POI')
         assignin('base','POI',file.POI);

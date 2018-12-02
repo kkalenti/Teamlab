@@ -4,6 +4,9 @@ function linesOff()
     realIndex = evalin('base','realIndex');
     voiPlot = evalin('base','voiPlot');
     voiIndex = evalin('base','voiIndex');
+    hypoPlot = evalin('base','hypoPlot');
+    hypoIndex = evalin('base','hypoIndex');
     
     setLinesOff(realPlot(realIndex));
     setLinesOff(voiPlot(voiIndex));
+    setLinesOff(hypoPlot(hypoIndex));
