@@ -139,7 +139,7 @@ void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measu
 	double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
 	update_F(dt);
 	update_U(dt);
-	F.print("This F on predict hypo");
+	//F.print("This F on predict hypo");
 	x_pred = F * TraceOrHypo.SetState_X(); //9991
 	z_pred = H * x_pred; //3991
 	v = Measure.Getz() - z_pred;
@@ -149,7 +149,7 @@ void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measu
 	//S.print();
 }
 
-// update with measurement
+// update without measurement
 void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
 {
 	double dt = abs(CurrentTime - TraceOrHypo.SetlastTime());
@@ -172,7 +172,7 @@ void CKalmanFilter::Predict(CMeasurements &firstMeasure, CMeasurements &secondMe
 	/*this->F.print("F:");
 	this->U.print("U:");
 	*///P_Const.print("P_const:");
-	Q(0, 0) = 6;
+	//Q(0, 0) = 6;
 	P = F * P_Const * F.t() + U * Q * U.t();
 	//P.print("P res:");
 	mat R_Meas = firstMeasure.GetR() + secondMeasure.GetR();

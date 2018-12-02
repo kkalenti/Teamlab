@@ -35,7 +35,7 @@ void CVOI::associate()
 			{
 				KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]);
 				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
-				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
@@ -89,7 +89,7 @@ void CVOI::associate()
 			{
 				KalmanFilter.Predict(BankHypo[i], BankMeasurements[j]);
 				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
-				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				if ((D <= constSimilarityRate)&&(BankMeasurements[j].GetNmiss()==0)) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
