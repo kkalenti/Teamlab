@@ -37,10 +37,10 @@ public:
 	void update_F(double);
 	void update_U(double);
 
-	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure, mat &, colvec &);
-	colvec Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
-	colvec Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
-	colvec Predict(CBaseTraceHypo &Trace, double CurrentTime);
+	void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
+	//void Predict(CMeasurements &firstMeasure, CMeasurements &secondMeasure);
+	void Predict(CBaseTraceHypo &Trace, CMeasurements &Measure);
+	void Predict(CBaseTraceHypo &Trace, double CurrentTime);
 
 	void UpdateMeasure(CBaseTraceHypo&, CMeasurements&);
 	void UpdatePredict(CBaseTraceHypo&, double CurrentTime);

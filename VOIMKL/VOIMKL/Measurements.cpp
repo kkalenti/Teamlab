@@ -36,9 +36,9 @@ CMeasurements::CMeasurements(CVector coordinates, double vr, double time, double
 	this->z[1] = coordinates.y;
 	this->z[2] = coordinates.z;
 	this->Nmiss = 0;
-	this->R = get_Rconst();
 	this->R = rewriteR(cov);
 	this->reservedForUpdate = false;
+	this->CurrentSector = 0;
 }
 
 CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordinates, newres.Vr, newres.DetectionTime, newres.CovMat)
@@ -47,9 +47,9 @@ CMeasurements::CMeasurements(CResultOfScan &newres) :CResultOfScan(newres.Coordi
 	this->z[1] = newres.Coordinates.y;
 	this->z[2] = newres.Coordinates.z;
 	this->Nmiss = 0;
-	this->R = get_Rconst();
 	this->R = rewriteR(newres.CovMat);
 	this->reservedForUpdate = false;
+	this->CurrentSector = 0;
 }
 
 CMeasurements::~CMeasurements()
@@ -100,4 +100,14 @@ const dcolvec &CMeasurements::Getz()
 dcolvec &CMeasurements::Setz()
 {
 	return this->z;
+}
+
+void CMeasurements::SetCurrentSector(int Sector)
+{
+	this->CurrentSector = Sector;
+}
+
+const int CMeasurements::GetCurrentSector()
+{
+	return this->CurrentSector;
 }

@@ -9,26 +9,27 @@ class CMeasurements;
 class CBaseTraceHypo{
 protected:
 	int Nmiss;
-	//bool UpdateWithM = true; //проверяем способ обновления трассы - через измерения или предсказанное значение перенесется в обновление
-	//mutable mat Pconst = zeros<mat>(N, N);
 	mat P = zeros(N,N);
-	colvec x = zeros(N);
+	colvec x = zeros(N); 
 	mat Q = zeros(N, N);
 	double lastTime;
+	double CurrentSector;
 public:
 	CBaseTraceHypo();
 	~CBaseTraceHypo();
-	void IncNmiss();
-	void NullNmiss(); //зануление при обновлении 
-	const int GetNmiss();
+	void IncNmiss(); //инкремент счетчика пропусков
+	void NullNmiss(); //зануление счетчика пропусков при обновлении 
+	const int GetNmiss(); 
 	mat &SetP();
+	void GetP(mat &ppred);
 	colvec &SetState_X();
+	void GetState_X(colvec &xpred);
 	mat &SetQ();
 	double GetlastTime(double time);
 	const double SetlastTime();
-
-	//void UpdateState(mat P, colvec x); //для обновления по предсказаниям или измерениям
-	//bool GetUpdateWithM();
+	double FromDekartToAzimut();
+	void SetCurrentSector(int Sector);
+	const int GetCurrentSector();
 };
 
 class CTrace: public CBaseTraceHypo{
@@ -50,9 +51,9 @@ public:
 	CHypo(CMeasurements &newM);
 	~CHypo();
 	const int GetNapprove();
-	void IncApprove();
-	void NullNapprove();//
-	CTrace HypoToTrace();
+	void IncApprove(); //инкремент счетчика подтверждения гипотезы
+	void NullNapprove();//зануление счетчика подтверждения при обновлении 
+	CTrace HypoToTrace(); //превращаем гипотезу в трассу
 	const int GetId_hyp();
 };
 #endif BaseTraceHypo_H

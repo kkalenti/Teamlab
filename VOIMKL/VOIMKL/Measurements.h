@@ -10,20 +10,23 @@ class CMeasurements :  public CResultOfScan{
 private:
 	int Nmiss;
 	mat R=zeros<mat>(M,M); //double
-	bool reservedForUpdate;
+	bool reservedForUpdate; //флаг помечающий на удаление - т.к. удалять сразу нельзя, это сдвинет вектор решений из венгерского алгоритма
 	dcolvec z = zeros(M);
+	int CurrentSector;
 public:
 	CMeasurements(CVector coordinates, double vr, double time, double **cov);
 	CMeasurements::CMeasurements(CResultOfScan &newres);
 	~CMeasurements();
-	void IncNmiss();
+	void IncNmiss(); 
 	const int GetNmiss();
-	double FromDekartToAzimut();
+	double FromDekartToAzimut(); 
 	const mat &GetR();
 	mat &SetR();
 	void SetReservedForUpdate();
 	const bool GetReservedForUpdate();
 	const dcolvec &Getz();
 	dcolvec &Setz();
+	void SetCurrentSector(int Sector);
+	const int GetCurrentSector();
 };
 #endif Measurements_H

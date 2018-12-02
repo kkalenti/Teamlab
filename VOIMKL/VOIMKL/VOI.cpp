@@ -24,19 +24,18 @@ void CVOI::SetSizeZone(double bmin, double bmax)
 void CVOI::associate()
 {
 	// проверка наличия трасс
-	if (!BankOfSection[CurrentSector].GetBankTrace().empty())
+	if (!BankTrace.empty())
 	{
-		int sizeRow = BankOfSection[CurrentSector].GetBankTrace().size();
-		int sizeCol = BankOfSection[CurrentSector].GetBankMeasurements().size();
+		int sizeRow = BankTrace.size();
+		int sizeCol = BankMeasurements.size();
 		vector <vector<double>> MatrixSet(sizeRow, vector<double>(sizeCol, 0));
 		for (int i = 0; i < sizeRow; i++)
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				colvec v = arma::zeros(3);
-				v = KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
-				double D = countNorma(v, KalmanFilter.GetS());
-				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]);
+				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
+				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
@@ -46,52 +45,51 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				(BankOfSection[CurrentSector].SetBankTrace())[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
-				BankOfSection[CurrentSector].SetBankTrace()[i].NullNmiss();
-				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
+				KalmanFilter.Predict(BankTrace[i], BankMeasurements[assignment[i]]);
+				KalmanFilter.UpdateMeasure(BankTrace[i], BankMeasurements[assignment[i]]);
+				BankTrace[i].NullNmiss();
+				ChangeSectorHypoTrace(BankTrace[i]);
+				BankMeasurements[assignment[i]].SetReservedForUpdate();
 			}
 			else
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());	
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankTrace()[i], BankOfSection[CurrentSector].GetLasttime());
-				BankOfSection[CurrentSector].SetBankTrace()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
-				BankOfSection[CurrentSector].SetBankTrace()[i].IncNmiss();
+				KalmanFilter.Predict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
+				KalmanFilter.UpdatePredict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
+				BankTrace[i].IncNmiss();
+				ChangeSectorHypoTrace(BankTrace[i]);
 			}
 
 			CVector ToVoi2Coordinate;
-			ToVoi2Coordinate.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[0];
-			ToVoi2Coordinate.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[3];
-			ToVoi2Coordinate.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[6];
+			ToVoi2Coordinate.x = BankTrace[i].SetState_X()[0];
+			ToVoi2Coordinate.y = BankTrace[i].SetState_X()[3];
+			ToVoi2Coordinate.z = BankTrace[i].SetState_X()[6];
 			CVector ToVoi2Speed;
-			ToVoi2Speed.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[1];
-			ToVoi2Speed.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[4];
-			ToVoi2Speed.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[7];
+			ToVoi2Speed.x = BankTrace[i].SetState_X()[1];
+			ToVoi2Speed.y = BankTrace[i].SetState_X()[4];
+			ToVoi2Speed.z = BankTrace[i].SetState_X()[7];
 			CVector ToVoi2Acceleration;
-			ToVoi2Acceleration.x = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[2];
-			ToVoi2Acceleration.y = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[5];
-			ToVoi2Acceleration.z = BankOfSection[CurrentSector].SetBankTrace()[i].SetState_X()[8];
+			ToVoi2Acceleration.x = BankTrace[i].SetState_X()[2];
+			ToVoi2Acceleration.y = BankTrace[i].SetState_X()[5];
+			ToVoi2Acceleration.z = BankTrace[i].SetState_X()[8];
 			saveData(new CVoi2(ToVoi2Coordinate, ToVoi2Speed, ToVoi2Acceleration,
-			BankOfSection[CurrentSector].SetBankTrace()[i].SetlastTime(),
-			BankOfSection[CurrentSector].SetBankTrace()[i].GetId()));
+			BankTrace[i].SetlastTime(), BankTrace[i].GetId()));
 		}
-		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
+		this->DeletMeasurementsAfterUpdate();
 	}
 	
 	// проверка наличия гипотез
-	if (!BankOfSection[CurrentSector].GetBankHypo().empty())
+	if (!BankHypo.empty())
 	{
-		int sizeRow = BankOfSection[CurrentSector].GetBankHypo().size();
-		int sizeCol = BankOfSection[CurrentSector].GetBankMeasurements().size();
+		int sizeRow = BankHypo.size();
+		int sizeCol = BankMeasurements.size();
 		vector <vector<double>> MatrixSet(sizeRow, vector<double>(sizeCol, 0));
 		for (int i = 0; i < sizeRow; i++)
 		{
 			for (int j = 0; j < sizeCol; j++)
 			{
-				colvec v=KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j]);
-				double D = countNorma(v, KalmanFilter.GetS());
-				if (D <= constSimilarityRate) MatrixSet[i][j] = D;
+				KalmanFilter.Predict(BankHypo[i], BankMeasurements[j]);
+				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
+				if ((D <= constSimilarityRate)&&(BankMeasurements[j].GetNmiss()==0)) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
@@ -101,70 +99,69 @@ void CVOI::associate()
 		{
 			if ((assignment[i] != -1) && (MatrixSet[i][assignment[i]] != constBigNumber)) //венгерский алгоритм в любом случае найдет в каждой строке по числу, если кол-во столбцов позволяет,  -1 оно возвращает когда столбцов меньше строк
 			{
-				KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				KalmanFilter.UpdateMeasure(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]]);
-				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetBankMeasurements()[assignment[i]].DetectionTime);
-				BankOfSection[CurrentSector].SetBankHypo()[i].IncApprove();
-				BankOfSection[CurrentSector].SetBankHypo()[i].NullNmiss();
-				BankOfSection[CurrentSector].SetBankMeasurements()[assignment[i]].SetReservedForUpdate();
+				KalmanFilter.Predict(BankHypo[i], BankMeasurements[assignment[i]]);
+				KalmanFilter.UpdateMeasure(BankHypo[i], BankMeasurements[assignment[i]]);
+				BankHypo[i].IncApprove();
+				BankHypo[i].NullNmiss();
+				ChangeSectorHypoTrace(BankHypo[i]);
+				BankMeasurements[assignment[i]].SetReservedForUpdate();
 			}
 			else
 			{
-				KalmanFilter.UpdatePredict(BankOfSection[CurrentSector].SetBankHypo()[i], BankOfSection[CurrentSector].GetLasttime());
-				BankOfSection[CurrentSector].SetBankHypo()[i].GetlastTime(BankOfSection[CurrentSector].GetLasttime());
-				BankOfSection[CurrentSector].SetBankHypo()[i].IncNmiss();
-				BankOfSection[CurrentSector].SetBankHypo()[i].NullNapprove();
+				KalmanFilter.Predict(BankHypo[i], BankOfSection[BankOfSection.size() - 1].GetLasttime());
+				KalmanFilter.UpdatePredict(BankHypo[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
+				BankHypo[i].IncNmiss();
+				ChangeSectorHypoTrace(BankHypo[i]);
+				BankHypo[i].NullNapprove();
 			}
 			
-			CVector ToHypo2Coordinate;
-			ToHypo2Coordinate.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[0];
-			ToHypo2Coordinate.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[3];
-			ToHypo2Coordinate.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[6];
+			/*CVector ToHypo2Coordinate;
+			ToHypo2Coordinate.x = BankHypo[i].SetState_X()[0];
+			ToHypo2Coordinate.y = BankHypo[i].SetState_X()[3];
+			ToHypo2Coordinate.z = BankHypo[i].SetState_X()[6];
 			CVector ToHypo2Speed;
-			ToHypo2Speed.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[1];
-			ToHypo2Speed.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[4];
-			ToHypo2Speed.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[7];
+			ToHypo2Speed.x = BankHypo[i].SetState_X()[1];
+			ToHypo2Speed.y = BankHypo[i].SetState_X()[4];
+			ToHypo2Speed.z = BankHypo[i].SetState_X()[7];
 			CVector ToHypo2Acceleration;
-			ToHypo2Acceleration.x = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[2];
-			ToHypo2Acceleration.y = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[5];
-			ToHypo2Acceleration.z = BankOfSection[CurrentSector].SetBankHypo()[i].SetState_X()[8];
+			ToHypo2Acceleration.x = BankHypo[i].SetState_X()[2];
+			ToHypo2Acceleration.y = BankHypo[i].SetState_X()[5];
+			ToHypo2Acceleration.z = BankHypo[i].SetState_X()[8];
 			saveData(new CHypo2(ToHypo2Coordinate, ToHypo2Speed, ToHypo2Acceleration,
-				BankOfSection[CurrentSector].SetBankHypo()[i].SetlastTime(),
-				BankOfSection[CurrentSector].SetBankHypo()[i].GetId_hyp()));
+				BankHypo[i].SetlastTime(), BankHypo[i].GetId_hyp()));*/
 		}
-		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
+		DeletMeasurementsAfterUpdate();
 	}
 	
 	// проверка наличия измерений
-	if (!BankOfSection[CurrentSector].GetBankMeasurements().empty())
+	if (!BankMeasurements.empty())
 	{
-		int size = BankOfSection[CurrentSector].GetBankMeasurements().size();
+		int size = BankMeasurements.size();
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
 			{
 				if (i < j) //чтобы не сравнивать одинаковые пары 
 				{
-					colvec v = arma::zeros(3);
-					mat S = arma::zeros(3, 3);
-					KalmanFilter.Predict(BankOfSection[CurrentSector].SetBankMeasurements()[i], BankOfSection[CurrentSector].SetBankMeasurements()[j], S, v);	
-					double D = countNorma(v, S); 
+					KalmanFilter.Predict(BankMeasurements[i], BankMeasurements[j]);	
+					double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
 					if (D <= constSimilarityRate)
 					{
-						CMeasurements mes = BankOfSection[CurrentSector].GetBankMeasurements()[i];
+						CMeasurements mes = BankMeasurements[i];
 						CHypo newHypo(std::move(mes));
-						KalmanFilter.UpdateMeasure(newHypo, BankOfSection[CurrentSector].SetBankMeasurements()[j]);
-						BankOfSection[CurrentSector].SetBankHypo().push_back(newHypo);
-						BankOfSection[CurrentSector].SetBankMeasurements()[i].SetReservedForUpdate();
-						BankOfSection[CurrentSector].SetBankMeasurements()[j].SetReservedForUpdate();
+						KalmanFilter.Predict(newHypo, BankMeasurements[j]);
+						KalmanFilter.UpdateMeasure(newHypo, BankMeasurements[j]);
+						BankHypo.push_back(newHypo);
+						BankMeasurements[i].SetReservedForUpdate();
+						BankMeasurements[j].SetReservedForUpdate();
 					}
 				}
 			}
 		}
-		BankOfSection[CurrentSector].DeletMeasurementsAfterUpdate();
+		DeletMeasurementsAfterUpdate();
 	}
-	BankOfSection[CurrentSector].SectionHypoToTrace(); //переводим гипотезы в трассы
-	BankOfSection[CurrentSector].removeOutdatedObjects(); //удаляем то, что слишком долго лежит в хранилище
+	SectionHypoToTrace(); //переводим гипотезы в трассы
+	removeOutdatedObjects(); //удаляем то, что слишком долго лежит в хранилище
 }
 
 int CVOI::DetectSector(double azimutAngle)
@@ -179,7 +176,8 @@ int CVOI::DetectSector(double azimutAngle)
 void CVOI::pushMeasurements(CResultOfScan newres)
 {
 	CMeasurements newmes(newres);
-	this->BankOfSection[CurrentSector].SetBankMeasurements().push_back(newmes);
+	newmes.SetCurrentSector(CurrentSector);
+	this->BankMeasurements.push_back(newmes);
 }
 
 void CVOI::pushSectorObserved(double time, double b)
@@ -189,36 +187,90 @@ void CVOI::pushSectorObserved(double time, double b)
 		int howmanysection = (Bmax - Bmin) / b;
 		this->BankOfSection.resize(howmanysection);
 		this->FirstAngle = b;
+		for (int i = 0; i < howmanysection; i++)
+		{
+			BankOfSection[i].SetAzimutMin(i*b);
+			BankOfSection[i].SetAzimutMax(i*b+b);
+		}
 	}
-	TimeToStartAssociation(time);
+	this->BankOfSection[CurrentSector].SetLasttime(time);
+	TimeToStartAssociation(b);
 	if (FirstTry && (b==Bmax))
 	{
 		FirstTry = false;
 	}
-	
 	if (b == Bmax) CurrentSector = 0;
-	else (this->CurrentSector++); 
-
-	this->BankOfSection[CurrentSector].SetLasttime(time);
+	else (this->CurrentSector++); 	
 }
 
-//void CVOI::TimeToStartAssociation(double time)
-//{
-//	if (FirstTry||(CurrentSector==0)) return;
-//	if (BankOfSection[CurrentSector - 1].GetLasttime() > BankOfSection[CurrentSector].GetLasttime())
-//	{
-//		associate();
-//		if (CurrentSector == BankOfSection.size()) associate_one();
-//	}
-//}
-
-void CVOI::TimeToStartAssociation(double time)
+void CVOI::TimeToStartAssociation(double b)
 {
-	if (FirstTry) return;
+	if (FirstTry || (b != Bmax)) return; //проверяем, что обозрено все пространство и, как минимумЮ, второй раз
 	associate();
 }
 
 double CVOI::countNorma(colvec &v, mat &predictS)
 {
 	return arma::as_scalar(v.t()*predictS.i()*v);
+}
+
+void CVOI::removeOutdatedObjects()
+{
+	for (int i = 0; i < this->BankMeasurements.size(); i++)
+	{
+		if (this->BankMeasurements[i].GetNmiss() == MeasurMiss)
+		{
+			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
+		}
+	}
+	for (int i = 0; i < this->BankHypo.size(); i++)
+	{
+		if (this->BankHypo[i].GetNmiss() == HypoMiss)
+		{
+			this->BankHypo.erase(this->BankHypo.cbegin() + i);
+		}
+	}
+	for (int i = 0; i < this->BankTrace.size(); i++)
+	{
+		if (this->BankTrace[i].GetNmiss() == TraceMiss)
+		{
+			this->BankTrace.erase(this->BankTrace.cbegin() + i);
+		}
+	}
+}
+
+void CVOI::SectionHypoToTrace()
+{
+	for (int i = 0; i < this->BankHypo.size(); i++)
+	{
+		if (BankHypo[i].GetNapprove() == HypoApprove)
+		{
+			CTrace newTrace = BankHypo[i].HypoToTrace();
+			this->BankHypo.erase(this->BankHypo.cbegin() + i);
+			i--;
+			this->BankTrace.push_back(newTrace);
+		}
+	}
+}
+
+void CVOI::DeletMeasurementsAfterUpdate()
+{
+	for (int i = 0; i < BankMeasurements.size(); i++)
+	{
+		if (BankMeasurements[i].GetReservedForUpdate()){
+			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
+			i--;
+		}
+	}
+}
+
+void CVOI::ChangeSectorHypoTrace(CBaseTraceHypo &newbase)
+{
+	for (int in = 0; in < BankOfSection.size(); in++)
+	{
+		if ((newbase.FromDekartToAzimut()>BankOfSection[in].GetAzimutMin())&&(newbase.FromDekartToAzimut()<(BankOfSection[in].GetAzimutMax()+1)))
+		{
+			newbase.SetCurrentSector(in);
+		}
+	}
 }
