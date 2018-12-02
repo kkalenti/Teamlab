@@ -103,25 +103,30 @@ cla('reset');
 
 set(handles.axes1,'Visible','On');
 set(handles.axes2,'Visible','Off');
+
 set(handles.listbox1,'Enable','On');
 set(handles.listbox2,'Enable','On');    
-set(handles.togglebutton4,'String','3D');
+
 checkboxOff(handles);
 checkboxPOIOff(handles);
 checkboxNoizeOff(handles);
 checkboxStrobOff(handles);
+
 set(handles.checkbox4,'Value',0);
 set(handles.checkbox8,'Value',0);
 set(handles.checkbox12,'Value',0);
 set(handles.checkbox12,'Enable','on');
+
 set(handles.uibuttongroup4,'Visible','off');    
 set(handles.uibuttongroup5,'Visible','off');    
-set(handles.uibuttongroup6,'Visible','off');     
+set(handles.uibuttongroup6,'Visible','off'); 
+
 set(handles.togglebutton2,'Enable','On');        
 set(handles.togglebutton3,'Enable','On');
 set(handles.togglebutton2,'Value',0);        
 set(handles.togglebutton3,'Value',0);
 set(handles.togglebutton4,'Value',0);
+set(handles.togglebutton4,'String','3D');
 
 set(handles.text6,'String',file);
 informationAssigning(file, path_my);
@@ -853,8 +858,6 @@ function togglebutton4_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 value = get(hObject,'Value');
-realPlot = evalin('base','realPlot');
-    voiPlot = evalin('base','voiPlot');
     
 try
    poiPlot = evalin('base','poiPlot');
@@ -881,21 +884,25 @@ if (value == 1)
     
     set(handles.axes2,'Visible','On');
     set(handles.axes1,'Visible','Off');
+    
     set(handles.listbox1,'Enable','Off');
-    set(handles.listbox2,'Enable','Off');
-    set(handles.uibuttongroup1,'Visible','Off');
+    set(handles.listbox2,'Enable','Off');;
     
     checkboxOff(handles);
     checkboxPOIOff(handles);
     checkboxNoizeOff(handles);
     checkboxStrobOff(handles);
+    
     set(handles.checkbox4,'Value',0);
     set(handles.checkbox8,'Value',0);
     set(handles.checkbox12,'Value',0);
     set(handles.checkbox12,'Enable','Off');
+    
+    set(handles.uibuttongroup1,'Visible','Off')
     set(handles.uibuttongroup4,'Visible','off');    
     set(handles.uibuttongroup5,'Visible','off');    
-    set(handles.uibuttongroup6,'Visible','off');     
+    set(handles.uibuttongroup6,'Visible','off');
+    
     set(handles.togglebutton2,'Enable','On');        
     set(handles.togglebutton3,'Enable','On');
     set(handles.togglebutton2,'Value',0);        
@@ -906,12 +913,18 @@ else
     cla('reset');
     set(hObject,'String','3D');
     axes(handles.axes1);
+    
+    realPlot = evalin('base','realPlot');
+    voiPlot = evalin('base','voiPlot');
     legend([realPlot(1).ch1.coordinate,realPlot(1).ch2.coordinate,realPlot(1).ch3.coordinate,...
         voiPlot(1).ch1.coordinate,voiPlot(1).ch2.coordinate,voiPlot(1).ch3.coordinate]);
+    
     set(handles.axes1,'Visible','On');
     set(handles.axes2,'Visible','Off');
+    
     set(handles.listbox1,'Enable','On');
     set(handles.listbox2,'Enable','On');
+    
     set(handles.uibuttongroup1,'Visible','On');
     set(handles.uibuttongroup7,'Visible','On');
     
@@ -919,6 +932,7 @@ else
     set(handles.checkbox4,'Value',0);
     set(handles.checkbox8,'Value',0);
     set(handles.checkbox12,'Value',0);
+    
     set(handles.togglebutton2,'Value',0);        
     set(handles.togglebutton3,'Value',0);
     set(handles.togglebutton2,'Enable','On');        
