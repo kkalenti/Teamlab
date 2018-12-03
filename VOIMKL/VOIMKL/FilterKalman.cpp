@@ -136,7 +136,7 @@ void CKalmanFilter::Prediction(double dt)
 // update with measurement
 void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measure)
 {
-	double dt = abs(TraceOrHypo.SetlastTime() - Measure.DetectionTime);
+	double dt = abs(Measure.DetectionTime - TraceOrHypo.SetlastTime()); 
 	update_F(dt);
 	update_U(dt);
 	//F.print("This F on predict hypo");

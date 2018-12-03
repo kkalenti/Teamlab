@@ -5,10 +5,10 @@ maxBeta:10
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0.00000001
-SKOforBeta:0.00000001
-SKOforDistance:0.00000001
-SKOforRadialSpeed:0.00000001
+SKOforEpsilon:0
+SKOforBeta:0
+SKOforDistance:0
+SKOforRadialSpeed:0
 SKOforAcceleration:0
 FakeTargetIntensity:0
 LostMeasurements:0

@@ -307,7 +307,7 @@ int extendArray(CReferenceState* s, mxArray *origin, int target) {
 	mxArray *mx;
 	int n;
 	if (mxGetField(origin, target - 1, fieldNames[0])) {
-		n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
+		n = (int)mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
 	}
 	else {
 		n = 0;
@@ -414,7 +414,7 @@ int extendArray(CResultOfScan* s, mxArray *origin) {
 	int status;
 	mxArray *tmp;
 	mxArray *mx;
-	int n = mxGetN(mxGetField(origin, 0, fieldNames[0]));
+	size_t n = mxGetN(mxGetField(origin, 0, fieldNames[0]));
 
 	//Coordinate.x
 	tmp = mxGetField(origin, 0, fieldNames[0]);//лучше не трогать индекс
@@ -477,7 +477,7 @@ int extendArray(CNoize* s, mxArray *origin) {
 	int status;
 	mxArray *tmp;
 	mxArray *mx;
-	int n = mxGetN(mxGetField(origin, 0, fieldNames[0]));
+	size_t n = mxGetN(mxGetField(origin, 0, fieldNames[0]));
 
 	//Coordinate.x
 	tmp = mxGetField(origin, 0, fieldNames[0]);//лучше не трогать индекс
@@ -540,7 +540,7 @@ int extendArray(CVoi2* s, mxArray *origin, int target) {
 	int status;
 	mxArray *tmp;
 	mxArray *mx;
-	int n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
+	size_t n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
 
 	//Coordinate.x
 	tmp = mxGetField(origin, target - 1, fieldNames[0]);//лучше не трогать индекс
@@ -643,7 +643,7 @@ int extendArray(CHypo2* s, mxArray *origin, int target) {
 	int status;
 	mxArray *tmp;
 	mxArray *mx;
-	int n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
+	size_t n = mxGetN(mxGetField(origin, target - 1, fieldNames[0]));
 
 	//Coordinate.x
 	tmp = mxGetField(origin, target - 1, fieldNames[0]);//лучше не трогать индекс
@@ -964,7 +964,7 @@ void saveData(CReferenceState* s) {
 	if (mx == NULL) {
 		createStruct(s, s->NumberOfTarget+1);
 	}
-	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
+	else if ((oldN = (int)mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
 		extendStruct(s, mx, oldN, s->NumberOfTarget+1);
 	}
 	else { //новая дата
@@ -1010,7 +1010,7 @@ void saveData(CVoi2* s) {
 	if (mx == NULL && (s->NumberOfTarget+1) == 1) {
 		createStruct(s);
 	}
-	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
+	else if ((oldN = (int)mxGetN(mx)) <s->NumberOfTarget+1){ //новая цель
 		extendStruct(s, mx, oldN);
 	}
 	else { //новая дата
@@ -1028,7 +1028,7 @@ void saveData(CHypo2* s) {
 	if (mx == NULL && (s->NumberOfTarget + 1) == 1) {
 		createStruct(s);
 	}
-	else if ((oldN = mxGetN(mx)) <s->NumberOfTarget + 1){ //новая цель
+	else if ((oldN = (int)mxGetN(mx)) <s->NumberOfTarget + 1){ //новая цель
 		extendStruct(s, mx, oldN);
 	}
 	else { //новая дата
