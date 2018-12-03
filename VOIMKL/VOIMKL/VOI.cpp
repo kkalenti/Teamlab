@@ -31,8 +31,8 @@ void CVOI::associate()
 	// проверка наличия трасс
 	if (!BankTrace.empty())
 	{
-		int sizeRow = BankTrace.size();
-		int sizeCol = BankMeasurements.size();
+		size_t sizeRow = BankTrace.size();
+		size_t sizeCol = BankMeasurements.size();
 		vector <vector<double>> MatrixSet(sizeRow, vector<double>(sizeCol, 0));
 		for (int i = 0; i < sizeRow; i++)
 		{
@@ -103,8 +103,8 @@ void CVOI::associate()
 	//исключение - у гипотез есть счетчик подтверждений, после которых их переводят в трассы
 	if (!BankHypo.empty())
 	{
-		int sizeRow = BankHypo.size();
-		int sizeCol = BankMeasurements.size();
+		size_t sizeRow = BankHypo.size();
+		size_t sizeCol = BankMeasurements.size();
 		vector <vector<double>> MatrixSet(sizeRow, vector<double>(sizeCol, 0));
 		for (int i = 0; i < sizeRow; i++)
 		{
@@ -159,7 +159,7 @@ void CVOI::associate()
 	// проверка наличия измерений
 	if (BankMeasurements.size()>1)
 	{
-		int size = BankMeasurements.size();
+		size_t size = BankMeasurements.size();
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
@@ -195,6 +195,8 @@ int CVOI::DetectSector(double azimutAngle)
 		if ((azimutAngle>this->BankOfSection[i].GetAzimutMin()) && (azimutAngle < this->BankOfSection[i].GetAzimutMax())) return i;
 	}
 	///отлов ошибки
+	cout << "\nsector not found\n\n";
+	return -1;
 }
 
 void CVOI::pushMeasurements(CResultOfScan newres)
@@ -209,7 +211,7 @@ void CVOI::pushSectorObserved(double time, double b)
 	//проверяем, что это первый раз, когда мы запускаем программу --> надо выставить все константы
 	if (FirstTry && (FirstAngle < 0.0))
 	{
-		int howmanysection = (Bmax - Bmin) / b; //сколько всего секторов
+		int howmanysection = (int)((Bmax - Bmin) / (b - Bmin)); //сколько всего секторов
 		this->BankOfSection.resize(howmanysection);
 		this->FirstAngle = b; //первый угол (т.е. второй, если с учетом 0)
 		for (int i = 0; i < howmanysection; i++)
