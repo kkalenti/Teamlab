@@ -39,6 +39,6 @@ public:
 	void removeOutdatedObjects(); //удалить объекты, не обновлявшиеся на этом цикле
 	void SectionHypoToTrace(); //перевод гипотезы в трассу
 	void DeletMeasurementsAfterUpdate(); //удалить все измерения после окончания ассоциации
-	void ChangeSectorHypoTrace(CBaseTraceHypo &newbase); //изменить сектор, в котором предположительно находится объект
+	//void ChangeSectorHypoTrace(CBaseTraceHypo &newbase); //изменить сектор, в котором предположительно находится объект
 };
 #endif VOI_H

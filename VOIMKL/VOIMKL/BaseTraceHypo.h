@@ -13,7 +13,7 @@ protected:
 	colvec x = zeros(N); 
 	mat Q = zeros(N, N);
 	double lastTime;
-	double CurrentSector;
+	//double CurrentSector;
 public:
 	CBaseTraceHypo();
 	~CBaseTraceHypo();
@@ -28,8 +28,8 @@ public:
 	double GetlastTime(double time);
 	const double SetlastTime();
 	double FromDekartToAzimut();
-	void SetCurrentSector(int Sector);
-	const int GetCurrentSector();
+	//void SetCurrentSector(int Sector);
+	//const int GetCurrentSector();
 };
 
 class CTrace: public CBaseTraceHypo{

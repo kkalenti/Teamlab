@@ -21,6 +21,11 @@ void CVOI::SetSizeZone(double bmin, double bmax)
 	this->Bmax = bmax;
 }
 
+//отладку удобнее начинать остсюда.Когда мы получаем пару измерений за два шага, мы должны рассчитать для них
+//норму и если она вписывается в установленные ограничения - завязать на основании измерений гипотезу
+//для того чтобы гипотеза стала трассой онадолжна три разу обновиться измерениями. Мы обновяем гипотезы и трассы
+//в любом случае, но либо предсказанными значениями, либо измерениями
+//И в первом случае прибавляем счетчик пропуска. 
 void CVOI::associate()
 {
 	// проверка наличия трасс
@@ -41,7 +46,7 @@ void CVOI::associate()
 				//дали положительный результат, значит эту пару трасса-измерение можно использовать 
 				//в дальнейших поисках. Иначе помещаем на место соответствующее паре по индексам большое число
 				//которое позволит исключить эту пару из набора возможных решений
-				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D; 
+				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D;
 				else MatrixSet[i][j] = constBigNumber;
 			}
 		}
@@ -58,7 +63,7 @@ void CVOI::associate()
 				KalmanFilter.Predict(BankTrace[i], BankMeasurements[assignment[i]]);
 				KalmanFilter.UpdateMeasure(BankTrace[i], BankMeasurements[assignment[i]]);
 				BankTrace[i].NullNmiss(); //зануляем счетчик пропусков т.к. трасса подтвердилась обновлением измерением
-				ChangeSectorHypoTrace(BankTrace[i]);
+				//ChangeSectorHypoTrace(BankTrace[i]);
 				//помечаем использованное измерение
 				//на последующее удаление. Нельзя сразу удалить чтобы не сбить индексацию в 
 				//векторе решений
@@ -71,7 +76,7 @@ void CVOI::associate()
 				KalmanFilter.Predict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				KalmanFilter.UpdatePredict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				BankTrace[i].IncNmiss(); //прибавляем счетчик пропусков т.к. трасса не была обновлена измерением
-				ChangeSectorHypoTrace(BankTrace[i]);
+				//ChangeSectorHypoTrace(BankTrace[i]);
 			}
 			//сохранение
 			CVector ToVoi2Coordinate;
@@ -121,7 +126,7 @@ void CVOI::associate()
 				KalmanFilter.UpdateMeasure(BankHypo[i], BankMeasurements[assignment[i]]);
 				BankHypo[i].IncApprove();
 				BankHypo[i].NullNmiss();
-				ChangeSectorHypoTrace(BankHypo[i]);
+				//ChangeSectorHypoTrace(BankHypo[i]);
 				BankMeasurements[assignment[i]].SetReservedForUpdate();
 			}
 			else
@@ -129,11 +134,11 @@ void CVOI::associate()
 				KalmanFilter.Predict(BankHypo[i], BankOfSection[BankOfSection.size() - 1].GetLasttime());
 				KalmanFilter.UpdatePredict(BankHypo[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				BankHypo[i].IncNmiss();
-				ChangeSectorHypoTrace(BankHypo[i]);
+				//ChangeSectorHypoTrace(BankHypo[i]);
 				BankHypo[i].NullNapprove();
 			}
 			
-			/*CVector ToHypo2Coordinate;
+			CVector ToHypo2Coordinate;
 			ToHypo2Coordinate.x = BankHypo[i].SetState_X()[0];
 			ToHypo2Coordinate.y = BankHypo[i].SetState_X()[3];
 			ToHypo2Coordinate.z = BankHypo[i].SetState_X()[6];
@@ -146,7 +151,7 @@ void CVOI::associate()
 			ToHypo2Acceleration.y = BankHypo[i].SetState_X()[5];
 			ToHypo2Acceleration.z = BankHypo[i].SetState_X()[8];
 			saveData(new CHypo2(ToHypo2Coordinate, ToHypo2Speed, ToHypo2Acceleration,
-				BankHypo[i].SetlastTime(), BankHypo[i].GetId_hyp()));*/
+				BankHypo[i].SetlastTime(), BankHypo[i].GetId_hyp()));
 		}
 		DeletMeasurementsAfterUpdate();
 	}
@@ -198,28 +203,29 @@ void CVOI::pushMeasurements(CResultOfScan newres)
 	newmes.SetCurrentSector(CurrentSector);
 	this->BankMeasurements.push_back(newmes);
 }
-
+//получаем метку угла и время (после каждого обхода очередного сектора 
 void CVOI::pushSectorObserved(double time, double b)
 {
+	//проверяем, что это первый раз, когда мы запускаем программу --> надо выставить все константы
 	if (FirstTry && (FirstAngle < 0.0))
 	{
-		int howmanysection = (Bmax - Bmin) / b;
+		int howmanysection = (Bmax - Bmin) / b; //сколько всего секторов
 		this->BankOfSection.resize(howmanysection);
-		this->FirstAngle = b;
+		this->FirstAngle = b; //первый угол (т.е. второй, если с учетом 0)
 		for (int i = 0; i < howmanysection; i++)
 		{
 			BankOfSection[i].SetAzimutMin(i*b);
 			BankOfSection[i].SetAzimutMax(i*b+b);
 		}
 	}
-	this->BankOfSection[CurrentSector].SetLasttime(time);
-	TimeToStartAssociation(b);
-	if (FirstTry && (b==Bmax))
+	this->BankOfSection[CurrentSector].SetLasttime(time); //устанавливаем в текущий сектор время последнего обзора
+	TimeToStartAssociation(b); //проверяем - пришло ли время начать ассоциацию
+	if (FirstTry && (b==Bmax)) //определяем,что первый круг был пройден
 	{
 		FirstTry = false;
 	}
-	if (b == Bmax) CurrentSector = 0;
-	else (this->CurrentSector++); 	
+	if (b == Bmax) CurrentSector = 0; //возвращаемся к первому сектору, после того, как осмотрели все
+	else (this->CurrentSector++); 	//или передвигаемся на 1 сектор вперед, если еще не дошли до конца
 }
 
 void CVOI::TimeToStartAssociation(double b)
@@ -230,18 +236,21 @@ void CVOI::TimeToStartAssociation(double b)
 
 double CVOI::countNorma(colvec &v, mat &predictS)
 {
-	return arma::as_scalar(v.t()*predictS.i()*v);
+	//считаем норму, тут должно получаться маленькое (сравнимое с 9) неотрицаельное число
+	return arma::as_scalar(v.t()*predictS.i()*v); 	
 }
 
-void CVOI::removeOutdatedObjects()
+void CVOI::removeOutdatedObjects() //удаление старых(хранившихся дольше N обзоров) объектов
 {
+	//для измерений - 2
 	for (int i = 0; i < this->BankMeasurements.size(); i++)
 	{
-		if (this->BankMeasurements[i].GetNmiss() == MeasurMiss)
+		if (this->BankMeasurements[i].GetNmiss() == MeasurMiss) 
 		{
 			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
 		}
 	}
+	//для гипотез -3 
 	for (int i = 0; i < this->BankHypo.size(); i++)
 	{
 		if (this->BankHypo[i].GetNmiss() == HypoMiss)
@@ -249,6 +258,7 @@ void CVOI::removeOutdatedObjects()
 			this->BankHypo.erase(this->BankHypo.cbegin() + i);
 		}
 	}
+	//для трасс -3 
 	for (int i = 0; i < this->BankTrace.size(); i++)
 	{
 		if (this->BankTrace[i].GetNmiss() == TraceMiss)
@@ -258,7 +268,7 @@ void CVOI::removeOutdatedObjects()
 	}
 }
 
-void CVOI::SectionHypoToTrace()
+void CVOI::SectionHypoToTrace() //перевод гипотезы в трассу, если счетчик =3
 {
 	for (int i = 0; i < this->BankHypo.size(); i++)
 	{
@@ -266,30 +276,30 @@ void CVOI::SectionHypoToTrace()
 		{
 			CTrace newTrace = BankHypo[i].HypoToTrace();
 			this->BankHypo.erase(this->BankHypo.cbegin() + i);
-			i--;
+			i--; //чтобы не сбиться с индексации в измененном после удаления элемента векторе
 			this->BankTrace.push_back(newTrace);
 		}
 	}
 }
 
-void CVOI::DeletMeasurementsAfterUpdate()
+void CVOI::DeletMeasurementsAfterUpdate() //удаление измерений, которые уже были использованны
 {
 	for (int i = 0; i < BankMeasurements.size(); i++)
 	{
-		if (BankMeasurements[i].GetReservedForUpdate()){
+		if (BankMeasurements[i].GetReservedForUpdate()){ //проверяем флаг 
 			this->BankMeasurements.erase(this->BankMeasurements.cbegin() + i);
-			i--;
+			i--; //чтобы не сбиться с индексации в измененном после удаления элемента векторе
 		}
 	}
 }
 
-void CVOI::ChangeSectorHypoTrace(CBaseTraceHypo &newbase)
-{
-	for (int in = 0; in < BankOfSection.size(); in++)
-	{
-		if ((newbase.FromDekartToAzimut()>BankOfSection[in].GetAzimutMin())&&(newbase.FromDekartToAzimut()<(BankOfSection[in].GetAzimutMax()+1)))
-		{
-			newbase.SetCurrentSector(in);
-		}
-	}
-}
+//void CVOI::ChangeSectorHypoTrace(CBaseTraceHypo &newbase) //изменяем сектор трассы или гипотезы (сейчас не используется)
+//{
+//	for (int in = 0; in < BankOfSection.size(); in++)
+//	{
+//		if ((newbase.FromDekartToAzimut()>BankOfSection[in].GetAzimutMin())&&(newbase.FromDekartToAzimut()<(BankOfSection[in].GetAzimutMax()+1)))
+//		{
+//			newbase.SetCurrentSector(in);
+//		}
+//	}
+//}

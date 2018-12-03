@@ -67,7 +67,7 @@ CTrace::CTrace(CHypo &&hypo)
 	this->ID = COPIES_COUNT;
 	COPIES_COUNT++;
 	this->Nmiss = 0;
-	this->CurrentSector = 0;
+	//this->CurrentSector = 0;
 }
 
 CTrace::~CTrace()
@@ -98,7 +98,7 @@ CHypo::CHypo(CMeasurements &newM) : CBaseTraceHypo()
 	this->lastTime = newM.DetectionTime;
 	this->ID_hyp = COPIES_COUNT2;
 	COPIES_COUNT2++;
-	this->CurrentSector = 0;
+	//this->CurrentSector = 0;
 }
 
 CHypo::~CHypo()
@@ -152,12 +152,12 @@ double CBaseTraceHypo::FromDekartToAzimut()
 	return (atan(this->x[6] / this->x[0]));
 }
 
-void CBaseTraceHypo::SetCurrentSector(int Sector)
-{
-	this->CurrentSector = Sector;
-}
+//void CBaseTraceHypo::SetCurrentSector(int Sector)
+//{
+//	this->CurrentSector = Sector;
+//}
 
-const int CBaseTraceHypo::GetCurrentSector()
-{
-	return this->CurrentSector;
-}
+//const int CBaseTraceHypo::GetCurrentSector()
+//{
+//	return this->CurrentSector;
+//}
