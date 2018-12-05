@@ -151,15 +151,15 @@ void CImitator::getConfig()  // парсер конфиг файла
 		switch( k ) {
 		case 7:
 			config.getline(str, 40,'\n');
-			CAirObject::epsilonSko = stod(str);
+			CAirObject::SkoX = stod(str);
 			break;
 		case 8:
 			config.getline(str, 40,'\n');
-			CAirObject::betaSko = stod(str);
+			CAirObject::SkoY = stod(str);
 			break;
 		case 9:
 			config.getline(str, 40,'\n');
-			CAirObject::distanceSko = stod(str);
+			CAirObject::SkoZ = stod(str);
 			break;
 		case 10:
 			config.getline(str, 40,'\n');

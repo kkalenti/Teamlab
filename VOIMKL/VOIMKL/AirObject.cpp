@@ -7,9 +7,9 @@
 CAirObject::CAirObject() 
 {
 	this->AccelerationStates = nullptr;
-	this->beta = 0;
-	this->epsilon = 0;
-	this->distance = 0;
+	this->Coordinate.x = 0;
+	this->Coordinate.y = 0;
+	this->Coordinate.z = 0;
 	this->aChangesCounter = 0;
 	CovMat = new double*[3];
 	for (int i = 0; i < 4; i++) {
@@ -18,6 +18,9 @@ CAirObject::CAirObject()
 			CovMat[i][j] = 0;
 		}
 	}
+	CovMat[0][0] = pow(CAirObject::SkoX, 2);
+	CovMat[1][1] = pow(CAirObject::SkoY, 2);
+	CovMat[2][2] = pow(CAirObject::SkoZ, 2);
 	CovMat[3][3] = pow(CAirObject::radialSko, 2);
 }
 
@@ -26,15 +29,6 @@ CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
 	Coordinate.x = fx;
 	Coordinate.y = fy;
 	Coordinate.z = fz;
-	distance = sqrt(pow(Coordinate.x - station.x, 2) + pow(Coordinate.y - station.y, 2) + pow(Coordinate.z - station.z, 2)); // расстояние до цели
-	double katet = sqrt(pow(Coordinate.z - station.z, 2) + pow(Coordinate.x - station.x, 2)); // система координат, где Y это Z, X это Y, а Z это X
-	double katet2 = sqrt(pow(distance, 2) - pow(katet, 2));
-	epsilon = katet2 / distance; // пересчет азимута
-	// пересчет угла места
-	katet = Coordinate.x - station.x;
-	katet2 = Coordinate.z - station.z;
-	double projection = sqrt(pow(katet, 2) + pow(katet2, 2)); // проекция distance на плоскость XZ
-	beta = katet2 / projection; // пересчет угла места
 	std::random_device device;
 	gaussGenerator.seed(device());
 	CovMat = new double*[4];
@@ -44,6 +38,9 @@ CAirObject::CAirObject(int fx, int fy, int fz, const CVector& station)
 			CovMat[i][j] = 0;
 		}
 	}
+	CovMat[0][0] = pow(CAirObject::SkoX, 2);
+	CovMat[1][1] = pow(CAirObject::SkoY, 2);
+	CovMat[2][2] = pow(CAirObject::SkoZ, 2);
 	CovMat[3][3] = pow(CAirObject::radialSko, 2);
 }
 
@@ -54,9 +51,9 @@ CAirObject::~CAirObject()
 	}
 }
 
-double CAirObject::epsilonSko; // все необходимые среднеквадратические отклонения для шумов
-double CAirObject::betaSko;
-double CAirObject::distanceSko;
+double CAirObject::SkoX; // все необходимые среднеквадратические отклонения для шумов
+double CAirObject::SkoY;
+double CAirObject::SkoZ;
 double CAirObject::accelerationSko;
 double CAirObject::radialSko;
 int CAirObject::typeOfEmulation; 
@@ -116,37 +113,11 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 { 
 	// наложение шумов на азимут/угол места/дистанцию/радиальную скорость
 	radialSpeed += returnGaussRandom(radialSko);
-	double ep = this->epsilon + returnGaussRandom(epsilonSko);
-	double bt = this->beta + returnGaussRandom(betaSko);
-	double di = this->distance + returnGaussRandom(distanceSko);
-	// вычисление ковариационной матрицы
 
-
-	double b1 = exp(-1 * pow(CAirObject::betaSko, 2) / 2);
-	double b2 = exp(-1 * pow(CAirObject::epsilonSko, 2) / 2);
-
-	CovMat[0][0] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(cos(bt), 2) * pow(cos(ep), 2) + 0.25
-	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 + pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-	CovMat[1][1] = (pow((b1 * b2), -2) - 2) * pow(di, 2) * pow(sin(bt), 2) * pow(cos(ep), 2) + 0.25
-	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * (1 - pow(b1, 4) * cos(2 * bt)) * (1 + pow(b2, 4) * cos(2 * ep));
-	CovMat[2][2] = (pow(b2, -2) - 2) * pow(di, 2) * pow(sin(ep), 2) + 0.5 * (pow(di, 2) + pow(CAirObject::distanceSko, 2))
-	* (1 - pow(b2, 4) * cos(2 * ep));
-	CovMat[0][1] = (pow(b1 * b2, -2) - 2) * pow(di, 2) * sin(bt) * cos(bt) * pow(cos(ep), 2) + 0.25
-	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * pow(b1, 4) * sin(2 * bt) * (1 + pow(b2, 4) * cos(2 * ep));
-	CovMat[1][0] = CovMat[0][1];
-	CovMat[0][2] = (pow(b1, -1) * pow(b2, -1) - pow(b1, -1) - b1) * pow(di, 2) * cos(bt) * sin(ep) * cos(ep) + 0.5
-	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * cos(bt) * sin(2 * ep);
-	CovMat[2][0] = CovMat[0][2];
-	CovMat[1][2] = (pow(b1, -1) * pow(b2, -2) - pow(b1, -1) - b1) * pow(di, 2) * sin(bt) * sin(ep) * cos(ep) + 0.5
-	* (pow(di, 2) + pow(CAirObject::distanceSko, 2)) * b1 * pow(b2, 4) * sin(bt) * sin(2 * ep);
-	CovMat[2][1] = CovMat[1][2];
-
-    // вычисление координат с учетом шума
 	CVector coordinates;
-	coordinates.y = ep * di;   // через синус 
-	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
-	coordinates.z = bt * katet; // через синус
-	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
+	coordinates.x = Coordinate.x + returnGaussRandom(SkoX);
+	coordinates.y = Coordinate.y + returnGaussRandom(SkoY);
+	coordinates.z = Coordinate.z + returnGaussRandom(SkoZ);
 	
 	coordinates.x = this->Round(9, coordinates.x);
 	coordinates.y = this->Round(9, coordinates.y);

@@ -15,6 +15,7 @@ int main(int argc, char** argv)
 
 	delete imitator;
 	closeMat();
+	cout << "\n\nIt was other version of Imitator\n";
 	_getch();
 	return 0;
 }

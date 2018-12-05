@@ -5,9 +5,9 @@ maxBeta:10
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0
-SKOforBeta:0
-SKOforDistance:0
+SkoX:0
+SkoY:0
+SkoZ:0
 SKOforRadialSpeed:0
 SKOforAcceleration:0
 FakeTargetIntensity:0

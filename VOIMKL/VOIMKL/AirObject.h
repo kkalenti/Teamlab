@@ -28,9 +28,9 @@ public:
 	CVector Coordinate; // m
 	CVector Speed; // m/c
 	CVector Acceleration; // m/c
-	static double epsilonSko; // sko(ско) - среднеквадратическое отклонение, требуется нам для определения нормального распределения
-	static double betaSko;
-	static double distanceSko;
+	static double SkoX; // sko(ско) - среднеквадратическое отклонение, требуется нам для определения нормального распределения
+	static double SkoY;
+	static double SkoZ;
 	static double accelerationSko;
 	static double radialSko;
 	static int fakeTargetIntensity;
