@@ -93,14 +93,13 @@ void CAirObject::Update(const double time, const double curTime, const CVector& 
 	}
 	// пересчет азимута
 	distance = sqrt(pow(Coordinate.x - station.x, 2) + pow(Coordinate.y - station.y, 2) + pow(Coordinate.z - station.z, 2)); // расстояние до цели
-	double katet = sqrt(pow(Coordinate.z - station.z, 2) + pow(Coordinate.x - station.x, 2)); // система координат, где Y это Z, X это Y, а Z это X
-	double katet2 = sqrt(pow(distance, 2) - pow(katet, 2));
-	epsilon = katet2 / distance; // пересчет азимута
-	// пересчет угла места
+	double katet = sqrt(pow(Coordinate.z - station.z, 2) + pow(Coordinate.x - station.x, 2)); // система координат, где Y это Z, X это Y, а Z это XCoordinate.y
+	epsilon = Coordinate.y / distance; // пересчет угла места
+	// пересчет азимута дальше
 	katet = Coordinate.x - station.x;
-	katet2 = Coordinate.z - station.z;
+	double katet2 = Coordinate.z - station.z;
 	double projection = sqrt(pow(katet, 2) + pow(katet2, 2)); // проекция distance на плоскость XZ
-	beta = katet2 / projection; // пересчет угла места
+	beta = katet2 / projection; // пересчет азимута косинус - прилежащий к гипотенузе - косинус потомучто 0 в направлении X
 
 	if( AccelerationStates != nullptr && aChangesCounter < AccelerationStatesLen ) { // если имитатор рабаботает в конфигурации с переменным ускорением
 		if( AccelerationStates[aChangesCounter].time <= curTime ) { // если закончилось время очередного состояния ускорения
@@ -147,7 +146,7 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
-	
+	// sko по длине и по epsilon вляиют на вс три координаты, по beta не влияет на y тк не меняется дальность до цели
 	coordinates.x = this->Round(9, coordinates.x);
 	coordinates.y = this->Round(9, coordinates.y);
 	coordinates.z = this->Round(9, coordinates.z);
