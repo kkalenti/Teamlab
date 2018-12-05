@@ -6,13 +6,14 @@
 #ifndef Imitator_H
 #define Imitator_H
 
-#include "AirObject.h"
+//#include "AirObject.h"
+class CAirObject;
+class CVOI;
 #include <vector>
 #include <random> 
-#include "VOI.h"
-#include "stdafx.h"
+//#include "VOI.h"
+//#include "stdafx.h"
 
-class CVOI;
 
 class CImitator {
 public:

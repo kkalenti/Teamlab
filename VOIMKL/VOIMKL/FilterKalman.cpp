@@ -1,8 +1,8 @@
 #include "stdafx.h"
+#include "FilterKalman.h"
 
 CKalmanFilter::CKalmanFilter()
 {
-	
 	
 	P_Const << 100 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr
 		<< 0 << 1500 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << endr

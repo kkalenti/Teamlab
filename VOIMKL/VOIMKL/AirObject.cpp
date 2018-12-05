@@ -2,6 +2,7 @@
 #include <math.h>
 #include <random>
 #include <ctime>
+#include "AirObject.h"
 
 CAirObject::CAirObject() 
 {
@@ -146,6 +147,10 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	double katet = sqrt(pow(di, 2) - pow(coordinates.y, 2));  // теорема пифагора
 	coordinates.z = bt * katet; // через синус
 	coordinates.x = sqrt(pow(katet, 2) - pow(coordinates.z, 2));  // теорема пифагора
+	
+	coordinates.x = this->Round(9, coordinates.x);
+	coordinates.y = this->Round(9, coordinates.y);
+	coordinates.z = this->Round(9, coordinates.z);
 
 	CResultOfScan* packagedb = new CResultOfScan(coordinates, radialSpeed, curtime, CovMat); // формирование пакета данных для передачи на вои
 	CResultOfScan package(coordinates, radialSpeed, curtime, CovMat);
@@ -190,4 +195,10 @@ CAirObject::CAccelerationState::CAccelerationState()
 CAirObject::CAccelerationState::~CAccelerationState()
 {
 	
+}
+
+double CAirObject::Round(int pos, double val)
+{
+	string buf = std::to_string(val);
+	return stod(buf);
 }

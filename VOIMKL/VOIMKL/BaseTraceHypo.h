@@ -1,7 +1,7 @@
 #ifndef BaseTraceHypo_H
 #define BaseTraceHypo_H
 #include <armadillo>
-#include "Measurements.h"
+//#include "Measurements.h"
 
 using namespace arma;
 class CHypo;

@@ -6,13 +6,6 @@
 #include "Section.h"
 #include "FilterKalman.h"
 #include "ResultOfScan.h"
-#include "Measurements.h"
-#include "BaseTraceHypo.h"
-
-class CSection;
-class CMeasurements;
-class CHypo;
-class CTrace;
 
 class CVOI{
 private:

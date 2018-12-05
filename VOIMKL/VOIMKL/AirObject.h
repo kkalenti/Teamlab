@@ -7,12 +7,7 @@
 #define AirObject_H
 
 #include <random> 
-
-//struct CVector {
-//	double x, y, z;
-//};
-
-class CVOI;
+#include "VOI.h"
 class CAirObject {
 
 public:
@@ -62,5 +57,6 @@ private:
 	int aChangesCounter; // показывает, какое состояние ускорения на данный момент, если имитатор работает по конфигурации с переменным ускорением
 
 	double returnGaussRandom(double sko);
+	double Round(int, double);
 };
 #endif AirObject_H

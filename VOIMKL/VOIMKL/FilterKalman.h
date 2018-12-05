@@ -1,6 +1,7 @@
 #ifndef FilterKalman_H
 #define FilterKalman_H
-#include "BaseTraceHypo.h"
+//#include "BaseTraceHypo.h" 
+class CBaseTraceHypo;
 #include "Measurements.h"
 #include <armadillo>
 
