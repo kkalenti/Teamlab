@@ -112,7 +112,7 @@ void CAirObject::Update(const double time, const double curTime, const CVector& 
 }
 
 void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
-{ 
+{
 	// наложение шумов на азимут/угол места/дистанцию/радиальную скорость
 	radialSpeed += returnGaussRandom(radialSko);
 	double ep = this->epsilon + returnGaussRandom(epsilonSko);

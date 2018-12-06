@@ -143,10 +143,15 @@ void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, CMeasurements & Measu
 	x_pred = F * TraceOrHypo.SetState_X(); //9991
 	z_pred = H * x_pred; //3991
 	v = Measure.Getz() - z_pred;
+	/*v.print("v:");
+	x_pred.print("x_pred:");
+	z_pred.print("z_pred:");*/
+
 	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t(); //99 = 99*99*99+91*1*19
-	//P.print();
+	//P.print("P:");
+
 	S = Measure.GetR() + H * P * H.t(); // 33+39*99*93
-	//S.print();
+	//S.print("S:");
 }
 
 // update without measurement
@@ -156,6 +161,8 @@ void  CKalmanFilter::Predict(CBaseTraceHypo & TraceOrHypo, double CurrentTime)
 	update_F(dt);
 	update_U(dt);
 	x_pred = F * TraceOrHypo.SetState_X(); //9991
+	F.print("F:");
+	TraceOrHypo.SetState_X().print("State before upd:");
 	////x_pred = F * x_0;
 	//z_pred = H * x_pred; //3991
 	//v = Measure.Getz() - z_pred;
@@ -212,8 +219,9 @@ void CKalmanFilter::UpdatePredict(CBaseTraceHypo &TraceOrHypo, double CurrentTim
 	double dt = CurrentTime - TraceOrHypo.SetlastTime();
 	update_F(dt);
 	update_U(dt);
-	this->x_pred = F * x_pred;//Хранить в трейсилигипотеза предсказанное значение было бы глупо
-	this->P = F * P * F.t() + U * Q * U.t();
+	x_pred = F * TraceOrHypo.SetState_X();
+	//this->x_pred = F * x_pred;//Хранить в трейсилигипотеза предсказанное значение было бы глупо
+	P = F * TraceOrHypo.SetP() * F.t() + U * Q * U.t();
 	TraceOrHypo.GetState_X(x_pred);
 	TraceOrHypo.GetP(P);
 	TraceOrHypo.GetlastTime(CurrentTime);

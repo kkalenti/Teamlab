@@ -1019,6 +1019,7 @@ void saveData(CVoi2* s) {
 
 	mxSetData(mx, NULL);
 	mxDestroyArray(mx);
+	delete s;
 }
 //
 void saveData(CHypo2* s) {
