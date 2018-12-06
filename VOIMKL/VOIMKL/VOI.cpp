@@ -47,7 +47,11 @@ void CVOI::associate()
 				//в дальнейших поисках. Иначе помещаем на место соответствующее паре по индексам большое число
 				//которое позволит исключить эту пару из набора возможных решений
 				if (D <= constSimilarityRate && (BankMeasurements[j].GetNmiss() == 0)) MatrixSet[i][j] = D;
-				else MatrixSet[i][j] = constBigNumber;
+				else 
+				{
+					MatrixSet[i][j] = constBigNumber;
+					KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]);
+				}
 			}
 		}
 		vector<int> assignment;
@@ -73,7 +77,7 @@ void CVOI::associate()
 			{
 				//в эту ветку трасса попадет, если для нее не было найдено подходящее решение и ее
 				//необходимо продолжить предсказанным значением
-				KalmanFilter.Predict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
+				//KalmanFilter.Predict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				KalmanFilter.UpdatePredict(BankTrace[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				BankTrace[i].IncNmiss(); //прибавляем счетчик пропусков т.к. трасса не была обновлена измерением
 				//ChangeSectorHypoTrace(BankTrace[i]);
@@ -112,8 +116,13 @@ void CVOI::associate()
 			{
 				KalmanFilter.Predict(BankHypo[i], BankMeasurements[j]);
 				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
+
 				if ((D <= constSimilarityRate)&&(BankMeasurements[j].GetNmiss()==0)) MatrixSet[i][j] = D;
-				else MatrixSet[i][j] = constBigNumber;
+				else 
+				{ 
+					MatrixSet[i][j] = constBigNumber;
+					KalmanFilter.Predict(BankHypo[i], BankMeasurements[j]);
+				}
 			}
 		}
 		vector<int> assignment;
@@ -131,7 +140,7 @@ void CVOI::associate()
 			}
 			else
 			{
-				KalmanFilter.Predict(BankHypo[i], BankOfSection[BankOfSection.size() - 1].GetLasttime());
+				//KalmanFilter.Predict(BankHypo[i], BankOfSection[BankOfSection.size() - 1].GetLasttime());
 				KalmanFilter.UpdatePredict(BankHypo[i], BankOfSection[BankOfSection.size()-1].GetLasttime());
 				BankHypo[i].IncNmiss();
 				//ChangeSectorHypoTrace(BankHypo[i]);
@@ -172,17 +181,55 @@ void CVOI::associate()
 					//измерения могут использоваться в нескольких гипотезах
 					if (D <= constSimilarityRate) 
 					{	
-						CHypo newHypo(std::move(BankMeasurements[i])); //создаем гипотезу из измерения
-						KalmanFilter.Predict(newHypo, BankMeasurements[j]);
-						KalmanFilter.UpdateMeasure(newHypo, BankMeasurements[j]); //обновляем вновь созданную гипотезу
+						CHypo newHypo(std::move(BankMeasurements[j])); //создаем гипотезу из измерения
+
+						CVector ToHypo2Coordinate;
+						ToHypo2Coordinate.x = newHypo.SetState_X()[0];
+						ToHypo2Coordinate.y = newHypo.SetState_X()[3];
+						ToHypo2Coordinate.z = newHypo.SetState_X()[6];
+						CVector ToHypo2Speed;
+						ToHypo2Speed.x = newHypo.SetState_X()[1];
+						ToHypo2Speed.y = newHypo.SetState_X()[4];
+						ToHypo2Speed.z = newHypo.SetState_X()[7];
+						CVector ToHypo2Acceleration;
+						ToHypo2Acceleration.x = newHypo.SetState_X()[2];
+						ToHypo2Acceleration.y = newHypo.SetState_X()[5];
+						ToHypo2Acceleration.z = newHypo.SetState_X()[8];
+						saveData(new CHypo2(ToHypo2Coordinate, ToHypo2Speed, ToHypo2Acceleration,
+							newHypo.SetlastTime(), newHypo.GetId_hyp()));
+						// 
+						//KalmanFilter.Predict(newHypo, BankMeasurements[j]);
+						//KalmanFilter.UpdateMeasure(newHypo, BankMeasurements[j]); //обновляем вновь созданную гипотезу
+
+						////CVector ToHypo2Coordinate;
+						//ToHypo2Coordinate.x = newHypo.SetState_X()[0];
+						//ToHypo2Coordinate.y = newHypo.SetState_X()[3];
+						//ToHypo2Coordinate.z = newHypo.SetState_X()[6];
+						////CVector ToHypo2Speed;
+						//ToHypo2Speed.x = newHypo.SetState_X()[1];
+						//ToHypo2Speed.y = newHypo.SetState_X()[4];
+						//ToHypo2Speed.z = newHypo.SetState_X()[7];
+						////CVector ToHypo2Acceleration;
+						//ToHypo2Acceleration.x = newHypo.SetState_X()[2];
+						//ToHypo2Acceleration.y = newHypo.SetState_X()[5];
+						//ToHypo2Acceleration.z = newHypo.SetState_X()[8];
+						//saveData(new CHypo2(ToHypo2Coordinate, ToHypo2Speed, ToHypo2Acceleration,
+						//	newHypo.SetlastTime(), newHypo.GetId_hyp()));
+
 						BankHypo.push_back(newHypo);
 						BankMeasurements[i].SetReservedForUpdate();
 						BankMeasurements[j].SetReservedForUpdate();
 					}
 				}
+
 			}
 		}
 		DeletMeasurementsAfterUpdate();
+	}
+	
+	for (int i = 0; i < BankMeasurements.size();i++)
+	{
+		BankMeasurements[i].IncNmiss();
 	}
 	SectionHypoToTrace(); //переводим гипотезы в трассы
 	removeOutdatedObjects(); //удаляем то, что слишком долго лежит в хранилище
