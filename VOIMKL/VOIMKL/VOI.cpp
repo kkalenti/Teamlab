@@ -39,7 +39,7 @@ void CVOI::associate()
 			for (int j = 0; j < sizeCol; j++)
 			{
 				KalmanFilter.Predict(BankTrace[i], BankMeasurements[j]); //рассчитываем предсказанное значение
-				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
+				double D = abs(countNorma(KalmanFilter.GetV(), KalmanFilter.GetS())); 
 				//сравниваем норму и коэффициент схожести и проверяем шаг, на котором поступило измерение
 				//к трассам необходимо привязывать только измерения с прошлого шага (т.к. трасса в любом 
 				//случае продолжается на каждом шаге и старые измерения не нужны. Если обе проверки
@@ -115,7 +115,7 @@ void CVOI::associate()
 			for (int j = 0; j < sizeCol; j++)
 			{
 				KalmanFilter.Predict(BankHypo[i], BankMeasurements[j]);
-				double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS());
+				double D = abs(countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()));
 
 				if ((D <= constSimilarityRate)&&(BankMeasurements[j].GetNmiss()==0)) MatrixSet[i][j] = D;
 				else 
@@ -176,7 +176,7 @@ void CVOI::associate()
 				if (i < j) //чтобы не сравнивать одинаковые пары измерений и измерения с самими собой
 				{
 					KalmanFilter.Predict(BankMeasurements[i], BankMeasurements[j]);	
-					double D = countNorma(KalmanFilter.GetV(), KalmanFilter.GetS()); 
+					double D = abs(countNorma(KalmanFilter.GetV(), KalmanFilter.GetS())); 
 					//основанием для завязки гипотезы служит соответствующая норма
 					//измерения могут использоваться в нескольких гипотезах
 					if (D <= constSimilarityRate) 
