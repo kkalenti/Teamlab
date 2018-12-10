@@ -25,16 +25,16 @@ struct CVector {
 #include <string>
 
 #include "Imitator.h"
-#include "AirObject.h"
-#include "ResultOfScan.h"
-#include "Noize.h"
-#include "Voi2.h"
-#include "Hypo2.h"
 #include "Saver.h"
-#include "ReferenceState.h"
-#include "VOI.h"
+//#include "AirObject.h"
+//#include "ResultOfScan.h"
+//#include "Noize.h"
+//#include "Voi2.h"
+//#include "Hypo2.h"
+//#include "ReferenceState.h"
+//#include "VOI.h"
 #include "BaseTraceHypo.h"
-#include "FilterKalman.h"
+//#include "FilterKalman.h"
 #include "Measurements.h"
 
 using namespace std;

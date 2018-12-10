@@ -2,6 +2,8 @@
 #include <fstream>
 #include <cstddef>
 #include <random> 
+#include "AirObject.h"
+#include "VOI.h"
 
 CImitator::CImitator()
 {	
