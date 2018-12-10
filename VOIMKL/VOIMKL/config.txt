@@ -1,11 +1,11 @@
 Station:0,0,0
-numberOfSteps:2600
+numberOfSteps:22000
 timeOfTakt:0.001
 maxBeta:10
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
-SKOforEpsilon:0
+SKOforEpsilon:0.01
 SKOforBeta:0
 SKOforDistance:0
 SKOforRadialSpeed:0

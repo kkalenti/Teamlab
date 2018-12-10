@@ -84,7 +84,6 @@
     <fileset.package />
     <fileset.depfun>
       <file>${PROJECT_ROOT}\Functions\allHypoCheckboxAssignin.m</file>
-      <file>${PROJECT_ROOT}\Functions\allLinesOff.m</file>
       <file>${PROJECT_ROOT}\Functions\allRealCheckboxAssignin.m</file>
       <file>${PROJECT_ROOT}\Functions\allVoiCheckboxAssignin.m</file>
       <file>${PROJECT_ROOT}\Functions\ch1Plot.m</file>
@@ -101,6 +100,9 @@
       <file>${PROJECT_ROOT}\Functions\informationAssigning.m</file>
       <file>${PROJECT_ROOT}\Functions\linesOff.m</file>
       <file>${PROJECT_ROOT}\Functions\make3D.m</file>
+      <file>${PROJECT_ROOT}\Functions\make3DHypo.m</file>
+      <file>${PROJECT_ROOT}\Functions\make3DReal.m</file>
+      <file>${PROJECT_ROOT}\Functions\make3DVOI.m</file>
       <file>${PROJECT_ROOT}\Functions\makeEmptyHypo.m</file>
       <file>${PROJECT_ROOT}\Functions\makeEmptyNoize.m</file>
       <file>${PROJECT_ROOT}\Functions\makeEmptyPOI.m</file>
