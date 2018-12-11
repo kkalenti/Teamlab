@@ -1,7 +1,7 @@
 Station:0,0,0
-numberOfSteps:26000
+numberOfSteps:200000
 timeOfTakt:0.001
-maxBeta:10
+maxBeta:90
 minBeta:0
 maxEpsilon:10
 minEpsilon:0
@@ -10,9 +10,9 @@ SkoY:40
 SkoZ:40
 SKOforRadialSpeed:2
 SKOforAcceleration:0
-FakeTargetIntensity:1
+FakeTargetIntensity:2
 LostMeasurements:1
-TypeOfSimulation:2
+TypeOfSimulation:5
 
 // Lost measurements 1 = есть 0 = отсутствуют
 // Fake target intensity

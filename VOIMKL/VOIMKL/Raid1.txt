@@ -1,8 +1,8 @@
 numberOfTargets:1
 
-VectorCoordinates:100000,5000,10000
-VectorSpeeds:10,0,20
-VectorAccelerations:0,0,0
+VectorCoordinates:10000,3000,20000
+VectorSpeeds:0,0,250
+VectorAccelerations:-2,1,0
 
 
 // Конфиг файл для начальной инициализации целей без установки сценариев. СТРУКТУРУ ФАЙЛА НЕ МЕНЯТЬ!!! Добавление новой цели делается так

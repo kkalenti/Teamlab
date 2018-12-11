@@ -54,9 +54,9 @@ void CImitator::Scan()
 				targets[k].Update(this->timeOfTakt, this->currentTime, this->stationCoordinates);  // пересчет параметров воздушных целей
 				if (returnPoissonRandom(10) > CAirObject::fakeTargetIntensity) {
 					cout << "\nFake target sended\n";
-					int fx = returnUniformRandom(100000);
-					int fy = returnUniformRandom(10000);	
-					int fz = returnUniformRandom(100000);
+					int fx = returnUniformRandom(10000);
+					int fy = returnUniformRandom(2000);	
+					int fz = returnUniformRandom(45000);
 					CAirObject* fake = new CAirObject(fx, fy, fz, stationCoordinates);
 					fake->SendToVoi(*GeneralVoi, currentTime, true);
 				}
