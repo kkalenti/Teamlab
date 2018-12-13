@@ -54,15 +54,15 @@ void CImitator::Scan()
 				targets[k].Update(this->timeOfTakt, this->currentTime, this->stationCoordinates);  // пересчет параметров воздушных целей
 				if (returnPoissonRandom(10) > CAirObject::fakeTargetIntensity) {
 					cout << "\nFake target sended\n";
-					int fx = returnUniformRandom(10000);
-					int fy = returnUniformRandom(2000);	
-					int fz = returnUniformRandom(45000);
+					int fx = returnUniformRandom(0, 100000);
+					int fy = returnUniformRandom(0, 100000);	
+					int fz = returnUniformRandom(0, 100000);
 					CAirObject* fake = new CAirObject(fx, fy, fz, stationCoordinates);
 					fake->SendToVoi(*GeneralVoi, currentTime, true);
 				}
 				// если луч и цель совпали
 				if( y == floor(targets[k].GetEpsion() * 180 / 3.14159265 + .5) && i == floor(targets[k].GetBeta() * 180 / 3.14159265 +.5) ) {
-					if (CAirObject::lostMeasurements && returnUniformRandom(10) == 10) { // измерить не удалось с вероятностью 0.1
+					if (CAirObject::lostMeasurements && returnUniformRandom(0, 10) == 10) { // измерить не удалось с вероятностью 0.1
 						cout << "\nMeasurement missed";
 						continue;
 					}
@@ -79,12 +79,12 @@ void CImitator::Scan()
 	}
 }
 
-int CImitator::returnUniformRandom(int max)
+int CImitator::returnUniformRandom(int min, int max)
 {
 	if (max == 0) {
 		return 0;
 	}
-	std::uniform_int_distribution<int> range(0, max);
+	std::uniform_int_distribution<int> range(min, max);
 	return range(eqGenerator);
 }
 

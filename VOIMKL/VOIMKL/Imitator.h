@@ -39,7 +39,7 @@ private:
 
 	void getConfig(); // инициализация имитатора основным конфиг файлом
 	void init(char* path, bool withStates);  // инициализация целей целевым конфиг файлом
-	int returnUniformRandom(int max);
+	int returnUniformRandom(int min, int max);
 	int returnPoissonRandom(int lambda);
 };
 

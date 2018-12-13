@@ -1,16 +1,22 @@
-numberOfTargets:1
+numberOfTargets:2
 
-VectorCoordinates:5000,1800,10000
-VectorSpeeds:0,5,175
-VectorAccelerations:1,-0.15,0
-NumberOfStatesForAcceleration:3
-Time:90
-VectorAccelerations:-3,0.3,0
-Time:200
-VectorAccelerations:-0.1,-0.1,0
-Time:200
-VectorAccelerations:0,0,0
+VectorCoordinates:10000,2000,10000
+VectorSpeeds:-10,5,250
+VectorAccelerations:0.5,1,1
+NumberOfStatesForAcceleration:2
+Time:20
+VectorAccelerations:2,1,1
+Time:40
+VectorAccelerations:0,1,1.5
 
+VectorCoordinates:6000,4200,15000
+VectorSpeeds:100,-30,150
+VectorAccelerations:0.5,0,1
+NumberOfStatesForAcceleration:2
+Time:15
+VectorAccelerations:2,1,1
+Time:30
+VectorAccelerations:0,4,1.5
 
 
 // Конфиг файл для начальной инициализации целей С УСТАНОВКОЙ СЦЕНАРИЕВ ПОЛЕТА. СТРУКТУРУ ФАЙЛА НЕ МЕНЯТЬ!!! Добавление новой цели делается так

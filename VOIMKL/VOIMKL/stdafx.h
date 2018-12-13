@@ -5,7 +5,7 @@
 static const int M = 3;
 static const int N = 9;
 static const int MeasurMiss = 2, TraceMiss = 3, HypoMiss = 3, HypoApprove=3;
-static const double constQ=25;
+static const double constQ=1;
 static const double constSimilarityRate = 9; //порог дл€ D
 static const double constBigNumber = 10000; //дл€ матрицы назначени€, значени€ которые ставим туда, где точно нет решени€
 static int COPIES_COUNT = 0; //счетчик дл€ трасc

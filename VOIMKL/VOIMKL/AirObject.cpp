@@ -133,6 +133,7 @@ void CAirObject::SendToVoi(CVOI &voi, const double curtime, const bool fake)
 	}	else {
 		CNoize* Noize = new CNoize(coordinates, radialSpeed, curtime);
 		saveData(Noize);
+		delete Noize;
 	}
 
 	delete packagedb;
