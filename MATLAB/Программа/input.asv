@@ -68,43 +68,42 @@ while(flag~=1)
 %             delta(3) = i;
 %         end
 %     end
-%     for i = 1:v(2)
-%         if(voiCounter(i,2) >= voiCounter(i,1) && delta(1) >= VOI(i).t(voiCounter(i,1)))
-%             delta(1) = VOI(i).t(voiCounter(i,1));
-%             delta(2) = 4;
-%             delta(3) = i;
-%         else
-%             if(voiCounter(i,2) < voiCounter(i,1))
-%                 flag = 1;
-%             end     
-%         end
-%     end
+    for i = 1:v(2)
+        if(voiCounter(i,2) >= voiCounter(i,1) && delta(1) >= VOI(i).t(voiCounter(i,1)))
+            delta(1) = VOI(i).t(voiCounter(i,1));
+            delta(2) = 4;
+            delta(3) = i;
+        else
+            if(voiCounter(i,2) < voiCounter(i,1))
+                flag = 1;
+            end     
+        end
+    end
     
     cla('reset');
     if(poiCounter(1,2) >= poiCounter(1,1) && poiCounter(1,3) == 1)
-        plot3(POI.x(1:poiCounter(1,1)),POI.y(1:poiCounter(1,1)),POI.z(1:poiCounter(1,1)),'.r');
+        plot3(POI.x(1:poiCounter(1,1)),POI.y(1:poiCounter(1,1)),POI.z(1:poiCounter(1,1)),'.');
     end
     hold on;
-    grid on;
     if(noizeCounter(1,2) >= noizeCounter(1,1) && noizeCounter(1,3) == 1)
-        plot3(Noize.x(1:noizeCounter(1,1)),Noize.y(1:noizeCounter(1,1)),Noize.z(1:noizeCounter(1,1)),'.r');
+        plot3(Noize.x(1:noizeCounter(1,1)),Noize.y(1:noizeCounter(1,1)),Noize.z(1:noizeCounter(1,1)),'.');
     end
 %     for i = 1:h(2)
 %         if(hypoCounter(i,2) >= hypoCounter(i,1) && hypoCounter(i,3) == 1)
 %             plot3(Hypo(i).x(1:hypoCounter(i,1)),Hypo(i).y(1:hypoCounter(i,1)),Hypo(i).z(1:hypoCounter(i,1)),'-.x');
 %         end
 %     end
-%     for i = 1:v(2)
-%         if(voiCounter(i,3) == 1 && voiCounter(i,2) >= voiCounter(i,1))
-%         plot3(VOI(i).x(1:voiCounter(i,1)),VOI(i).y(1:voiCounter(i,1)),VOI(i).z(1:voiCounter(i,1)),'--x');
-%         end
-%     end
+    for i = 1:v(2)
+        if(voiCounter(i,3) == 1 && voiCounter(i,2) >= voiCounter(i,1))
+        plot3(VOI(i).x(1:voiCounter(i,1)),VOI(i).y(1:voiCounter(i,1)),VOI(i).z(1:voiCounter(i,1)),'--x');
+        end
+    end
     
     %axis([8000,16000,1000,6000,5000,30000]);
     axis([8000,14000,1400,5000,10000,28000]);
-%     j = j + 1;
-%     view( [ j,25 ] );
-    pause(0.00002);
+    j = j + 1;
+    view( [ j,25 ] );
+    pause(0.0000002);
     switch(delta(2))
 %        case 2
 %             for i = 1:h(2)
@@ -116,13 +115,13 @@ while(flag~=1)
         case 3
             poiCounter(1,1) = poiCounter(1,1) + 1;
             poiCounter(1,3) = 1;
-%         case 4
-%             for i = 1:v(2)
-%                 if(delta(3) == i)
-%                      voiCounter(i,1) = voiCounter(i,1) + 1;
-%                     voiCounter(i,3) = 1;
-%                 end
-%             end
+        case 4
+            for i = 1:v(2)
+                if(delta(3) == i)
+                     voiCounter(i,1) = voiCounter(i,1) + 1;
+                    voiCounter(i,3) = 1;
+                end
+            end
         case 5
             noizeCounter(1,1) = noizeCounter(1,1) + 1;
             noizeCounter(1,3) = 1;
