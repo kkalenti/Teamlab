@@ -1211,10 +1211,11 @@ if (value == 1)
     
     Real = evalin('base','Real');
     make3DReal(Real,value);
-    Hypo = evalin('base','Hypo');
-    make3DHypo(Hypo,value);
     VOI = evalin('base','VOI');
     make3DVOI(VOI,value);
+    Hypo = evalin('base','Hypo');
+    make3DHypo(Hypo,value);
+    
     
     Real3dPlot = evalin('base','Real3dPlot');
     RealEnd3dPlot = evalin('base','RealEnd3dPlot');
