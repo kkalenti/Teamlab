@@ -160,7 +160,7 @@ while (flag ~= 2)
     
     plot3(POI.x,POI.y,POI.z,'.');
     hold on;
-    plot3(Noize.x,Noize.y,Noize.z,'.r');
+    plot3(Noize.x,Noize.y,Noize.z,'.');
     for i = 1:v(2)
         if(voiCounter(i,3) == 1 && voiCounter(i,2) >= voiCounter(i,1))
         plot3(VOI(i).x(1:voiCounter(i,1)),VOI(i).y(1:voiCounter(i,1)),VOI(i).z(1:voiCounter(i,1)),'--x');
@@ -190,7 +190,7 @@ cla('reset');
     axis([8000,14000,1400,5000,10000,28000]);
     hold on;
 for i = 1:v(2)
-    plot3(VOI(i).x,VOI(i).y,VOI(i).z,'--x');
+    plot3(VOI(i).),VOI(i).y,VOI(i).z,'--x');
 end
     pause(2);
 for i = 1:r(2)   
